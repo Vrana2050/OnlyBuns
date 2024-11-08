@@ -22,6 +22,7 @@ import rs.ac.uns.ftn.onlybunsapp.dto.UserTokenState;
 import rs.ac.uns.ftn.onlybunsapp.exception.ResourceConflictException;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
+import rs.ac.uns.ftn.onlybunsapp.service.impl.EmailSenderService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
 
@@ -38,7 +39,10 @@ public class AuthenticationController {
 
 	@Autowired
 	private UserService userService;
-	
+
+	@Autowired
+	private EmailSenderService emailSenderService;
+
 	// Prvi endpoint koji pogadja korisnik kada se loguje.
 	// Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
 	@PostMapping("/login")
@@ -72,6 +76,8 @@ public class AuthenticationController {
 		}
 
 		User user = this.userService.save(userRequest);
+
+		emailSenderService.sendAccountActivationEmail(user.getEmail(), user.getFirstName(), user.getLastName());
 
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
