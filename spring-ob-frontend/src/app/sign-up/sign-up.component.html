@@ -27,6 +27,10 @@
                 <label>Email: </label>
                 <input formControlName="email" matInput>
             </mat-form-field>
+            <mat-form-field>
+                <label>Address: </label>
+                <input formControlName="address" matInput>
+            </mat-form-field>
             <button [disabled]="!form.valid" color="primary" mat-raised-button type="submit">Sign up</button>
             <br>
             <button color="primary" mat-raised-button routerLink="/" >Go Back</button>
