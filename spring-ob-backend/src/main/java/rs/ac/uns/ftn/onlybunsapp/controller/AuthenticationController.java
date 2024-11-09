@@ -59,6 +59,9 @@ public class AuthenticationController {
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
+		if(!user.isEnabled())
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
 
@@ -77,7 +80,7 @@ public class AuthenticationController {
 
 		User user = this.userService.save(userRequest);
 
-		emailSenderService.sendAccountActivationEmail(user.getEmail(), user.getFirstName(), user.getLastName());
+		emailSenderService.sendAccountActivationEmail(user);
 
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}

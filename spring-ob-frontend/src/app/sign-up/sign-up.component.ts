@@ -59,7 +59,8 @@ export class SignUpComponent implements OnInit {
       password: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)])],
       firstname: [''],
       lastname: [''],
-      email: ['']
+      email: [''],
+      address: ['']
     });
   }
 
@@ -77,11 +78,12 @@ export class SignUpComponent implements OnInit {
 
     this.authService.signup(this.form.value)
       .subscribe(data => {
-        console.log(data);
+        console.log(data);/*
         this.authService.login(this.form.value).subscribe(() => {
           this.userService.getMyInfo().subscribe();
-        });
-        this.router.navigate([this.returnUrl]);
+        });*/
+        this.router.navigate(['/activate-account'], { queryParams: { email: this.form.value.email } });
+        //alert(this.form.value.email);
       },
         error => {
           this.submitted = false;

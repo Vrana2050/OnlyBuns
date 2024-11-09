@@ -16,10 +16,18 @@ export class AuthService {
     private userService: UserService,
     private config: ConfigService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   private access_token = null;
+
+  activateAccount(userId : number) {
+    console.log('lukaivan');
+    return this.apiService.get(this.config.activate_account_url + userId)
+      .pipe(map((res) => {
+        console.log('Account activated');
+        console.log(res);
+      }));
+  }
 
   login(user:any) {
     const loginHeaders = new HttpHeaders({
@@ -60,6 +68,8 @@ export class AuthService {
   tokenIsPresent() {
     return this.access_token != undefined && this.access_token != null;
   }
+
+
 
   getToken() {
     return this.access_token;
