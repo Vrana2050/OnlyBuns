@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.onlybunsapp.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +62,9 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
+
+    @ManyToMany(mappedBy = "likedBy")
+    private List<Post> likedPosts;
 
     public Long getId() {
         return id;
