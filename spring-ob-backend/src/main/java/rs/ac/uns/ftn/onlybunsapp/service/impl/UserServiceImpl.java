@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
 		u.setLastName(userRequest.getLastname());
 		u.setEnabled(false);
 		u.setEmail(userRequest.getEmail());
+		u.setAddress(userRequest.getAddress());
 
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
 		List<Role> roles = roleService.findByName("ROLE_USER");
@@ -78,5 +79,11 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
 
 }

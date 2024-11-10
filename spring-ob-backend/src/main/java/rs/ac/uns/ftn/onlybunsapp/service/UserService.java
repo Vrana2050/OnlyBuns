@@ -12,4 +12,5 @@ public interface UserService {
 	User save(UserRequest userRequest);
     User update(User updatedUser);
     boolean activateUser(long userId);
+    User findByEmail(String email);
 }

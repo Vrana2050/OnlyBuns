@@ -21,7 +21,6 @@ export class AuthService {
   private access_token = null;
 
   activateAccount(userId : number) {
-    console.log('lukaivan');
     return this.apiService.get(this.config.activate_account_url + userId)
       .pipe(map((res) => {
         console.log('Account activated');
@@ -36,7 +35,7 @@ export class AuthService {
     });
     // const body = `username=${user.username}&password=${user.password}`;
     const body = {
-      'username': user.username,
+      'email': user.email,
       'password': user.password
     };
     return this.apiService.post(this.config.login_url, JSON.stringify(body), loginHeaders)

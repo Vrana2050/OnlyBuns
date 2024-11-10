@@ -25,6 +25,8 @@ import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.service.impl.EmailSenderService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
+import java.util.Map;
+
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -50,8 +52,9 @@ public class AuthenticationController {
 			@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
 		// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
 		// AuthenticationException
+		System.out.println(authenticationRequest.getEmail() + authenticationRequest.getPassword());
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+				authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
 		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
 		// kontekst
@@ -62,7 +65,7 @@ public class AuthenticationController {
 		if(!user.isEnabled())
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-		String jwt = tokenUtils.generateToken(user.getUsername());
+		String jwt = tokenUtils.generateToken(user.getEmail());
 		int expiresIn = tokenUtils.getExpiredIn();
 
 		// Vrati token kao odgovor na uspesnu autentifikaciju
@@ -71,17 +74,29 @@ public class AuthenticationController {
 
 	// Endpoint za registraciju novog korisnika
 	@PostMapping("/signup")
-	public ResponseEntity<User> addUser(@RequestBody UserRequest userRequest, UriComponentsBuilder ucBuilder) {
-		User existUser = this.userService.findByUsername(userRequest.getUsername());
+	public ResponseEntity<?> addUser(@RequestBody UserRequest userRequest, UriComponentsBuilder ucBuilder) {
 
-		if (existUser != null) {
-			throw new ResourceConflictException(userRequest.getId(), "Username already exists");
+		// Check if username already exists
+		if (this.userService.findByUsername(userRequest.getUsername()) != null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					Map.of("field", "username", "error", "Username already exists")
+			);
 		}
 
+		// Check if email already exists
+		if (this.userService.findByEmail(userRequest.getEmail()) != null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					Map.of("field", "email", "error", "Email already in use")
+			);
+		}
+
+		// Save new user if validations pass
 		User user = this.userService.save(userRequest);
 
+		// Send account activation email
 		emailSenderService.sendAccountActivationEmail(user);
 
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
+
 }

@@ -16,7 +16,6 @@ public class AccountActivationController {
 
     @GetMapping("/activate/{userId}")
     public ResponseEntity<String> activateAccount(@PathVariable("userId") long userId) {
-        System.out.println("USAO USAO USAO");
         if (userService.activateUser(userId))
             return ResponseEntity.ok("Account activated successfully!");
 
