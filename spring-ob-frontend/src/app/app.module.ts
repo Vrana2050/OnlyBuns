@@ -22,6 +22,7 @@ import {ConfigService} from './service/config.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
+import { PostComponent } from './post/post.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { SuccessfullyActivatedComponent } from './successfully-activated/successfully-activated.component';
 @NgModule({
@@ -32,6 +33,7 @@ import { SuccessfullyActivatedComponent } from './successfully-activated/success
     HeaderComponent,
     LoginComponent,
     SignUpComponent,
+    PostComponent,
     ActivateAccountComponent,
     SuccessfullyActivatedComponent,
    
