@@ -9,7 +9,7 @@ import { User } from '../model/user.model';
 })
 export class AdminUserListComponent implements OnInit {
   users: User[] = [];
-  currentPage: number = 1;
+  justarray: User[] = [];
   pageSize: number = 5;
   totalUsers: number = 0;
   totalPages: number = 0;
@@ -22,12 +22,14 @@ export class AdminUserListComponent implements OnInit {
     maxPosts: 100000,
     sortBy: 'email',
     sortDirection: 'asc',
+    page: 0,
+    size: this.pageSize
   };
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.searchAndSortUsers();
   }
 
   loadUsers() {
@@ -35,15 +37,17 @@ export class AdminUserListComponent implements OnInit {
       .subscribe(
         data => {
           console.log(data); 
-          this.users = data; 
+          this.justarray = data; 
           
-          this.totalUsers = data.totalCount || this.users.length; 
+          this.totalUsers = data.totalCount || this.justarray.length; 
           this.totalPages = Math.ceil(this.totalUsers / this.pageSize);
+          console.log(this.totalPages + this.totalUsers)
         },
         error => {
           console.log(error);
         }
       );
+    this.searchAndSortUsers();
 }
 
 
@@ -51,7 +55,10 @@ searchAndSortUsers() {
   this.userService.getFilteredUsers(this.filter).subscribe((response) => {
     console.log('Response:', response);
     console.log('Is Array:', Array.isArray(response)); 
-    this.users = response; 
+    this.users = response.content;       // The paginated list of users
+    this.totalUsers = response.totalElements; // Total number of users
+    this.totalPages = response.totalPages;
+    console.log("TOTAL PAGES" + this.totalPages);
   });
   
   
@@ -77,39 +84,31 @@ onSort(sortBy: string) {
 
   
   get totalPagesArray(): number[] {
-    return this.totalPages ? Array.from({ length: this.totalPages }, (_, i) => i + 1) : [];
+    return this.totalPages ? Array.from({ length: this.totalPages }, (_, i) => i ) : [];
   }
   
 
   goToPage(page: number) {
-    if (page !== this.currentPage) {
-      this.currentPage = page;
-      this.loadUsers();
+    if (page !== this.filter.page) {
+      this.filter.page = page;
+      this.searchAndSortUsers();
     }
   }
-  /*
-  onSearch() {
-    this.currentPage = 1;
-    this.loadUsers();
-  }
-
-  onSort(sortBy: string) {
-    this.filter.sortBy = sortBy;
-    this.filter.sortOrder = this.filter.sortOrder === 'asc' ? 'desc' : 'asc';
-    this.loadUsers();
-  }*/
 
   nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.loadUsers();
+    if (this.filter.page < this.totalPages -1) {
+      this.filter.page++;
+      console.log("ONA KOJU SALJEM IZ FILTERA" + this.filter.page)
+      this.searchAndSortUsers();
     }
   }
 
   previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadUsers();
+    console.log(this.filter.page + "STRANICE JE")
+    if (this.filter.page  > 0) {
+      console.log(this.filter.page + "PRI PREVIOUSU")
+      this.filter.page--;
+      this.searchAndSortUsers();
     }
   }
 }

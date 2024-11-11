@@ -5,6 +5,7 @@ import {catchError, map} from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { User } from '../model/user.model';
 import { HttpParams, HttpResponse } from '@angular/common/http';
+import { Page } from '../model/page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +32,11 @@ export class UserService {
     return this.apiService.get(this.config.users_url);
   }
 
-  getFilteredUsers(filter: any): Observable<User[]> {
+  getFilteredUsers(filter: any): Observable<Page<User>> {
     return this.apiService.post('http://localhost:8082/api/user/allUsersFiltered', filter).pipe(
-      map((response: HttpResponse<User[]>) => response.body || []) 
+      map((response: HttpResponse<Page<User>>) => response.body as Page<User>)
     );
   }
-  
   
   
   getUsers(page: number, pageSize: number, filters: any, sortBy: string, sortDirection: string): Observable<any> {
