@@ -1,8 +1,8 @@
 package rs.ac.uns.ftn.onlybunsapp.dto;
 
 public class PaginationRequest {
-    //private int page;
-    //private int size;
+    private int page;
+    private int size;
     private String firstName;
     private String lastName;
     private String email;
@@ -11,6 +11,21 @@ public class PaginationRequest {
     private String sortBy;
     private String sortDirection;
 
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     public String getFirstName() {
         return firstName;

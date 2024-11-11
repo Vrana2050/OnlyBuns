@@ -14,8 +14,6 @@ public interface UserService {
     User findByUsername(String username);
     List<User> findAll ();
 	User save(UserRequest userRequest);
-    Page<AdminUserList> getUsers(Pageable pageable, String firstName, String lastName,
-                                        String email, Integer minPosts, Integer maxPosts);
 
-    public List<User> getFilteredUsers(PaginationRequest p);
+    public Page<User> probaPaginacije(PaginationRequest p);
 }

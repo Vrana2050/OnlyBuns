@@ -54,42 +54,10 @@ public class UserController {
 		List<User> users = this.userService.findAll();
 		return users;
 	}
-	/*
-	@PostMapping("/user/allUsers")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Page<AdminUserList>> getUsers(
-			@RequestBody PaginationRequest paginationRequest) {
-		// Extract the data from the paginationRequest object
-		int page = paginationRequest.getPage();
-		int size = paginationRequest.getSize();
-		String firstName = paginationRequest.getFirstName();
-		String lastName = paginationRequest.getLastName();
-		String email = paginationRequest.getEmail();
-		Integer minPosts = paginationRequest.getMinPosts();
-		Integer maxPosts = paginationRequest.getMaxPosts();
-		String sortBy = paginationRequest.getSortBy();
-		String sortDirection = paginationRequest.getSortDirection();
-
-		System.out.println(paginationRequest.getSortDirection());
-		System.out.println(paginationRequest.getMinPosts());
-		System.out.println(paginationRequest.getSize()); // Log to verify
-
-		System.out.println(paginationRequest.getFirstName());
-		Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
-				Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-
-		Pageable pageable = PageRequest.of(page, size, sort);
-		return new ResponseEntity<>(userService.getUsers(pageable, firstName, lastName, email, minPosts, maxPosts), HttpStatus.OK);
-	}*/
-
 	@PostMapping("/user/allUsersFiltered")
 	@PreAuthorize("hasRole('ADMIN')")
-	public List<User> getUsersFiltered(@RequestBody PaginationRequest p) {
-		System.out.println(p.getFirstName());
-		List<User> filteredUsers = this.userService.getFilteredUsers(p);
-		for(User user : filteredUsers) {
-			System.out.println(user.getEmail());
-		}
+	public Page<User> getUsersFiltered(@RequestBody PaginationRequest p) {
+		Page<User> filteredUsers = this.userService.probaPaginacije(p);
 		return filteredUsers;
 	}
 

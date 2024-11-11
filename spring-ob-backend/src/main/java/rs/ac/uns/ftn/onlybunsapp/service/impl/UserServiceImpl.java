@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,74 +73,26 @@ public class UserServiceImpl implements UserService {
 		return this.userRepository.save(u);
 	}
 
-	public Page<AdminUserList> getUsers(Pageable pageable, String firstName, String lastName,
-										String email, Integer minPosts, Integer maxPosts) {
-		System.out.println("Page request: " + pageable);
+	public Page<User> probaPaginacije(PaginationRequest p) {
+		// Set up the Pageable with sorting information
+		Pageable pageable = PageRequest.of(
+				p.getPage(),
+				p.getSize(),
+				"desc".equalsIgnoreCase(p.getSortDirection())
+						? Sort.by(p.getSortBy()).descending()
+						: Sort.by(p.getSortBy()).ascending()
+		);
 
-		// Check if page size or page number is being passed correctly
-		if (pageable.getPageNumber() < 0 || pageable.getPageSize() <= 0) {
-			throw new IllegalArgumentException("Invalid page or size");
-		}
-
-		Page<User> users = userRepository.findAllByFirstNameAndLastNameAndEmail(firstName, lastName, email, pageable);
-		System.out.println("MIKA JE LEPA");
-		System.out.println(users.getTotalElements());
-
-		// Use the mapper to convert each User in the Page<User> to AdminUserList
-		Page<AdminUserList> adminUserListPage = users.map(this::toAdminUserList);
-
-		for (AdminUserList adminUserList : adminUserListPage) {
-			System.out.println(adminUserList.getEmail());
-		}
-		System.out.println("Obecavam");
-
-		return adminUserListPage;
+		// Query the database with the filtered parameters
+		return userRepository.findAllWithFilters(
+				p.getFirstName(),
+				p.getLastName(),
+				p.getEmail(),
+				p.getMinPosts(),
+				p.getMaxPosts(),
+				pageable
+		);
 	}
-	public AdminUserList toAdminUserList(User user) {
-		AdminUserList adminUserList = new AdminUserList();
-		adminUserList.setEmail(user.getEmail());
-		adminUserList.setFirstname(user.getFirstName());
-		adminUserList.setLastname(user.getLastName());
-		adminUserList.setNumberOfPosts(user.getNumberOfPosts());
-		adminUserList.setNumberOfFollowing(user.getNumberOfFollowing());
-		adminUserList.setId(user.getId());
-		return adminUserList;
-	}
-
-	public List<User> getFilteredUsers(PaginationRequest p) {
-
-		// Fetch all users
-		List<User> users = userRepository.findAll();
-
-		// Filter users based on criteria
-		List<User> filteredUsers = users.stream()
-				.filter(user -> user.getFirstName().toLowerCase().contains(p.getFirstName().toLowerCase()))
-				.filter(user -> user.getLastName().toLowerCase().contains(p.getLastName().toLowerCase()))
-				.filter(user -> user.getEmail().toLowerCase().contains(p.getEmail().toLowerCase()))
-				.filter(user -> (p.getMinPosts() == null || user.getNumberOfPosts() >= p.getMinPosts()))
-				.filter(user -> (p.getMaxPosts() == null || user.getNumberOfPosts() <= p.getMaxPosts()))
-				.collect(Collectors.toList());
-
-		// Sort users based on sortBy and sortOrder
-		Comparator<User> comparator;
-		if ("numberOfFollowing".equalsIgnoreCase(p.getSortBy())) {
-			comparator = Comparator.comparing(User::getNumberOfFollowing);
-		} else {
-			comparator = Comparator.comparing(User::getEmail);
-		}
-
-		if ("desc".equalsIgnoreCase(p.getSortDirection())) {
-			comparator = comparator.reversed();
-		}
-
-		filteredUsers.sort(comparator);
-
-		return filteredUsers;
-	}
-
-
-
-
 
 
 }
