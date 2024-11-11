@@ -8,6 +8,8 @@ import { PostService } from '../service/post.service';
   styleUrls: ['./post.component.css']
 })
 export class PostComponent {
+  coordinates: { latitude: number, longitude: number } | undefined;
+
   postForm: FormGroup;
   selectedFile: File | null = null;
 
@@ -60,4 +62,11 @@ export class PostComponent {
     );
   }
 
+  getCords(coordinates: { latitude: number, longitude: number }) {
+    this.postForm.patchValue({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    });
+    console.log('Received coordinates:', this.postForm.get('latitude')?.value, this.postForm.get('longitude')?.value);
+  }
 }
