@@ -7,13 +7,6 @@
       </div>
   
       <div class="form-group">
-        <label for="longitude">longitude:</label>
-        <input type="number" id="longitude" formControlName="longitude" class="form-control" required>
-        <label for="latitude">latitude:</label>
-        <input type="number" id="latitude" formControlName="latitude" class="form-control" required>
-      </div>
-  
-      <div class="form-group">
         <label for="image">Upload Image:</label>
         <input type="file" id="image" (change)="onFileSelected($event)" accept="image/*" class="form-control" required>
       </div>
@@ -21,4 +14,5 @@
       <button type="submit" class="btn btn-primary">Create Post</button>
     </form>
   </div>
+  <app-map (coordinatesExported)="getCords($event)"></app-map>
   
