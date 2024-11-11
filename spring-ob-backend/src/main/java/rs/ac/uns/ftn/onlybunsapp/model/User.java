@@ -50,6 +50,9 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "enabled")
     private boolean enabled;
 
@@ -86,6 +89,14 @@ public class User implements UserDetails {
         Timestamp now = new Timestamp(new Date().getTime());
         this.setLastPasswordResetDate(now);
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getFirstName() {

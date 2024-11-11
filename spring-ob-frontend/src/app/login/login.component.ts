@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.form = this.formBuilder.group({
-      username: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)])],
+      email: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(32)])]
     });
   }
@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
         error => {
           console.log(error);
           this.submitted = false;
-          this.notification = {msgType: 'error', msgBody: 'Incorrect username or password.'};
+          this.notification = {msgType: 'error', msgBody: 'Incorrect email or password.'};
         });
   }
 
