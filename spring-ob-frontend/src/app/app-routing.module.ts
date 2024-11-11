@@ -25,6 +25,7 @@ const routes: Routes = [
     path: 'post',
     component: PostComponent,
   },
+  {
     path: 'activate-account',
     component: ActivateAccountComponent,
   },

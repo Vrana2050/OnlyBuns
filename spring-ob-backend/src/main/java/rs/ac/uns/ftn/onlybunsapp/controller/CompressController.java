@@ -20,7 +20,7 @@ public class CompressController {
     @Autowired
     private ImageService imageService;
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void CompressImagesDaily() {
         try {
             List<String> imagesPaths = imageService.getAllUncompressedImagePaths();

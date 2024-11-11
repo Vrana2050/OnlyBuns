@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ImageServiceImpl implements ImageService {
-    String UPLOAD_DIR = System.getProperty("user.home") + File.separator + "Desktop" + File.separator +"OnlyBuns" + File.separator +"spring-ob-backend"+ File.separator + "uploads";
 
+    String UPLOAD_DIR = Paths.get("uploads").toString();
 
     @Override
     public String saveImage(MultipartFile image, String username) {
