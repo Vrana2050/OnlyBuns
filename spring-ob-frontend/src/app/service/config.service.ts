@@ -11,9 +11,14 @@ export class ConfigService {
   private _user_url = this._api_url + '/user';
 
   private _login_url = this._auth_url + '/login';
+  private _activate_account_url = 'http://localhost:8082/account/activate/';
 
   get login_url(): string {
     return this._login_url;
+  }
+
+  get activate_account_url(): string {
+    return this._activate_account_url;
   }
 
   private _whoami_url = this._api_url + '/whoami';
