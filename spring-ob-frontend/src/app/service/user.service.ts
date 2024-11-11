@@ -1,7 +1,10 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from './api.service';
 import {ConfigService} from './config.service';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { User } from '../model/user.model';
+import { HttpParams, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +30,38 @@ export class UserService {
   getAll() {
     return this.apiService.get(this.config.users_url);
   }
+
+  getFilteredUsers(filter: any): Observable<User[]> {
+    return this.apiService.post('http://localhost:8082/api/user/allUsersFiltered', filter).pipe(
+      map((response: HttpResponse<User[]>) => response.body || []) 
+    );
+  }
+  
+  
+  
+  getUsers(page: number, pageSize: number, filters: any, sortBy: string, sortDirection: string): Observable<any> {
+    const requestBody = {
+      page: page,
+      size: pageSize,
+      sortBy: sortBy,
+      sortDirection: sortDirection,
+      firstName: filters.firstName,
+      lastName: filters.lastName,
+      email: filters.email,
+      minPosts: filters.minPosts,
+      maxPosts: filters.maxPosts
+    };
+
+    console.log('Request Body:', requestBody);  // Log request body
+
+    return this.apiService.post('http://localhost:8082/api/user/allUsers', requestBody)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching users:', error);
+          return throwError(error);  // Handle error appropriately
+        })
+      );
+}
+  
 
 }

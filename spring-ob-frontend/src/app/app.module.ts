@@ -22,6 +22,7 @@ import {ConfigService} from './service/config.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
+import { AdminUserListComponent } from './admin-user-list/admin-user-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +31,7 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
     HeaderComponent,
     LoginComponent,
     SignUpComponent,
+    AdminUserListComponent,
    
   ],
   imports: [
