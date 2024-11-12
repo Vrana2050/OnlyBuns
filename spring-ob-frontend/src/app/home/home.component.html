@@ -7,9 +7,14 @@
   <body>
     <div class="side-menu" *ngIf="hasSignedIn()">
       <ul>
+        <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Feed</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Trending</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Nearby Posts</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Inbox</a></li>
+        <li [routerLink]="['post']"><a><i class="fas fa-user"></i>Post</a></li>
         <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
         <li><a (click)="navigateToProfile()"><i class="fas fa-user"></i> Profile</a></li>
-
       </ul>
     </div>
 
@@ -114,13 +119,6 @@
         </div>
       </div>
     </div>
-
-
-
-
-    
-
-    <!-- Popup for viewing remaining comments of a selected post -->
     <div class="popup-overlay" *ngIf="isPopupVisible">
       <div class="popup-content">
         <div class="popup-close">

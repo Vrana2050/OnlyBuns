@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostService } from '../service/post.service';
 
 @Component({
@@ -15,10 +15,10 @@ export class PostComponent {
 
   constructor(private fb: FormBuilder,private postService: PostService) {
     this.postForm = this.fb.group({
-      description: [''],
-      latitude: 0,
-      longitude: 0,
-    });
+      description: ['', Validators.required], // Ispravljen red
+      latitude: [null],
+      longitude: [null],
+    });    
   }
 
   onFileSelected(event: any): void {
@@ -33,6 +33,15 @@ export class PostComponent {
       alert('Please select an image file!');
       return;
     }
+    if(this.postForm.get('latitude')?.value == null || this.postForm.get('longitude')?.value == null){
+      alert('Please select location!');
+      return;
+    }
+    if(this.postForm.invalid){
+      alert('Please fill form!');
+      return;
+    }
+
 
     const formData = new FormData();
 
@@ -48,9 +57,6 @@ export class PostComponent {
     // Dodavanje JSON i slike u FormData
     formData.append('postDto', new Blob([JSON.stringify(postDto)], { type: 'application/json' }));
     formData.append('image', this.selectedFile);
-    console.log(postDto);
-    console.log(this.selectedFile)
-    console.log(formData)
 
     this.postService.createPost(formData).subscribe(
       (response :any) => {
