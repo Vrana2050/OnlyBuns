@@ -45,3 +45,21 @@
     color: #FFFFFF;
   }
   
+  .thank-you-for-joining {
+    font-family: SpaceGrotesk, sans-serif;
+    color: rgb(68, 217, 30);
+  }
+
+  .email-soon{
+    font-family: SpaceGrotesk, sans-serif;
+  }
+
+  .thank-you-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    width: 100%;
+  } 

@@ -16,4 +16,8 @@ public interface UserService {
 	User save(UserRequest userRequest);
 
     public Page<User> probaPaginacije(PaginationRequest p);
+    User update(User updatedUser);
+    boolean activateUser(long userId);
+    User findByEmail(String email);
+
 }

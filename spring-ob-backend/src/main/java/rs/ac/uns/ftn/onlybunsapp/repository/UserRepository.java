@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.onlybunsapp.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
 
+
     @Query("SELECT u FROM User u WHERE " +
             "(:firstName IS NULL OR LOWER(u.firstName) LIKE LOWER(CONCAT('%', :firstName, '%'))) AND " +
             "(:lastName IS NULL OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :lastName, '%'))) AND " +
@@ -25,6 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                   @Param("minPosts") Integer minPosts,
                                   @Param("maxPosts") Integer maxPosts,
                                   Pageable pageable);
+
+
+    User findByEmail(String email);
 
 }
 

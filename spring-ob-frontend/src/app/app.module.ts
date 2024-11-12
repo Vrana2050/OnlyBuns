@@ -23,6 +23,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { AdminUserListComponent } from './admin-user-list/admin-user-list.component';
+import { PostComponent } from './post/post.component';
+import { MapComponent } from './shared/map/map.component';
+import { ActivateAccountComponent } from './activate-account/activate-account.component';
+import { SuccessfullyActivatedComponent } from './successfully-activated/successfully-activated.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +36,10 @@ import { AdminUserListComponent } from './admin-user-list/admin-user-list.compon
     LoginComponent,
     SignUpComponent,
     AdminUserListComponent,
-   
+    PostComponent,
+    MapComponent,
+    ActivateAccountComponent,
+    SuccessfullyActivatedComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +48,7 @@ import { AdminUserListComponent } from './admin-user-list/admin-user-list.compon
     NoopAnimationsModule,
     AngularMaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [ 
     {

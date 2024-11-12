@@ -24,6 +24,7 @@ import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.repository.UserRepository;
 import rs.ac.uns.ftn.onlybunsapp.service.RoleService;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
+import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
 
 
@@ -63,8 +64,9 @@ public class UserServiceImpl implements UserService {
 		
 		u.setFirstName(userRequest.getFirstname());
 		u.setLastName(userRequest.getLastname());
-		u.setEnabled(true);
+		u.setEnabled(false);
 		u.setEmail(userRequest.getEmail());
+		u.setAddress(userRequest.getAddress());
 
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
 		List<Role> roles = roleService.findByName("ROLE_USER");
@@ -72,6 +74,7 @@ public class UserServiceImpl implements UserService {
 		
 		return this.userRepository.save(u);
 	}
+
 
 	public Page<User> probaPaginacije(PaginationRequest p) {
 		// Set up the Pageable with sorting information
@@ -92,6 +95,28 @@ public class UserServiceImpl implements UserService {
 				p.getMaxPosts(),
 				pageable
 		);
+
+
+	public User update(User updatedUser)throws AccessDeniedException {
+		if(userRepository.findById(updatedUser.getId()).isPresent()){
+			return this.userRepository.save(updatedUser);
+		}
+		return null;
+	}
+
+	public boolean activateUser(long userId){
+		User user = userRepository.findById(userId).orElse(null);
+		if(user != null){
+			user.setEnabled(true);
+			return update(user) != null;
+		}
+		return false;
+	}
+
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+
 	}
 
 

@@ -4,6 +4,9 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { AdminUserListComponent } from './admin-user-list/admin-user-list.component';
+import { PostComponent } from './post/post.component';
+import { ActivateAccountComponent } from './activate-account/activate-account.component';
+import { SuccessfullyActivatedComponent } from './successfully-activated/successfully-activated.component';
 
 const routes: Routes = [
   {
@@ -22,6 +25,19 @@ const routes: Routes = [
   {
     path: 'admin-user-list',
     component: AdminUserListComponent,
+  },
+  {
+    path: 'post',
+    component: PostComponent,
+  },
+  {
+    path: 'activate-account',
+    component: ActivateAccountComponent,
+  },
+  {
+    path: 'successfully-activated',
+    component: SuccessfullyActivatedComponent,
+
   },
 ];
 
