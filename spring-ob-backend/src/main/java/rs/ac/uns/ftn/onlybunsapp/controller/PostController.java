@@ -50,6 +50,15 @@ public class PostController {
     }
 
 
+    @GetMapping(value="/getAllSortedByTime")
+    public List<PostReadDto> getAllSortedByTime() {
+        List<PostReadDto> unsortedPosts = this.postService.getAll();
+
+
+
+        return this.postService.getAll();
+    }
+
 
 
 }

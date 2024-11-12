@@ -8,4 +8,5 @@ import java.util.List;
 public interface ImageService {
     public String saveImage(MultipartFile file,String username);
     public List<String> getAllUncompressedImagePaths() throws IOException;
+    public String toImageBase64(String folderPath);
 }
