@@ -17,10 +17,13 @@ export class HeaderComponent implements OnInit {
   hasSignedIn() {
     return !!this.userService.currentUser;
   }
+  IsUserAdmin() {
+    return this.userService.currentUser?.roles.some(r=>r.name==='ROLE_ADMIN');
+  }
 
   userName() {
     const user = this.userService.currentUser;
-    return user.firstName + ' ' + user.lastName;
+    return user?.firstName + ' ' + user?.lastName;
   }
   logout() {
     this.authService.logout();

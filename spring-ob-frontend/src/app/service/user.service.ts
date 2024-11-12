@@ -12,7 +12,7 @@ import { Page } from '../model/page.model';
 })
 export class UserService {
 
-  currentUser!:any;
+  currentUser!:User | null;
 
   constructor(
     private apiService: ApiService,
