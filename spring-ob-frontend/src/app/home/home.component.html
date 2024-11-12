@@ -8,12 +8,13 @@
     <div class="side-menu">
       <ul>
         <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a (click)="navigateToProfile()"><i class="fas fa-user"></i> Profile</a></li>
+
       </ul>
     </div>
 
     <div class="feed" *ngIf="hasSignedIn()">
-      <div class="post" *ngFor="let post of posts">
+      <div class="post" *ngFor="let post of posts; let i = index" class="post">
         <div class="post-header">
           <img [src]=" 'https://via.placeholder.com/40'" alt="User">
           <div class="user-info">
@@ -27,7 +28,23 @@
         </div>
         <div class="post-description">{{ post.description }}</div>
         <div class="post-interactions">
-          ❤️ {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
+          <!-- Heart-shaped Like Button -->
+          <button 
+            class="like-button" 
+            (click)="toggleLike(i)">
+            <svg 
+              [attr.fill]="post.likes ? 'red' : 'none'" 
+              stroke="red" 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              width="24" 
+              height="24">
+              <path 
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.42 3.42 5 5.5 5c1.54 0 3.04.99 3.57 2.36h.87C14.46 5.99 15.96 5 17.5 5 19.58 5 21 6.42 21 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z">
+              </path>
+            </svg>
+          </button>
+          {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
         </div>
         
         <div class="comments-section">
@@ -61,8 +78,25 @@
         <div class="post-description">{{ post.description }}</div>
         
         <div class="post-interactions">
-          ❤️ {{ post.likes }} Likes • 💬 {{ post.numOfComments }} Comments
+          <!-- Heart-shaped Like Button -->
+          <button 
+            class="like-button" 
+            (click)="toggleLike(i)">
+            <svg 
+              [attr.fill]="post.likes ? 'red' : 'none'" 
+              stroke="red" 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              width="24" 
+              height="24">
+              <path 
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.42 3.42 5 5.5 5c1.54 0 3.04.99 3.57 2.36h.87C14.46 5.99 15.96 5 17.5 5 19.58 5 21 6.42 21 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z">
+              </path>
+            </svg>
+          </button>
+          {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
         </div>
+
         
         <div class="comments-section">
           <!-- Display the first two comments in the main feed -->
@@ -75,7 +109,7 @@
           
           <div class="comment-input">
             <input type="text" placeholder="Add a comment...">
-            <button>Post</button>
+            <button (click)="hasSignedIn() ? null : openLoginModal()">Post</button>
           </div>
         </div>
       </div>
@@ -107,6 +141,16 @@
             <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
           </div>
         </div>
+      </div>
+    </div>
+    <div class="popup-overlay" *ngIf="showLoginModal">
+      <div class="popup-content">
+        <div class="popup-close">
+          <button (click)="closeLoginModal()">✖</button>
+        </div>
+  
+        <h3>You have to be logged in to comment.</h3>
+  
       </div>
     </div>
   </body>

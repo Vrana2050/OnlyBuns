@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostService } from '../service/post.service';
 import { PostReadDto } from '../model/postRead.model';
 import { UserService } from '../service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,12 +14,13 @@ export class HomeComponent implements OnInit {
   posts: PostReadDto[] = [];
   postsNotSignedIn : PostReadDto[] = [];
   selectedPostIndex: number | null = null;
+  showLoginModal: boolean = false;
 
   hasSignedIn() {
     return !!this.userService.currentUser;
   }
 
-  constructor(private postService: PostService, private userService : UserService) { }
+  constructor(private postService: PostService, private userService : UserService,private router: Router) { }
 
   ngOnInit() {
 
@@ -32,6 +34,33 @@ export class HomeComponent implements OnInit {
       console.log(response)
     });
   }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
+  toggleLike(index: number) {
+    const post = this.posts[index];
+    /*
+    post.likedByCurrentUser = !post.likes;
+  
+    if (post.likedByCurrentUser) {
+      post.likes += 1; // Increment likes
+      this.postService.likePost(post.id).subscribe();
+    } else {
+      post.likes -= 1; // Decrement likes
+      this.postService.unlikePost(post.id).subscribe();
+    }*/
+  }
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  // Method to close login modal
+  closeLoginModal(): void {
+    this.showLoginModal = false;
+  }
+
 
 
 

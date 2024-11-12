@@ -7,6 +7,7 @@ import { AdminUserListComponent } from './admin-user-list/admin-user-list.compon
 import { PostComponent } from './post/post.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { SuccessfullyActivatedComponent } from './successfully-activated/successfully-activated.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,11 @@ const routes: Routes = [
   {
     path: 'successfully-activated',
     component: SuccessfullyActivatedComponent,
+
+  },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
 
   },
 ];
