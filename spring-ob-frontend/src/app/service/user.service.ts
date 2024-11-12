@@ -11,8 +11,7 @@ import { Page } from '../model/page.model';
   providedIn: 'root'
 })
 export class UserService {
-
-  currentUser!:any;
+  currentUser!:User | null;
   isUserLoggedIn: boolean = false;
 
   constructor(

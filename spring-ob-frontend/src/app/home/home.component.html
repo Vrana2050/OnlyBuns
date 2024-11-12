@@ -6,10 +6,15 @@
   </head>
   <body>
     <div class="side-menu">
-      <ul>
+        <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Profile</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Feed</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Trending</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Nearby Posts</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Inbox</a></li>
+        <li [routerLink]="['post']"><a><i class="fas fa-user"></i>Post</a></li>
         <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
         <li><a (click)="navigateToProfile()"><i class="fas fa-user"></i> Profile</a></li>
-
       </ul>
     </div>
 
