@@ -64,14 +64,6 @@ export class HomeComponent implements OnInit {
   }
 
 
-
-
-
-  openPopup(post : PostReadDto): void {
-    this.selectedPostIndex = index;
-    this.isPopupVisible = true;
-  }
-
   lookAtProfile(userId: number) {
     this.router.navigate(['/other-user-profile'], { queryParams: { userId: userId } });
   }
