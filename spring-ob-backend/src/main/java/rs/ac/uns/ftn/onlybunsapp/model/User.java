@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.onlybunsapp.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +51,9 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "enabled")
     private boolean enabled;
 
@@ -61,6 +65,9 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
+
+    @ManyToMany(mappedBy = "likedBy")
+    private List<Post> likedPosts;
 
     public Long getId() {
         return id;
@@ -86,6 +93,14 @@ public class User implements UserDetails {
         Timestamp now = new Timestamp(new Date().getTime());
         this.setLastPasswordResetDate(now);
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getFirstName() {

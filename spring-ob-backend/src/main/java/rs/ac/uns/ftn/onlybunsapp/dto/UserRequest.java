@@ -15,6 +15,8 @@ public class UserRequest {
 	
 	private String email;
 
+	private String address;
+
 	public String getUsername() {
 		return username;
 	}
@@ -61,6 +63,14 @@ public class UserRequest {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 }
