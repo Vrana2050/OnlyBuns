@@ -50,6 +50,7 @@ public class PostServiceImpl implements PostService {
             for(Comment comment : post.getComments()){
                 postReadDto.comments.add(commentMapper.toCommentReadDto(comment));
             }
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
             postReadDtos.add(postReadDto);
         }
         return postReadDtos;
@@ -95,6 +96,7 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+
     @Override
     public List<PostReadDto> getAllSortedByDate() {
         List<PostReadDto> unsortedPosts = getAll();
@@ -102,4 +104,54 @@ public class PostServiceImpl implements PostService {
 
         return new ArrayList<>(unsortedPosts);
     }
+
+    public List<PostReadDto> getPostsFromFollowingUsers(User user) {
+
+        List<User> followingUsers = user.getFollowing();
+
+        if (followingUsers.isEmpty()) {
+            return List.of();
+        }
+        List<Post> posts = postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseOrderByPostDateDesc(followingUsers);
+
+        List<PostReadDto> postReadDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostReadDto postReadDto = postMapper.toPostReadDto(post);
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+            postReadDtos.add(postReadDto);
+        }
+        return postReadDtos;
+    }
+
+    @Override
+    public Boolean delete(User user, long postId) {
+        Post post = postRepository.getById(postId);
+        if(post.getCreator().getId() != user.getId()){
+            return false;
+        }
+        postRepository.delete(post);
+        return true;
+    }
+
+    public List<PostReadDto> getPostsForUser(User user) {
+        List<Post> posts = postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
+        List<PostReadDto> postReadDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostReadDto postReadDto = postMapper.toPostReadDto(post);
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+            postReadDtos.add(postReadDto);
+        }
+        return postReadDtos;
+    }
+
+    public PostReadDto editDescription(User user, long postId, String newDescription) {
+        Post post = postRepository.findById(postId);
+        post.setDescription(newDescription);
+        postRepository.save(post);
+        PostReadDto postReadDto = postMapper.toPostReadDto(post);
+        postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+        return postReadDto;
+    }
+
+
 }

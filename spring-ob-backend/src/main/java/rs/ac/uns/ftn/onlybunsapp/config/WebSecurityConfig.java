@@ -90,6 +90,8 @@ public class WebSecurityConfig {
 			.antMatchers("/api/foo").permitAll()
 				.antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()// /api/foo
 			.antMatchers("/account/**").permitAll()// /api/foo
+				.antMatchers("/api/posts/getAllSortedByTime").permitAll()
+				.antMatchers("/api/getById/**").permitAll()
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
 			// koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
 			// samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:

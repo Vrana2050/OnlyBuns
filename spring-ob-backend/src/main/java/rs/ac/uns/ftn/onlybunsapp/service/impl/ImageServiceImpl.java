@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
             String imagePath = postDir + File.separator + generateUniqueFileName(image.getOriginalFilename());
 
             File imageFile = new File(imagePath);
-            image.transferTo(imageFile);
+            image.transferTo(imageFile.getAbsoluteFile());
 
             return postDir;
         } catch (IOException e) {
@@ -75,6 +75,7 @@ public class ImageServiceImpl implements ImageService {
             // Assuming there's only one image in the specified folder
             File folder = new File(folderPath);
             File[] files = folder.listFiles();
+            System.out.println(folderPath);
 
             if (files == null || files.length == 0) {
                 return ""; // No image file found in the folder
