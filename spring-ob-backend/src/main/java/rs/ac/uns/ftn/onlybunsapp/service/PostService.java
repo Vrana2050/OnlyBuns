@@ -11,4 +11,6 @@ public interface PostService {
     public PostReadDto create(PostCreateDto postDto, User user);
     public Boolean like(User user,long postId);
     public Boolean unlike(User user,long postId);
+    public List<PostReadDto> getAllSortedByDate();
+
 }

@@ -42,6 +42,13 @@ public class Post {
     @Column(name = "likes")
     private long likes;
 
+    @Column(name = "num_of_comments")
+    private int numOfComments;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
     public Post() {}
 
     public void addLike() {
@@ -119,5 +126,21 @@ public class Post {
 
     public void setPostDate(Timestamp postDate) {
         this.postDate = postDate;
+    }
+
+    public int getNumOfComments() {
+        return numOfComments;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setNumOfComments(int numOfComments) {
+        this.numOfComments = numOfComments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
