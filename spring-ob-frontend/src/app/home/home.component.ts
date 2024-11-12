@@ -15,8 +15,7 @@ export class HomeComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   openPopup(): void {
     this.isPopupVisible = true;
@@ -25,5 +24,4 @@ export class HomeComponent implements OnInit {
   closePopup(): void {
     this.isPopupVisible = false; 
   }
-
 }

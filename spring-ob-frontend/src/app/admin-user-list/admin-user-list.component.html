@@ -1,0 +1,72 @@
+<div class="admin-user-list">
+    <h2>Registered Users</h2>
+  
+    <div>
+        <input type="text" [(ngModel)]="filter.firstName" placeholder="Search by First Name" (input)="onSearch()" />
+        <input type="text" [(ngModel)]="filter.lastName" placeholder="Search by Last Name" (input)="onSearch()" />
+        <input type="text" [(ngModel)]="filter.email" placeholder="Search by Email" (input)="onSearch()" />
+        <input type="number" [(ngModel)]="filter.minPosts" placeholder="Min Posts" (input)="onSearch()" />
+        <input type="number" [(ngModel)]="filter.maxPosts" placeholder="Max Posts" (input)="onSearch()" />
+      </div>
+  
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th >First Name</th>
+            <th >Last Name</th>
+            <th (click)="onSort('email')">Email
+                <span class="sort-arrows">
+                  <span [class.active]="filter.sortBy === 'email' && filter.sortDirection === 'asc'" class="arrow-up">&#x2191;</span>
+                  <span [class.active]="filter.sortBy === 'email' && filter.sortDirection === 'desc'" class="arrow-down">&#x2193;</span>
+                </span>
+              </th>
+              <th>Number of Posts</th>
+              <th (click)="onSort('numberOfFollowing')">Following
+                <span class="sort-arrows">
+                  <span [class.active]="filter.sortBy === 'numberOfFollowing' && filter.sortDirection === 'asc'" class="arrow-up">&#x2191;</span>
+                  <span [class.active]="filter.sortBy === 'numberOfFollowing' && filter.sortDirection === 'desc'" class="arrow-down">&#x2193;</span>
+                </span>
+              </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.numberOfPosts }}</td>
+            <td>{{ user.numberOfFollowing }}</td>
+          </tr>
+        </tbody>
+      </table>
+    <div *ngIf="users.length === 0">
+        <p>No users found.</p>
+    </div>
+  
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <!-- Previous Page Button -->
+            <li class="page-item" (click)="previousPage()" [class.disabled]="this.filter.page === 0">
+                <a class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+    
+            <!-- Page Number Links -->
+            <li class="page-item" *ngFor="let page of totalPagesArray" 
+                [class.active]="page === this.filter.page" 
+                (click)="goToPage(page)">
+                <a class="page-link" >{{ page }}</a>
+            </li>
+    
+            <!-- Next Page Button -->
+            <li class="page-item" [class.disabled]="this.filter.page === totalPages - 1">
+                <a class="page-link" aria-label="Next" (click)="nextPage()">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+  </div>
+  
