@@ -9,11 +9,15 @@ INSERT INTO USERS (username, password, first_name, last_name, email, address, en
 INSERT INTO LOCATIONS (longitude, latitude) VALUES (120, 120);
 INSERT INTO LOCATIONS (longitude, latitude) VALUES (90, 89);
 
-INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id) VALUES ('A beautiful sunset over the mountains', '/images/sunset/', 100, 5, '2024-11-12 11:00:00', 1, 1);
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id) VALUES ('A beautiful sunset over the mountains', 'uploads/user/post_0', 0, 4, '2024-11-12 11:00:00', 1, 1);
 
 INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:00:00', 'This sunset is stunning!', 1, 1);
 
 INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:05:00', 'Amazing view! Where is this?', 1, 1);
+
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:05:00', 'Such a cute little potato!', 1, 1);
+
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:05:00', 'Rabbit just pissed on me', 1, 1);
 
 
 INSERT INTO ROLE (name) VALUES ('ROLE_USER');

@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FooService} from '../service/foo.service';
-import {UserService} from '../service/user.service';
-import {ConfigService} from '../service/config.service';
-import {Router} from '@angular/router';
 import { PostService } from '../service/post.service';
 import { PostReadDto } from '../model/postRead.model';
+import { UserService } from '../service';
 
 @Component({
   selector: 'app-home',
@@ -12,27 +9,31 @@ import { PostReadDto } from '../model/postRead.model';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
   isPopupVisible: boolean = false;
+  posts: PostReadDto[] = [];
+  selectedPostIndex: number | null = null;
 
-  posts : PostReadDto[] = [];
+  hasSignedIn() {
+    return !!this.userService.currentUser;
+  }
 
-  constructor(private postService : PostService) { }
+  constructor(private postService: PostService, private userService : UserService) { }
 
   ngOnInit() {
+    
     this.postService.getAllPostsDescByDate().subscribe((response) => {
       this.posts = response;
       console.log(response);
     });
+  }
 
-
-   }
-
-  openPopup(): void {
+  openPopup(index: number): void {
+    this.selectedPostIndex = index;
     this.isPopupVisible = true;
   }
 
   closePopup(): void {
-    this.isPopupVisible = false; 
+    this.isPopupVisible = false;
+    this.selectedPostIndex = null;
   }
 }

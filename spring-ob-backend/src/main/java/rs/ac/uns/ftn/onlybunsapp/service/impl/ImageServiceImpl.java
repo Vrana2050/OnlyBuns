@@ -75,6 +75,7 @@ public class ImageServiceImpl implements ImageService {
             // Assuming there's only one image in the specified folder
             File folder = new File(folderPath);
             File[] files = folder.listFiles();
+            System.out.println(folderPath);
 
             if (files == null || files.length == 0) {
                 return ""; // No image file found in the folder
