@@ -22,6 +22,7 @@ import {ConfigService} from './service/config.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/TokenInterceptor';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
+import { AdminUserListComponent } from './admin-user-list/admin-user-list.component';
 import { PostComponent } from './post/post.component';
 import { MapComponent } from './shared/map/map.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
@@ -34,6 +35,7 @@ import { SuccessfullyActivatedComponent } from './successfully-activated/success
     HeaderComponent,
     LoginComponent,
     SignUpComponent,
+    AdminUserListComponent,
     PostComponent,
     MapComponent,
     ActivateAccountComponent,

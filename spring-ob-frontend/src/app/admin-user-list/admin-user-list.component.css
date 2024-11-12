@@ -1,0 +1,99 @@
+.admin-user-list {
+    width: 80%;
+    margin: auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #0056b3;
+    font-size: 24px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .filters input {
+    width: 22%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    
+  }
+  
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    cursor: pointer;
+    background-color: #f2f2f2;
+    color: #0056b3;
+  }
+  
+  tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .pagination {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    background-color: #0056b3;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .sort-arrows {
+    display: inline-block;
+    margin-left: 5px;
+  }
+  
+  .arrow-up, .arrow-down {
+    cursor: pointer;
+    font-size: 16px;
+    color: #bbb;
+    transition: color 0.3s ease;
+  }
+  
+  .arrow-up:hover, .arrow-down:hover {
+    color: #007bff; /* Change color on hover */
+  }
+  
+  .arrow-up.active, .arrow-down.active {
+    color: #007bff; /* Active arrow color when sorted */
+  }
+  
+  .arrow-up {
+    margin-right: 5px; /* Space between arrows */
+  }
+  
+  .arrow-down {
+    margin-left: 5px; /* Space between arrows */
+  }
+  
+  
