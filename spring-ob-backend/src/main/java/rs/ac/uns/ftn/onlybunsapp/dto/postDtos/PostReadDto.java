@@ -14,7 +14,25 @@ public class PostReadDto {
     public long likes;
     public int numOfComments;
     public String imageBase64;
+    public boolean isDeleted;
+    public boolean isRestricted;
     public List<CommentReadDto> comments;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean isRestricted() {
+        return isRestricted;
+    }
+
+    public void setRestricted(boolean restricted) {
+        isRestricted = restricted;
+    }
 
     public long getId() {
         return id;

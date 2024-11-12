@@ -13,6 +13,7 @@ import { Page } from '../model/page.model';
 export class UserService {
 
   currentUser!:any;
+  isUserLoggedIn: boolean = false;
 
   constructor(
     private apiService: ApiService,
@@ -24,8 +25,10 @@ export class UserService {
     return this.apiService.get(this.config.whoami_url)
       .pipe(map(user => {
         this.currentUser = user;
+        this.isUserLoggedIn = true;
         return user;
       }));
+      
   }
 
   getAll() {
@@ -36,6 +39,10 @@ export class UserService {
     return this.apiService.post('http://localhost:8082/api/user/allUsersFiltered', filter).pipe(
       map((response: HttpResponse<Page<User>>) => response.body as Page<User>)
     );
+  }
+
+  getById(id: number | undefined) {
+    return this.apiService.get('http://localhost:8082/api/getById/' + id );
   }
   
   

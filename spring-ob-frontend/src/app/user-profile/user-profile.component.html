@@ -1,0 +1,49 @@
+<div class="profile-page">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-info">
+        <img class="profile-picture" src="https://via.placeholder.com/100" alt="Profile Picture">
+        <div class="profile-details">
+          <h2></h2>
+          <p>"This user has no bio."</p>
+          <div class="stats">
+            <span><strong>{{ posts.length }}</strong> Posts</span>
+            <span><strong>X</strong> Followers</span>
+            <span><strong>Y</strong> Following</span>
+          </div>
+        </div>
+      </div>
+    </div>
+<div *ngIf="posts.length > 0" class="posts-container">
+    <div class="post" *ngFor="let post of posts">
+      <div class="post-header">
+        
+        <span>{{ post.postDate | date: 'short' }}</span>
+      </div>
+  
+      <div class="post-description" *ngIf="editingPostId !== post.id">
+        {{ post.description }}
+        <button (click)="editPost(post)">Edit</button>
+      </div>
+      <div *ngIf="editingPostId === post.id">
+        <textarea [(ngModel)]="newDescription" rows="3"></textarea>
+        <div class="post-actions">
+          <button (click)="saveDescription(post)">Save</button>
+          <button (click)="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+  
+      <div class="post-image">
+        <img [src]="'data:image/png;base64,' + post.imageBase64" alt="Post Image" />
+      </div>
+      <div class="post-interactions">
+        ❤️ {{ post.likes }} Likes • 💬 {{ post.numOfComments }} Comments
+      </div>
+      <button (click)="deletePost(post)" class="delete-btn">Delete</button>
+    </div>
+  </div>
+  
+  <div *ngIf="posts.length === 0">
+    <p>No posts available.</p>
+  </div>
+  

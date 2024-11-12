@@ -16,6 +16,7 @@ import rs.ac.uns.ftn.onlybunsapp.service.PostService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/posts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,13 +58,34 @@ public class PostController {
 
     @GetMapping(value="/getAllSortedByTime")
     public List<PostReadDto> getAllSortedByTime() {
-        List<PostReadDto> unsortedPosts = this.postService.getAll();
-
-
-
-        return this.postService.getAll();
+        return this.postService.getAllSortedByDate();
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PostMapping(value = "/following", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getFollowedPosts(@AuthenticationPrincipal User user) {
+        return postService.getPostsFromFollowingUsers(user);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/delete/{postId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Boolean deletePost(@AuthenticationPrincipal User user, @PathVariable long postId) {
+        return postService.delete(user,postId);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/getPostsOfUser",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getPostsOfUser(@AuthenticationPrincipal User user) {
+        return postService.getPostsForUser(user);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/edit/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostReadDto editPostDescription(@AuthenticationPrincipal User user, @PathVariable long postId, @RequestBody Map<String, String> body) {
+        String newDescription = body.get("description");
+        System.out.println(newDescription);
+        return postService.editDescription(user, postId, newDescription);
+    }
 
 }
