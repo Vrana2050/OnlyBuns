@@ -3,6 +3,8 @@ import {FooService} from '../service/foo.service';
 import {UserService} from '../service/user.service';
 import {ConfigService} from '../service/config.service';
 import {Router} from '@angular/router';
+import { PostService } from '../service/post.service';
+import { PostReadDto } from '../model/postRead.model';
 
 @Component({
   selector: 'app-home',
@@ -13,9 +15,18 @@ export class HomeComponent implements OnInit {
 
   isPopupVisible: boolean = false;
 
-  constructor() { }
+  posts : PostReadDto[] = [];
 
-  ngOnInit() { }
+  constructor(private postService : PostService) { }
+
+  ngOnInit() {
+    this.postService.getAllPostsDescByDate().subscribe((response) => {
+      this.posts = response;
+      console.log(response);
+    });
+
+
+   }
 
   openPopup(): void {
     this.isPopupVisible = true;

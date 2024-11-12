@@ -50,6 +50,7 @@ public class PostServiceImpl implements PostService {
             for(Comment comment : post.getComments()){
                 postReadDto.comments.add(commentMapper.toCommentReadDto(comment));
             }
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
             postReadDtos.add(postReadDto);
         }
         return postReadDtos;
