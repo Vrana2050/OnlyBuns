@@ -9,7 +9,7 @@ import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostReadDto;
 import rs.ac.uns.ftn.onlybunsapp.model.Location;
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 
-@Mapper(componentModel = "spring", uses = {LocationMapper.class})
+@Mapper(componentModel = "spring", uses = {LocationMapper.class, UserMapper.class, CommentMapper.class})
 public interface PostMapper {
     Post toPostDomain(PostCreateDto postDto);
 

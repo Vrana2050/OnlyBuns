@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,6 +67,33 @@ public class ImageServiceImpl implements ImageService {
                 })
                 .map(Path::toString)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toImageBase64(String folderPath) {
+        try {
+            // Assuming there's only one image in the specified folder
+            File folder = new File(folderPath);
+            File[] files = folder.listFiles();
+
+            if (files == null || files.length == 0) {
+                return ""; // No image file found in the folder
+            }
+
+            // Select the first image file found in the folder
+            File imageFile = files[0];
+
+            // Convert image file to byte array
+            byte[] fileContent = Files.readAllBytes(imageFile.toPath());
+
+            // Encode byte array to Base64
+            String base64String = Base64.getEncoder().encodeToString(fileContent);
+
+            return base64String;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ""; // Return an empty string in case of error
+        }
     }
 
     private String generateUniqueFileName(String originalFilename) {

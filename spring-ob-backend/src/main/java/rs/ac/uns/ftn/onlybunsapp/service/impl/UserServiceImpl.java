@@ -1,13 +1,23 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
+import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
 import rs.ac.uns.ftn.onlybunsapp.model.Role;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
@@ -15,6 +25,8 @@ import rs.ac.uns.ftn.onlybunsapp.repository.UserRepository;
 import rs.ac.uns.ftn.onlybunsapp.service.RoleService;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
+
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -38,7 +50,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<User> findAll() throws AccessDeniedException {
-		return userRepository.findAll();
+		return (List<User>) userRepository.findAll();
 	}
 
 	@Override
@@ -64,6 +76,28 @@ public class UserServiceImpl implements UserService {
 	}
 
 
+	public Page<User> probaPaginacije(PaginationRequest p) {
+		// Set up the Pageable with sorting information
+		Pageable pageable = PageRequest.of(
+				p.getPage(),
+				p.getSize(),
+				"desc".equalsIgnoreCase(p.getSortDirection())
+						? Sort.by(p.getSortBy()).descending()
+						: Sort.by(p.getSortBy()).ascending()
+		);
+
+		// Query the database with the filtered parameters
+		return userRepository.findAllWithFilters(
+				p.getFirstName(),
+				p.getLastName(),
+				p.getEmail(),
+				p.getMinPosts(),
+				p.getMaxPosts(),
+				pageable
+		);
+
+	}
+
 	public User update(User updatedUser)throws AccessDeniedException {
 		if(userRepository.findById(updatedUser.getId()).isPresent()){
 			return this.userRepository.save(updatedUser);
@@ -83,6 +117,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
+
 	}
 
 

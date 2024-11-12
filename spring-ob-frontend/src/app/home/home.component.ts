@@ -14,69 +14,17 @@ export class HomeComponent implements OnInit {
   fooResponse = {};
   whoamIResponse = {};
   allUserResponse = {};
-  user!:any;
+  isPopupVisible: boolean = false;
 
-  constructor(
-    private config: ConfigService,
-    private fooService: FooService,
-    private userService: UserService,
-    private router : Router
-  ) {
+  constructor() { }
+
+  ngOnInit() { }
+
+  openPopup(): void {
+    this.isPopupVisible = true;
   }
 
-  ngOnInit() {
-    this.userService.getMyInfo()
-      .subscribe(res => {
-        this.user = res;
-      }
-    );
+  closePopup(): void {
+    this.isPopupVisible = false; 
   }
-
-  makeRequest(path:any) {
-    if (this.config.foo_url.endsWith(path)) {
-      this.fooService.getFoo()
-        .subscribe(res => {
-          this.forgeResonseObj(this.fooResponse, res, path);
-        }, err => {
-          this.forgeResonseObj(this.fooResponse, err, path);
-        });
-    } else if (this.config.whoami_url.endsWith(path)) {
-      this.userService.getMyInfo()
-        .subscribe(res => {
-          this.forgeResonseObj(this.whoamIResponse, res, path);
-        }, err => {
-          this.forgeResonseObj(this.whoamIResponse, err, path);
-        });
-    } else {
-      this.userService.getAll()
-        .subscribe(res => {
-          this.forgeResonseObj(this.allUserResponse, res, path);
-        }, err => {
-          this.forgeResonseObj(this.allUserResponse, err, path);
-        });
-    }
-  }
-
-  forgeResonseObj(obj:any, res:any, path:any) {
-    obj['path'] = path;
-    obj['method'] = 'GET';
-    if (res.ok === false) {
-      // err
-      obj['status'] = res.status;
-      try {
-        obj['body'] = JSON.stringify(JSON.parse(res._body), null, 2);
-      } catch (err) {
-        console.log(res);
-        obj['body'] = res.error.message;
-      }
-    } else {
-      // 200
-      obj['status'] = 200;
-      obj['body'] = JSON.stringify(res, null, 2);
-    }
-  }
-  PublishPost() {
-    this.router.navigate(['/post']);
-  }
-
 }
