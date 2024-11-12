@@ -203,4 +203,11 @@
   .like-button svg[fill="red"] {
     fill: red;
   }
+  .user-info:hover {
+    cursor: pointer; /* Changes the cursor to a hand only on hover */
+  }
+
+  .commenter-profile{
+    cursor: pointer;
+  }
   

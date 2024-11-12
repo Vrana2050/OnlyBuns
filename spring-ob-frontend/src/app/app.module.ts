@@ -28,6 +28,8 @@ import { MapComponent } from './shared/map/map.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { SuccessfullyActivatedComponent } from './successfully-activated/successfully-activated.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,6 +44,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     ActivateAccountComponent,
     SuccessfullyActivatedComponent,
     UserProfileComponent,
+    OtherUserProfileComponent,
   ],
   imports: [
     BrowserModule,

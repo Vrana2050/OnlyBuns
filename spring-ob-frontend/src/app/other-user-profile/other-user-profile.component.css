@@ -1,0 +1,38 @@
+.profile-card {
+    max-width: 350px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin: auto;
+  }
+  
+  .avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .user-info h2 {
+    font-size: 1.5em;
+    margin: 5px 0;
+    color: #333;
+  }
+  
+  .user-info p {
+    font-size: 1em;
+    color: #666;
+  }
+  
+  .user-info p:nth-child(6) {
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+  
+  .user-info p:nth-child(7) {
+    font-size: 1.5em;
+  }
+  
