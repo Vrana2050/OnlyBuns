@@ -28,4 +28,10 @@ export class PostService {
     return this.apiService.get('http://localhost:8082/api/posts/getAllSortedByTime');
   }
 
+  getAllPostsFollowing(){
+    return this.apiService.post('http://localhost:8082/api/posts/following',{}).pipe(
+      map((response: HttpResponse<PostReadDto[]>) => response.body as PostReadDto[])
+    );
+  }
+
 }

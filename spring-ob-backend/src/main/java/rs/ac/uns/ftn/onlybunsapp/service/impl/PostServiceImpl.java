@@ -96,6 +96,7 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+
     @Override
     public List<PostReadDto> getAllSortedByDate() {
         List<PostReadDto> unsortedPosts = getAll();
@@ -103,4 +104,23 @@ public class PostServiceImpl implements PostService {
 
         return new ArrayList<>(unsortedPosts);
     }
+
+    public List<PostReadDto> getPostsFromFollowingUsers(User user) {
+
+        List<User> followingUsers = user.getFollowing();
+
+        if (followingUsers.isEmpty()) {
+            return List.of();
+        }
+        List<Post> posts = postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseOrderByPostDateDesc(followingUsers);
+
+        List<PostReadDto> postReadDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostReadDto postReadDto = postMapper.toPostReadDto(post);
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+            postReadDtos.add(postReadDto);
+        }
+        return postReadDtos;
+    }
+
 }

@@ -12,8 +12,41 @@
       </ul>
     </div>
 
+    <div class="feed" *ngIf="hasSignedIn()">
+      <div class="post" *ngFor="let post of posts">
+        <div class="post-header">
+          <img [src]=" 'https://via.placeholder.com/40'" alt="User">
+          <div class="user-info">
+            <strong>{{ post.creator.username }}</strong>
+            <span>Posted {{ post.postDate  }} in lokacija ovde</span>
+          </div>
+        </div>
+        
+        <div class="post-image">
+          <img [src]="post.imageBase64 || 'https://via.placeholder.com/400x200'" alt="Post Image">
+        </div>
+        <div class="post-description">{{ post.description }}</div>
+        <div class="post-interactions">
+          ❤️ {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
+        </div>
+        
+        <div class="comments-section">
+          <div class="comment" *ngFor="let comment of post.comments.slice(0, 2)">
+            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+          </div>
+          <div class="view-more" (click)="openPopup(post)">View more comments</div>
+          <div class="comment-input">
+            <input type="text" placeholder="Add a comment..." >
+            <button >Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
     <div class="feed" *ngIf="!hasSignedIn()">
-      <div *ngFor="let post of posts; let i = index" class="post">
+      <div *ngFor="let post of postsNotSignedIn; let i = index" class="post">
         <div class="post-header">
           <div class="user-info">
             <strong>{{ post.creator.username }}</strong>
@@ -38,7 +71,7 @@
           </div>
           
           <!-- 'View more comments' button opens popup with remaining comments -->
-          <div class="view-more" (click)="openPopup(i)">View more comments</div>
+          <div class="view-more" (click)="openPopup(post)">View more comments</div>
           
           <div class="comment-input">
             <input type="text" placeholder="Add a comment...">
@@ -47,6 +80,11 @@
         </div>
       </div>
     </div>
+
+
+
+
+    
 
     <!-- Popup for viewing remaining comments of a selected post -->
     <div class="popup-overlay" *ngIf="isPopupVisible">

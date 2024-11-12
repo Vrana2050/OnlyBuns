@@ -11,6 +11,7 @@ import { UserService } from '../service';
 export class HomeComponent implements OnInit {
   isPopupVisible: boolean = false;
   posts: PostReadDto[] = [];
+  postsNotSignedIn : PostReadDto[] = [];
   selectedPostIndex: number | null = null;
 
   hasSignedIn() {
@@ -20,15 +21,21 @@ export class HomeComponent implements OnInit {
   constructor(private postService: PostService, private userService : UserService) { }
 
   ngOnInit() {
-    
+
     this.postService.getAllPostsDescByDate().subscribe((response) => {
-      this.posts = response;
+      this.postsNotSignedIn = response;
       console.log(response);
+    });
+
+    this.postService.getAllPostsFollowing().subscribe((response) => {
+      this.posts = response;
+      console.log(response)
     });
   }
 
-  openPopup(index: number): void {
-    this.selectedPostIndex = index;
+
+
+  openPopup(post : PostReadDto): void {
     this.isPopupVisible = true;
   }
 
@@ -36,4 +43,7 @@ export class HomeComponent implements OnInit {
     this.isPopupVisible = false;
     this.selectedPostIndex = null;
   }
+
 }
+
+

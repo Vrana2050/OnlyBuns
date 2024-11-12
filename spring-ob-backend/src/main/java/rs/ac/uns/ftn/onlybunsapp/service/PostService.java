@@ -13,4 +13,8 @@ public interface PostService {
     public Boolean unlike(User user,long postId);
     public List<PostReadDto> getAllSortedByDate();
 
+
+    List<PostReadDto> getPostsFromFollowingUsers(User user);
+
+
 }

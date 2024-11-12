@@ -56,5 +56,18 @@ public class PostController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PostMapping(value = "/following", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getFollowedPosts(@AuthenticationPrincipal User user) {
+        return postService.getPostsFromFollowingUsers(user);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/delete",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Boolean deletePost(@AuthenticationPrincipal User user, @PathVariable long postId) {
+        return postService.delete(user,postId);
+    }
+
+
 
 }
