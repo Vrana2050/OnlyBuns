@@ -178,3 +178,12 @@
     font-size: 18px;
     cursor: pointer;
   }
+
+  .user-info:hover {
+    cursor: pointer; /* Changes the cursor to a hand only on hover */
+  }
+
+  .commenter-profile{
+    cursor: pointer;
+  }
+  

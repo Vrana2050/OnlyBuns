@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostService } from '../service/post.service';
 import { PostReadDto } from '../model/postRead.model';
 import { UserService } from '../service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,9 @@ export class HomeComponent implements OnInit {
     return !!this.userService.currentUser;
   }
 
-  constructor(private postService: PostService, private userService : UserService) { }
+  constructor(private postService: PostService, private userService : UserService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     
@@ -27,6 +30,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  lookAtProfile(userId: number) {
+    this.router.navigate(['/other-user-profile'], { queryParams: { userId: userId } });
+  }
+  
   openPopup(index: number): void {
     this.selectedPostIndex = index;
     this.isPopupVisible = true;

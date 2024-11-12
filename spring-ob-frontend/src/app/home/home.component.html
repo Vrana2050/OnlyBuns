@@ -16,7 +16,7 @@
       <div *ngFor="let post of posts; let i = index" class="post">
         <div class="post-header">
           <div class="user-info">
-            <strong>{{ post.creator.username }}</strong>
+            <strong (click)="lookAtProfile(post.creator.id)">{{ post.creator.username }} </strong>
             <span>{{ post.postDate | date:'short' }}</span>
           </div>
         </div>
@@ -34,7 +34,7 @@
         <div class="comments-section">
           <!-- Display the first two comments in the main feed -->
           <div *ngFor="let comment of post.comments | slice:0:2" class="comment">
-            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+              <strong class="commenter-profile" (click)="lookAtProfile(comment.creator.id)">{{ comment.creator.username }}:</strong> {{ comment.text }}            
           </div>
           
           <!-- 'View more comments' button opens popup with remaining comments -->
@@ -60,7 +60,7 @@
         <!-- Show only the remaining comments, skipping the first two -->
         <div *ngIf="selectedPostIndex !== null">
           <div *ngFor="let comment of posts[selectedPostIndex].comments | slice:posts[selectedPostIndex].numOfComments" class="comment">
-            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+            <strong (click)="lookAtProfile(comment.creator.id)">{{ comment.creator.username }}:</strong> {{ comment.text }}
           </div>
         </div>
       </div>
