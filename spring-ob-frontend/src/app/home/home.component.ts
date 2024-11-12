@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   fooResponse = {};
   whoamIResponse = {};
   allUserResponse = {};
+  user!:any;
 
   constructor(
     private config: ConfigService,
@@ -24,6 +25,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.getMyInfo()
+      .subscribe(res => {
+        this.user = res;
+      }
+    );
   }
 
   makeRequest(path:any) {

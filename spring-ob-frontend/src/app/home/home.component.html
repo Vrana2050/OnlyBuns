@@ -13,5 +13,5 @@
     fxFlex subTitle="Authorized role: ADMIN" title='"All users"'>
   </app-card>
 
-<button (click)="PublishPost()">Publish post</button>
+<button *ngIf="user" (click)="PublishPost()">Publish post</button>
 </div>
