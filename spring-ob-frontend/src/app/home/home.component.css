@@ -179,6 +179,30 @@
     cursor: pointer;
   }
 
+  .like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .like-button:hover svg {
+    transform: scale(1.1);
+  }
+  
+  .like-button svg {
+    stroke-width: 2;
+    transition: fill 0.3s ease, transform 0.2s ease;
+  }
+  
+  .like-button svg[fill="red"] {
+    fill: red;
+  }
   .user-info:hover {
     cursor: pointer; /* Changes the cursor to a hand only on hover */
   }

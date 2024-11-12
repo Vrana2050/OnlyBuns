@@ -31,6 +31,28 @@ public class Post {
     @Column(name = "post_date")
     private Timestamp postDate;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
+    @Column(name = "is_restricted")
+    private boolean isRestricted;
+
+    public boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public boolean getRestricted() {
+        return isRestricted;
+    }
+
+    public void setRestricted(boolean restricted) {
+        isRestricted = restricted;
+    }
+
     @ManyToMany
     @JoinTable(
             name = "post_user_likes",

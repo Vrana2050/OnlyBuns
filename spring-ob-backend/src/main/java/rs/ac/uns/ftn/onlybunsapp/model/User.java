@@ -88,9 +88,47 @@ public class User implements UserDetails {
     public void setNumberOfPosts(int numberOfPosts) {
         this.numberOfPosts = numberOfPosts;
     }
+    public List<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(List<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public List<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<User> following) {
+        this.following = following;
+    }
+
+    public List<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<User> followers) {
+        this.followers = followers;
+    }
 
     @ManyToMany(mappedBy = "likedBy")
     private List<Post> likedPosts;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "following",
+            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
+    )
+    @JsonIgnore // Prevent serialization
+    private List<User> following;
+
+    @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
+    @JsonIgnore // Prevent serialization
+    private List<User> followers;
+
 
 
     public Long getId() {

@@ -4,6 +4,7 @@ import {ConfigService} from './config.service';
 import {map} from 'rxjs/operators';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { PostReadDto } from '../model/postRead.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,4 +29,31 @@ export class PostService {
     return this.apiService.get('http://localhost:8082/api/posts/getAllSortedByTime');
   }
 
+  getAllPostsFollowing(){
+    return this.apiService.post('http://localhost:8082/api/posts/following',{}).pipe(
+      map((response: HttpResponse<PostReadDto[]>) => response.body as PostReadDto[])
+    );
+  }
+  getAllPostsForUser() : Observable<PostReadDto[]>{
+    return this.apiService.post('http://localhost:8082/api/posts/getPostsOfUser',{}).pipe(
+      map((response: HttpResponse<PostReadDto[]>) => response.body as PostReadDto[])
+    );
+  }
+
+  deletePost(postId: number): Observable<boolean> {
+
+    return this.apiService.post(`http://localhost:8082/api/posts/delete/${postId}`,{}).pipe(
+      map((response: HttpResponse<boolean>) => response.body as boolean)
+    );
+  }
+  editPostDescription(postId: number, newDescription: string): Observable<PostReadDto> {
+    const body = { description: newDescription };
+    return this.apiService.post(
+      `http://localhost:8082/api/posts/edit/${postId}`,
+      body
+    ).pipe(
+      map((response: HttpResponse<PostReadDto>) => response.body as PostReadDto)
+    );
+  }
+  
 }

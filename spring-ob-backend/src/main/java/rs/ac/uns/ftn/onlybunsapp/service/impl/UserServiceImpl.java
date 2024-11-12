@@ -57,11 +57,11 @@ public class UserServiceImpl implements UserService {
 	public User save(UserRequest userRequest) {
 		User u = new User();
 		u.setUsername(userRequest.getUsername());
-		
+
 		// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
 		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
 		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		
+
 		u.setFirstName(userRequest.getFirstname());
 		u.setLastName(userRequest.getLastname());
 		u.setEnabled(false);
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
 		List<Role> roles = roleService.findByName("ROLE_USER");
 		u.setRoles(roles);
-		
+
 		return this.userRepository.save(u);
 	}
 
@@ -98,27 +98,28 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	public User update(User updatedUser)throws AccessDeniedException {
-		if(userRepository.findById(updatedUser.getId()).isPresent()){
-			return this.userRepository.save(updatedUser);
+		public User update (User updatedUser)throws AccessDeniedException {
+			if (userRepository.findById(updatedUser.getId()).isPresent()) {
+				return this.userRepository.save(updatedUser);
+			}
+			return null;
 		}
-		return null;
-	}
 
-	public boolean activateUser(long userId){
-		User user = userRepository.findById(userId).orElse(null);
-		if(user != null){
-			user.setEnabled(true);
-			return update(user) != null;
+		public boolean activateUser ( long userId){
+			User user = userRepository.findById(userId).orElse(null);
+			if (user != null) {
+				user.setEnabled(true);
+				return update(user) != null;
+			}
+			return false;
 		}
-		return false;
+
+		@Override
+		public User findByEmail (String email){
+			return userRepository.findByEmail(email);
+
+		}
+
+
 	}
 
-	@Override
-	public User findByEmail(String email) {
-		return userRepository.findByEmail(email);
-
-	}
-
-
-}

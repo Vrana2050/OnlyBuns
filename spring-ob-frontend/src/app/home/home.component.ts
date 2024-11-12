@@ -12,22 +12,64 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   isPopupVisible: boolean = false;
   posts: PostReadDto[] = [];
+  postsNotSignedIn : PostReadDto[] = [];
   selectedPostIndex: number | null = null;
+  showLoginModal: boolean = false;
 
   hasSignedIn() {
     return !!this.userService.currentUser;
   }
 
-  constructor(private postService: PostService, private userService : UserService,
-    private router: Router
-  ) { }
+
+  constructor(private postService: PostService, private userService : UserService,private router: Router) { }
+
 
   ngOnInit() {
-    
+
     this.postService.getAllPostsDescByDate().subscribe((response) => {
-      this.posts = response;
+      this.postsNotSignedIn = response;
       console.log(response);
     });
+
+    this.postService.getAllPostsFollowing().subscribe((response) => {
+      this.posts = response;
+      console.log(response)
+    });
+  }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
+  toggleLike(index: number) {
+    const post = this.posts[index];
+    /*
+    post.likedByCurrentUser = !post.likes;
+  
+    if (post.likedByCurrentUser) {
+      post.likes += 1; // Increment likes
+      this.postService.likePost(post.id).subscribe();
+    } else {
+      post.likes -= 1; // Decrement likes
+      this.postService.unlikePost(post.id).subscribe();
+    }*/
+  }
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  // Method to close login modal
+  closeLoginModal(): void {
+    this.showLoginModal = false;
+  }
+
+
+
+
+
+  openPopup(post : PostReadDto): void {
+    this.selectedPostIndex = index;
+    this.isPopupVisible = true;
   }
 
   lookAtProfile(userId: number) {
@@ -43,4 +85,7 @@ export class HomeComponent implements OnInit {
     this.isPopupVisible = false;
     this.selectedPostIndex = null;
   }
+
 }
+
+

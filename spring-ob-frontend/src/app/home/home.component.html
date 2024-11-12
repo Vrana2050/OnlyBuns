@@ -8,12 +8,62 @@
     <div class="side-menu">
       <ul>
         <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a (click)="navigateToProfile()"><i class="fas fa-user"></i> Profile</a></li>
+
       </ul>
     </div>
 
+    <div class="feed" *ngIf="hasSignedIn()">
+      <div class="post" *ngFor="let post of posts; let i = index" class="post">
+        <div class="post-header">
+          <img [src]=" 'https://via.placeholder.com/40'" alt="User">
+          <div class="user-info">
+            <strong>{{ post.creator.username }}</strong>
+            <span>Posted {{ post.postDate  }} in lokacija ovde</span>
+          </div>
+        </div>
+        
+        <div class="post-image">
+          <img [src]="'data:image/png;base64,' + post.imageBase64" alt="Post Image">
+        </div>
+        <div class="post-description">{{ post.description }}</div>
+        <div class="post-interactions">
+          <!-- Heart-shaped Like Button -->
+          <button 
+            class="like-button" 
+            (click)="toggleLike(i)">
+            <svg 
+              [attr.fill]="post.likes ? 'red' : 'none'" 
+              stroke="red" 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              width="24" 
+              height="24">
+              <path 
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.42 3.42 5 5.5 5c1.54 0 3.04.99 3.57 2.36h.87C14.46 5.99 15.96 5 17.5 5 19.58 5 21 6.42 21 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z">
+              </path>
+            </svg>
+          </button>
+          {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
+        </div>
+        
+        <div class="comments-section">
+          <div class="comment" *ngFor="let comment of post.comments.slice(0, 2)">
+            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+          </div>
+          <div class="view-more" (click)="openPopup(post)">View more comments</div>
+          <div class="comment-input">
+            <input type="text" placeholder="Add a comment..." >
+            <button >Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
     <div class="feed" *ngIf="!hasSignedIn()">
-      <div *ngFor="let post of posts; let i = index" class="post">
+      <div *ngFor="let post of postsNotSignedIn; let i = index" class="post">
         <div class="post-header">
           <div class="user-info">
             <strong (click)="lookAtProfile(post.creator.id)">{{ post.creator.username }} </strong>
@@ -28,8 +78,25 @@
         <div class="post-description">{{ post.description }}</div>
         
         <div class="post-interactions">
-          ❤️ {{ post.likes }} Likes • 💬 {{ post.numOfComments }} Comments
+          <!-- Heart-shaped Like Button -->
+          <button 
+            class="like-button" 
+            (click)="toggleLike(i)">
+            <svg 
+              [attr.fill]="post.likes ? 'red' : 'none'" 
+              stroke="red" 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              width="24" 
+              height="24">
+              <path 
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.42 3.42 5 5.5 5c1.54 0 3.04.99 3.57 2.36h.87C14.46 5.99 15.96 5 17.5 5 19.58 5 21 6.42 21 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z">
+              </path>
+            </svg>
+          </button>
+          {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
         </div>
+
         
         <div class="comments-section">
           <!-- Display the first two comments in the main feed -->
@@ -38,15 +105,20 @@
           </div>
           
           <!-- 'View more comments' button opens popup with remaining comments -->
-          <div class="view-more" (click)="openPopup(i)">View more comments</div>
+          <div class="view-more" (click)="openPopup(post)">View more comments</div>
           
           <div class="comment-input">
             <input type="text" placeholder="Add a comment...">
-            <button>Post</button>
+            <button (click)="hasSignedIn() ? null : openLoginModal()">Post</button>
           </div>
         </div>
       </div>
     </div>
+
+
+
+
+    
 
     <!-- Popup for viewing remaining comments of a selected post -->
     <div class="popup-overlay" *ngIf="isPopupVisible">
@@ -58,11 +130,27 @@
         <h3>All Comments</h3>
         
         <!-- Show only the remaining comments, skipping the first two -->
-        <div *ngIf="selectedPostIndex !== null">
+        <div *ngIf="selectedPostIndex !== null && hasSignedIn()">
           <div *ngFor="let comment of posts[selectedPostIndex].comments | slice:posts[selectedPostIndex].numOfComments" class="comment">
             <strong (click)="lookAtProfile(comment.creator.id)">{{ comment.creator.username }}:</strong> {{ comment.text }}
           </div>
         </div>
+
+        <div *ngIf="selectedPostIndex !== null && !hasSignedIn()">
+          <div *ngFor="let comment of postsNotSignedIn[selectedPostIndex].comments | slice:postsNotSignedIn[selectedPostIndex].numOfComments" class="comment">
+            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-overlay" *ngIf="showLoginModal">
+      <div class="popup-content">
+        <div class="popup-close">
+          <button (click)="closeLoginModal()">✖</button>
+        </div>
+  
+        <h3>You have to be logged in to comment.</h3>
+  
       </div>
     </div>
   </body>
