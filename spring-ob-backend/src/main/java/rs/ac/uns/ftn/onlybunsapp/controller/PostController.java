@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.onlybunsapp.service.PostService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/posts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,13 +62,25 @@ public class PostController {
     public List<PostReadDto> getFollowedPosts(@AuthenticationPrincipal User user) {
         return postService.getPostsFromFollowingUsers(user);
     }
-    /*
+
     @PreAuthorize("hasRole('USER')")
-    @PostMapping(value = "/delete",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/delete/{postId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean deletePost(@AuthenticationPrincipal User user, @PathVariable long postId) {
         return postService.delete(user,postId);
-    }*/
+    }
 
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/getPostsOfUser",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getPostsOfUser(@AuthenticationPrincipal User user) {
+        return postService.getPostsForUser(user);
+    }
 
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/edit/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostReadDto editPostDescription(@AuthenticationPrincipal User user, @PathVariable long postId, @RequestBody Map<String, String> body) {
+        String newDescription = body.get("description");
+        System.out.println(newDescription);
+        return postService.editDescription(user, postId, newDescription);
+    }
 
 }
