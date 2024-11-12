@@ -23,7 +23,7 @@
         </div>
         
         <div class="post-image">
-          <img [src]="post.imageBase64 || 'https://via.placeholder.com/400x200'" alt="Post Image">
+          <img [src]="'data:image/png;base64,' + post.imageBase64" alt="Post Image">
         </div>
         <div class="post-description">{{ post.description }}</div>
         <div class="post-interactions">
@@ -96,8 +96,14 @@
         <h3>All Comments</h3>
         
         <!-- Show only the remaining comments, skipping the first two -->
-        <div *ngIf="selectedPostIndex !== null">
+        <div *ngIf="selectedPostIndex !== null && hasSignedIn()">
           <div *ngFor="let comment of posts[selectedPostIndex].comments | slice:posts[selectedPostIndex].numOfComments" class="comment">
+            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+          </div>
+        </div>
+
+        <div *ngIf="selectedPostIndex !== null && !hasSignedIn()">
+          <div *ngFor="let comment of postsNotSignedIn[selectedPostIndex].comments | slice:postsNotSignedIn[selectedPostIndex].numOfComments" class="comment">
             <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
           </div>
         </div>
