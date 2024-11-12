@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService {
 				pageable
 		);
 
+	}
 
 	public User update(User updatedUser)throws AccessDeniedException {
 		if(userRepository.findById(updatedUser.getId()).isPresent()){
