@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
             String imagePath = postDir + File.separator + generateUniqueFileName(image.getOriginalFilename());
 
             File imageFile = new File(imagePath);
-            image.transferTo(imageFile);
+            image.transferTo(imageFile.getAbsoluteFile());
 
             return postDir;
         } catch (IOException e) {

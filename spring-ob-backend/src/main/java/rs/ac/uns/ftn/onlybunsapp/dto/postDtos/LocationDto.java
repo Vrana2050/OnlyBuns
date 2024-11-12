@@ -1,8 +1,12 @@
 package rs.ac.uns.ftn.onlybunsapp.dto.postDtos;
 
+import javax.validation.constraints.NotNull;
+
 public class LocationDto {
     public Long id;
+    @NotNull( message = "Latitude is required")
     public double latitude;
+    @NotNull( message = "Longitude is required")
     public double longitude;
 
     public Long getId() {

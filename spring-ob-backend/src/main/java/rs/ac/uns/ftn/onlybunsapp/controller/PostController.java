@@ -1,7 +1,9 @@
 package rs.ac.uns.ftn.onlybunsapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,7 +14,7 @@ import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostReadDto;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.PostService;
 
-import java.security.Principal;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -26,10 +28,13 @@ public class PostController {
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostReadDto createPost(@AuthenticationPrincipal User user, @RequestPart("postDto") PostCreateDto postDto,
+    public ResponseEntity<PostReadDto> createPost(@AuthenticationPrincipal User user, @RequestPart("postDto") PostCreateDto postDto,
                                   @RequestPart("image") MultipartFile image) {
+        if (image == null || image.isEmpty() || postDto.description.isBlank()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         postDto.setImage(image);
-        return this.postService.create(postDto,user);
+        return ResponseEntity.ok().body(this.postService.create(postDto,user));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

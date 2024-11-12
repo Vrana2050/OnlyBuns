@@ -10,6 +10,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  fooResponse = {};
+  whoamIResponse = {};
+  allUserResponse = {};
   isPopupVisible: boolean = false;
   posts: PostReadDto[] = [];
   postsNotSignedIn : PostReadDto[] = [];

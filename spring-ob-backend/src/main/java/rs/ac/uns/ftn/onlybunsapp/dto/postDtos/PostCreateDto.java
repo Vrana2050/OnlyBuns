@@ -2,6 +2,9 @@ package rs.ac.uns.ftn.onlybunsapp.dto.postDtos;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
+
+
 public class PostCreateDto {
     public String description;
     public LocationDto location;

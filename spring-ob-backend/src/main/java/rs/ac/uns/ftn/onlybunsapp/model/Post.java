@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.onlybunsapp.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
