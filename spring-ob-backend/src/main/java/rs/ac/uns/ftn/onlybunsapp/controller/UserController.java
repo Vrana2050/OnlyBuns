@@ -74,4 +74,10 @@ public class UserController {
         fooObj.put("foo", "bar");
         return fooObj;
     }
+
+	@GetMapping("/getById/{userId}")
+	public User getById(@PathVariable Long userId) {
+		return this.userService.findById(userId);
+	}
+
 }
