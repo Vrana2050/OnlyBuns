@@ -49,7 +49,7 @@
               </path>
             </svg>
           </button>
-          {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
+          {{ post.likes }} Likes • 💬 {{ post.numOfComments || 0 }} Comments
         </div>
         
         <div class="comments-section">
@@ -99,7 +99,7 @@
               </path>
             </svg>
           </button>
-          {{ post.likes }} Likes • 💬 {{ post.comments.length || 0 }} Comments
+          {{ post.likes }} Likes • 💬 {{ post.numOfComments || 0 }} Comments
         </div>
 
         
@@ -129,16 +129,17 @@
         
         <!-- Show only the remaining comments, skipping the first two -->
         <div *ngIf="selectedPostIndex !== null && hasSignedIn()">
-          <div *ngFor="let comment of posts[selectedPostIndex].comments | slice:posts[selectedPostIndex].numOfComments" class="comment">
+          <div *ngFor="let comment of posts[selectedPostIndex].comments" class="comment">
             <strong (click)="lookAtProfile(comment.creator.id)">{{ comment.creator.username }}:</strong> {{ comment.text }}
           </div>
         </div>
 
         <div *ngIf="selectedPostIndex !== null && !hasSignedIn()">
-          <div *ngFor="let comment of postsNotSignedIn[selectedPostIndex].comments | slice:postsNotSignedIn[selectedPostIndex].numOfComments" class="comment">
-            <strong>{{ comment.creator.username }}:</strong> {{ comment.text }}
+          <div *ngFor="let comment of postsNotSignedIn[selectedPostIndex].comments" class="comment">
+            <strong (click)="lookAtProfile(comment.creator.id)">{{ comment.creator.username }}:</strong> {{ comment.text }}
           </div>
         </div>
+        
       </div>
     </div>
     <div class="popup-overlay" *ngIf="showLoginModal">

@@ -15,13 +15,29 @@ export class HomeComponent implements OnInit {
   whoamIResponse = {};
   allUserResponse = {};
   isPopupVisible: boolean = false;
-  posts: PostReadDto[] = [];
+  posts: PostReadDto[] = [
+    {
+      id: 0,
+      description: "",
+      postDate: "",
+      creator: {
+        id: 0,
+        username: ""
+      },
+      likes: 0,
+      numOfComments: 0,
+      imageBase64: "",
+      comments: []
+    }
+  ];
+  
+  
   postsNotSignedIn : PostReadDto[] = [];
   selectedPostIndex: number | null = null;
   showLoginModal: boolean = false;
 
   hasSignedIn() {
-    return !!this.userService.currentUser;
+    return !!this.userService.isUserLoggedIn;
   }
 
 
@@ -29,6 +45,9 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
+    this.userService.getMyInfo().subscribe((response) => {
+      console.log(response);
+    });
 
     this.postService.getAllPostsDescByDate().subscribe((response) => {
       this.postsNotSignedIn = response;
@@ -37,6 +56,9 @@ export class HomeComponent implements OnInit {
 
     this.postService.getAllPostsFollowing().subscribe((response) => {
       this.posts = response;
+      console.log("KUREEEEEEEEE");
+      console.log(this.posts[0].comments);
+      console.log("KUREEEEEEEEE" + this.hasSignedIn());
       console.log(response)
     });
   }
