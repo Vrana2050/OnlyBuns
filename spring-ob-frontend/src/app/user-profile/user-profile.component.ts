@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PostService } from '../service/post.service';
 import { PostReadDto } from '../model/postRead.model';
+import { User } from '../model/user.model';
+import { UserService } from '../service';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,12 +13,19 @@ export class UserProfileComponent implements OnInit{
   posts: PostReadDto[] = [];
   editingPostId: number | null = null;
   newDescription: string = '';
+  user: User | null = null;
   
-  constructor(private postService : PostService,private cdr: ChangeDetectorRef){}
+  constructor(private postService : PostService,private userService : UserService){}
 
 
   ngOnInit(): void {
     this.loadPosts();
+    this.userService.getMyInfo().subscribe((response) => {
+      this.user = response;
+      console.log(response);
+    })
+
+    
   }
 
   loadPosts() :void {
@@ -75,5 +84,14 @@ export class UserProfileComponent implements OnInit{
 
   cancelEdit(): void {
     this.editingPostId = null;
+  }
+  selectedPost: any = null;
+
+  openModal(post: any) {
+    this.selectedPost = post;
+  }
+
+  closeModal() {
+    this.selectedPost = null;
   }
 }

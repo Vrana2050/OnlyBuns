@@ -20,4 +20,8 @@ public interface UserService {
     boolean activateUser(long userId);
     User findByEmail(String email);
 
+    public boolean isFollowing(long followerId, long followingId);
+    public void followUser(long followerId, long followingId);
+    public void unfollowUser(long followerId, long followingId);
+
 }
