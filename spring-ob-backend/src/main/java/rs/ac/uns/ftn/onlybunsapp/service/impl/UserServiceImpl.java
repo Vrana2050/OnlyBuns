@@ -1,11 +1,11 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import ch.qos.logback.core.CoreConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +19,16 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
+import rs.ac.uns.ftn.onlybunsapp.model.Post;
+import rs.ac.uns.ftn.onlybunsapp.model.PostUserLike;
 import rs.ac.uns.ftn.onlybunsapp.model.Role;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
+import rs.ac.uns.ftn.onlybunsapp.repository.CommentRepository;
+import rs.ac.uns.ftn.onlybunsapp.repository.LikeRepository;
+import rs.ac.uns.ftn.onlybunsapp.repository.PostRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.UserRepository;
+import rs.ac.uns.ftn.onlybunsapp.service.LikeService;
+import rs.ac.uns.ftn.onlybunsapp.service.PostService;
 import rs.ac.uns.ftn.onlybunsapp.service.RoleService;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
@@ -36,9 +43,18 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
+	@Autowired
+	private PostRepository postRepository;
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private EmailSenderService emailSenderService;
+
+	@Autowired
+	private LikeRepository likeRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
 	@Override
 	public User findByUsername(String username) throws UsernameNotFoundException {
@@ -120,6 +136,47 @@ public class UserServiceImpl implements UserService {
 
 		}
 
+	@Override
+	public void SendEmailToInactiveUsers() {
+		List<User> inactiveUsers = this.userRepository.getAllByLastLoginDateBefore(Date.from(Instant.now().minus(Duration.ofDays(7))));
+	    for (User user : inactiveUsers) {
+			String subject = "Whats new on OnlyBuns";
 
+			int newLikes = GetNumberOfUnseenLikes(user);
+			int newPosts = GetNumberOfUnseenPosts(user);
+			int newComments =GetNumberOfUnseenComments(user);
+			String body = String.format(
+					"Hello %s,\n\n" +
+							"We've missed you on OnlyBuns! Here's what's new since your last visit:\n\n" +
+							"- You have %d new likes on your posts.\n" +
+							"- There are %d new posts from people you follow.\n" +
+							"- You have %d new comments on your posts.\n\n" +
+							"Don't miss out on the latest activity—come back and see what's happening!\n\n" +
+							"Your OnlyBuns Team",
+					user.getFirstName(), // Assuming User has a method to get the first name
+					newLikes,
+					newPosts,
+					newComments
+			);
+			this.emailSenderService.sendEmail(user.getEmail(), subject, body);
+		}
 	}
+	private int GetNumberOfUnseenLikes(User user) {
+		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
+		List<Long> userPostIds = new ArrayList<>();
+		for (Post post : userPosts) {
+			userPostIds.add(post.getId());
+		}
+	return likeRepository.findByPostIdInAndLikeDateAfter(userPostIds,user.getLastLoginDate()).size();
+	}
+	private int GetNumberOfUnseenPosts(User user) {
+	return postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseAndPostDateAfter(user.getFollowing(),user.getLastLoginDate()).size();
+	}
+	private int GetNumberOfUnseenComments(User user) {
+		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
+		return commentRepository.findAllByPostInAndCreatedAfter(userPosts,user.getLastLoginDate()).size();
+	}
+
+
+}
 

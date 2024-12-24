@@ -1,7 +1,10 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
+import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.onlybunsapp.dto.commentDtos.CommentReadDto;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostCreateDto;
@@ -14,24 +17,34 @@ import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.repository.LikeRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.PostRepository;
+import rs.ac.uns.ftn.onlybunsapp.repository.UserRepository;
 import rs.ac.uns.ftn.onlybunsapp.service.ImageService;
 import rs.ac.uns.ftn.onlybunsapp.service.LikeService;
+import rs.ac.uns.ftn.onlybunsapp.service.LocationService;
 import rs.ac.uns.ftn.onlybunsapp.service.PostService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
+import javax.persistence.RollbackException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 @Service
 public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private LocationService locationService;
 
     @Autowired
     private LikeService likeService;
 
     @Autowired
     private UserMapper userMapper;
+    public int gas=0;
 
     @Autowired
     private PostMapper postMapper;
@@ -45,11 +58,8 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.findAll();
         List<PostReadDto> postReadDtos = new ArrayList<>();
         for (Post post : posts) {
+            post.getComments().sort((c1, c2) -> c2.getCreated().compareTo(c1.getCreated()));
             PostReadDto postReadDto = postMapper.toPostReadDto(post);
-            postReadDto.creator = userMapper.toUserReadDto(post.getCreator());
-            for(Comment comment : post.getComments()){
-                postReadDto.comments.add(commentMapper.toCommentReadDto(comment));
-            }
             postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
             postReadDtos.add(postReadDto);
         }
@@ -62,22 +72,23 @@ public class PostServiceImpl implements PostService {
         post.publish(creator);
         post.setFolderPath(imageService.saveImage(postDto.getImage(),creator.getUsername()));
         Post newPost = postRepository.save(post);
+        locationService.cacheLocation(newPost.getLocation());
         return postMapper.toPostReadDto(newPost);
     }
 
     @Override
-    public Boolean like(User user, long postId) {
-        try {
+    @Transactional
+    public Boolean like(User user, long postId)throws Exception {
+            gas++;
             Post post = postRepository.getById(postId);
             if (!likeService.save(user.getId(), postId))
                 return false;
             post.addLike();
+            if (gas == 1) {
+                Thread.sleep(3000);
+            }
             postRepository.save(post);
             return true;
-        }
-        catch (EntityNotFoundException e) {
-            return false;
-        }
     }
 
     @Override
@@ -116,6 +127,7 @@ public class PostServiceImpl implements PostService {
 
         List<PostReadDto> postReadDtos = new ArrayList<>();
         for (Post post : posts) {
+            post.getComments().sort((c1, c2) -> c2.getCreated().compareTo(c1.getCreated()));
             PostReadDto postReadDto = postMapper.toPostReadDto(post);
             postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
             postReadDtos.add(postReadDto);
@@ -137,6 +149,7 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
         List<PostReadDto> postReadDtos = new ArrayList<>();
         for (Post post : posts) {
+            post.getComments().sort((c1, c2) -> c2.getCreated().compareTo(c1.getCreated()));
             PostReadDto postReadDto = postMapper.toPostReadDto(post);
             postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
             postReadDtos.add(postReadDto);

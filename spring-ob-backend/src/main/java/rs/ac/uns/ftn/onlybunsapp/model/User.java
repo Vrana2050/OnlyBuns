@@ -60,6 +60,9 @@ public class User implements UserDetails {
     @Column(name = "last_password_reset_date")
     private Timestamp lastPasswordResetDate;
 
+    @Column(name = "last_login_date")
+    private Timestamp lastLoginDate;
+
     @Column(name="number_of_posts")
     private int numberOfPosts;
 
@@ -111,7 +114,10 @@ public class User implements UserDetails {
     public void setFollowers(List<User> followers) {
         this.followers = followers;
     }
+    public void setLastLoginDate(Timestamp lastLoginDate) {this.lastLoginDate = lastLoginDate;}
+    public Timestamp getLastLoginDate() {return lastLoginDate;}
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "likedBy")
     private List<Post> likedPosts;
 

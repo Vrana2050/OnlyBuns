@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.onlybunsapp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
@@ -17,6 +19,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="creator_Id", referencedColumnName = "id" , nullable = false)
+    @JsonIgnore
     private User creator;
 
     @Column(name = "description")
@@ -37,6 +40,8 @@ public class Post {
 
     @Column(name = "is_restricted")
     private boolean isRestricted;
+    @Version
+    private Integer version;
 
     public boolean getDeleted() {
         return isDeleted;
@@ -60,6 +65,7 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore
     private List<User> likedBy;
 
     @Column(name = "likes")
@@ -70,6 +76,7 @@ public class Post {
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comment> comments;
 
     public Post() {}
@@ -165,5 +172,11 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+    public Integer getVersion() {
+        return version;
+    }
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }

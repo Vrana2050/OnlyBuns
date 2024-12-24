@@ -3,6 +3,8 @@ import { PostService } from '../service/post.service';
 import { PostReadDto } from '../model/postRead.model';
 import { UserService } from '../service';
 import { Router } from '@angular/router';
+import { CommentService } from '../service/comment.service';
+import { CommentCreate } from '../model/comment.model';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
+  comment="";
   fooResponse = {};
   whoamIResponse = {};
   allUserResponse = {};
@@ -41,7 +44,7 @@ export class HomeComponent implements OnInit {
   }
 
 
-  constructor(private postService: PostService, private userService : UserService,private router: Router) { }
+  constructor(private postService: PostService,private commentService:CommentService, private userService : UserService,private router: Router) { }
 
 
   ngOnInit() {
@@ -69,16 +72,9 @@ export class HomeComponent implements OnInit {
 
   toggleLike(index: number) {
     const post = this.posts[index];
-    /*
-    post.likedByCurrentUser = !post.likes;
-  
-    if (post.likedByCurrentUser) {
-      post.likes += 1; // Increment likes
-      this.postService.likePost(post.id).subscribe();
-    } else {
-      post.likes -= 1; // Decrement likes
-      this.postService.unlikePost(post.id).subscribe();
-    }*/
+    this.postService.likePost(post.id).subscribe((response) => {
+      this.posts[index] = response
+    });
   }
   openLoginModal(): void {
     this.showLoginModal = true;
@@ -88,7 +84,21 @@ export class HomeComponent implements OnInit {
   closeLoginModal(): void {
     this.showLoginModal = false;
   }
-
+  AddComment(postId: number) {
+    const comment:CommentCreate = {
+      postId: postId,
+      comment: this.comment
+    }
+ this.commentService.createComment(comment).subscribe((response) => {
+  console.log(response);
+        this.posts.forEach((post) => {
+          if(post.id === postId){
+            post.comments.unshift(response.body);
+            console.log(post.comments);
+          }
+        }
+      )});
+  }
 
   lookAtProfile(userId: number) {
     this.router.navigate(['/other-user-profile'], { queryParams: { userId: userId } });

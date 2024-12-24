@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 
+import java.util.List;
+
 @Service
 public class EmailSenderService {
 
@@ -36,4 +38,5 @@ public class EmailSenderService {
                         "Cheers,\n" +
                         "The OnlyBuns Team");
     }
+
 }

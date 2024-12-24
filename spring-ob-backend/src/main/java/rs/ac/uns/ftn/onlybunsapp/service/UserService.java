@@ -20,4 +20,5 @@ public interface UserService {
     boolean activateUser(long userId);
     User findByEmail(String email);
 
+    void SendEmailToInactiveUsers();
 }

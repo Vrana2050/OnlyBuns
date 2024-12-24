@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,8 +24,10 @@ import rs.ac.uns.ftn.onlybunsapp.exception.ResourceConflictException;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.service.impl.EmailSenderService;
+import rs.ac.uns.ftn.onlybunsapp.util.ImageCompressor;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -70,6 +73,10 @@ public class AuthenticationController {
 
 		// Vrati token kao odgovor na uspesnu autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+	}
+	@Scheduled(cron = "0 0 0 * * ?")
+	public void SendEmailToInactiveUsers() {
+		this.userService.SendEmailToInactiveUsers();
 	}
 
 	// Endpoint za registraciju novog korisnika
