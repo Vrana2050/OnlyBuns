@@ -114,27 +114,68 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-		public User update (User updatedUser)throws AccessDeniedException {
-			if (userRepository.findById(updatedUser.getId()).isPresent()) {
-				return this.userRepository.save(updatedUser);
-			}
-			return null;
+	public User update (User updatedUser)throws AccessDeniedException {
+		if (userRepository.findById(updatedUser.getId()).isPresent()) {
+			return this.userRepository.save(updatedUser);
 		}
+		return null;
+	}
 
-		public boolean activateUser ( long userId){
-			User user = userRepository.findById(userId).orElse(null);
-			if (user != null) {
-				user.setEnabled(true);
-				return update(user) != null;
-			}
-			return false;
+	public boolean activateUser ( long userId){
+		User user = userRepository.findById(userId).orElse(null);
+		if (user != null) {
+			user.setEnabled(true);
+			return update(user) != null;
 		}
+		return false;
+	}
 
-		@Override
-		public User findByEmail (String email){
-			return userRepository.findByEmail(email);
+	@Override
+	public User findByEmail (String email){
+		return userRepository.findByEmail(email);
 
+	}
+	public void followUser(long followerId, long followingId) {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
+		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
+		if (!follower.getFollowing().contains(following)) {
+			follower.getFollowing().add(following);
+			following.getFollowers().add(follower);
+
+
+			follower.setNumberOfFollowing(follower.getNumberOfFollowing() + 1);
+			following.setNumberOfFollowers(following.getNumberOfFollowers() + 1);
+
+			userRepository.save(follower);
+			userRepository.save(following);
 		}
+  }
+/*
+	@Override
+	public List<User> getTop10UsersThatLikedMost() {
+		return userRepository.getTop10UsersThatLikedTheMost();
+	}*/
+
+
+	public void unfollowUser(long followerId, long followingId) {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
+		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
+
+		if (follower.getFollowing().contains(following)) {
+			follower.getFollowing().remove(following);
+			following.getFollowers().remove(follower);
+
+
+			follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
+			following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
+
+			userRepository.save(follower);
+			userRepository.save(following);
+		}
+	}
+
 
 	@Override
 	public void SendEmailToInactiveUsers() {
@@ -161,22 +202,31 @@ public class UserServiceImpl implements UserService {
 			this.emailSenderService.sendEmail(user.getEmail(), subject, body);
 		}
 	}
+  
 	private int GetNumberOfUnseenLikes(User user) {
 		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
 		List<Long> userPostIds = new ArrayList<>();
 		for (Post post : userPosts) {
 			userPostIds.add(post.getId());
 		}
-	return likeRepository.findByPostIdInAndLikeDateAfter(userPostIds,user.getLastLoginDate()).size();
+	  return likeRepository.findByPostIdInAndLikeDateAfter(userPostIds,user.getLastLoginDate()).size();
 	}
+  
 	private int GetNumberOfUnseenPosts(User user) {
-	return postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseAndPostDateAfter(user.getFollowing(),user.getLastLoginDate()).size();
+	  return postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseAndPostDateAfter(user.getFollowing(),user.getLastLoginDate()).size();
+  }
+
+	public boolean isFollowing(long followerId, long followingId) {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
+		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
+		return follower.getFollowing().contains(following);
 	}
+  
 	private int GetNumberOfUnseenComments(User user) {
 		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
 		return commentRepository.findAllByPostInAndCreatedAfter(userPosts,user.getLastLoginDate()).size();
 	}
-
 
 }
 
