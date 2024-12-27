@@ -9,6 +9,7 @@ import { ActivateAccountComponent } from './activate-account/activate-account.co
 import { SuccessfullyActivatedComponent } from './successfully-activated/successfully-activated.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
+import { TrendingComponent } from './trending/trending.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
   {
     path: 'other-user-profile',
     component: OtherUserProfileComponent,
+  },
+  {
+    path: "trending",
+    component: TrendingComponent,
   },
 ];
 

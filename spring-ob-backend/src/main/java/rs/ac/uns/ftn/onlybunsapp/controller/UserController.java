@@ -80,4 +80,9 @@ public class UserController {
 		return this.userService.findById(userId);
 	}
 
+	@GetMapping("/getUsersThatLikedMost")
+	public List<User> getUsersThatLikedMost(){
+		//return userService.getTop10UsersThatLikedMost();
+		return null;
+	}
 }

@@ -19,5 +19,6 @@ public interface UserService {
     User update(User updatedUser);
     boolean activateUser(long userId);
     User findByEmail(String email);
+    //List<User> getTop10UsersThatLikedMost();
 
 }
