@@ -56,8 +56,6 @@ export class HomeComponent implements OnInit {
 
     this.postService.getAllPostsFollowing().subscribe((response) => {
       this.posts = response;
-      console.log(this.posts[0].comments);
-      console.log(response)
     });
   }
 

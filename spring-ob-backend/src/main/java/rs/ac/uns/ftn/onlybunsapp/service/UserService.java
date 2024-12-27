@@ -21,4 +21,8 @@ public interface UserService {
     User findByEmail(String email);
     //List<User> getTop10UsersThatLikedMost();
 
+    public boolean isFollowing(long followerId, long followingId);
+    public void followUser(long followerId, long followingId);
+    public void unfollowUser(long followerId, long followingId);
+
 }

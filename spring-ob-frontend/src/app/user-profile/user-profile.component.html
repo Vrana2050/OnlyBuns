@@ -1,49 +1,73 @@
 <div class="profile-page">
-    <!-- Profile Header -->
-    <div class="profile-header">
-      <div class="profile-info">
-        <img class="profile-picture" src="https://via.placeholder.com/100" alt="Profile Picture">
-        <div class="profile-details">
-          <h2></h2>
-          <p>"This user has no bio."</p>
-          <div class="stats">
-            <span><strong>{{ posts.length }}</strong> Posts</span>
-            <span><strong>X</strong> Followers</span>
-            <span><strong>Y</strong> Following</span>
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-info">
+      <img class="profile-picture" src="https://via.placeholder.com/100" alt="Profile Picture" />
+      <div class="profile-details">
+        <h2>{{ user?.username }}</h2>
+        <p>"This user has no bio."</p>
+        <div class="stats">
+          <span><strong>{{ posts.length }}</strong> Posts</span>
+          <span><strong>{{ user?.numberOfFollowers || 0 }}</strong> Followers</span>
+          <span><strong>{{ user?.numberOfFollowing || 0 }}</strong> Following</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts Section -->
+  <div class="posts-section">
+    <div *ngIf="posts.length > 0" class="posts-container">
+      <div class="post-card" *ngFor="let post of posts" (click)="openModal(post)">
+        <img [src]="'data:image/png;base64,' + post.imageBase64" alt="Post Image" />
+        <div class="post-overlay">
+          ❤️ {{ post.likes }} • 💬 {{ post.numOfComments }}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="posts.length === 0" class="no-posts-message">
+      <p>No posts available.</p>
+    </div>
+  </div>
+
+  <!-- Post Modal -->
+  <div *ngIf="selectedPost" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- Left Side: Image -->
+      <div class="modal-left">
+        <img [src]="'data:image/png;base64,' + selectedPost.imageBase64" alt="Post Image" />
+      </div>
+      <!-- Right Side: Post Details -->
+      <div class="modal-right">
+        <div class="user-info">
+          <strong>{{ selectedPost.creator.username }}</strong>
+          <div>{{ selectedPost.postDate | date: 'short' }}</div>
+        </div>
+        <p class="description">{{ selectedPost.description }}</p>
+        <div class="interactions">
+          ❤️ {{ selectedPost.likes }}  • 💬 {{ selectedPost.numOfComments }} 
+        </div>
+        <div class="comments-section">
+          
+          <div class="comments-list">
+            <div *ngFor="let comment of selectedPost.comments" class="comment">
+              <strong>{{ comment.creator }}</strong>: {{ comment.text }}
+            </div>
+          </div>
+          
+        </div>
+        <div *ngIf="editingPostId !== selectedPost.id" class="action-buttons">
+          <button (click)="editPost(selectedPost)" class="edit-btn">Edit</button>
+          <button (click)="deletePost(selectedPost)" class="delete-btn">Delete</button>
+        </div>
+        <div *ngIf="editingPostId === selectedPost.id">
+          <textarea [(ngModel)]="newDescription" rows="3"></textarea>
+          <div class="post-actions">
+            <button (click)="saveDescription(selectedPost)">Save</button>
+            <button (click)="cancelEdit()">Cancel</button>
           </div>
         </div>
       </div>
     </div>
-<div *ngIf="posts.length > 0" class="posts-container">
-    <div class="post" *ngFor="let post of posts">
-      <div class="post-header">
-        
-        <span>{{ post.postDate | date: 'short' }}</span>
-      </div>
-  
-      <div class="post-description" *ngIf="editingPostId !== post.id">
-        {{ post.description }}
-        <button (click)="editPost(post)">Edit</button>
-      </div>
-      <div *ngIf="editingPostId === post.id">
-        <textarea [(ngModel)]="newDescription" rows="3"></textarea>
-        <div class="post-actions">
-          <button (click)="saveDescription(post)">Save</button>
-          <button (click)="cancelEdit()">Cancel</button>
-        </div>
-      </div>
-  
-      <div class="post-image">
-        <img [src]="'data:image/png;base64,' + post.imageBase64" alt="Post Image" />
-      </div>
-      <div class="post-interactions">
-        ❤️ {{ post.likes }} Likes • 💬 {{ post.numOfComments }} Comments
-      </div>
-      <button (click)="deletePost(post)" class="delete-btn">Delete</button>
-    </div>
   </div>
-  
-  <div *ngIf="posts.length === 0">
-    <p>No posts available.</p>
-  </div>
-  
+</div>

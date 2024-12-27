@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
@@ -80,9 +81,33 @@ public class UserController {
 		return this.userService.findById(userId);
 	}
 
+
 	@GetMapping("/getUsersThatLikedMost")
 	public List<User> getUsersThatLikedMost(){
 		//return userService.getTop10UsersThatLikedMost();
 		return null;
 	}
+
+	@PostMapping("/{userId}/follow")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	public ResponseEntity<?> followUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
+		userService.followUser(currentUser.getId(), userId);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/{userId}/unfollow")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	public ResponseEntity<?> unfollowUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
+		userService.unfollowUser(currentUser.getId(), userId);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/{userId}/is-following")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	public ResponseEntity<Boolean> isFollowing(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
+		boolean isFollowing = userService.isFollowing(currentUser.getId(), userId);
+		return ResponseEntity.ok(isFollowing);
+	}
+
+
 }

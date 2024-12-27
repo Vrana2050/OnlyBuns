@@ -3,8 +3,8 @@
 
 
 
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_posts) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', 'Trg Kralja 2', true, '2017-10-01 21:58:58.508-07', 0, 0);
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_posts) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', 'Titogradska 12', true, '2017-10-01 18:57:58.508-07', 0, 0);
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers,number_of_posts) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', 'Trg Kralja 2', true, '2017-10-01 21:58:58.508-07', 0, 1,0);
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers,number_of_posts) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', 'Titogradska 12', true, '2017-10-01 18:57:58.508-07', 1,0, 0);
 
 
 

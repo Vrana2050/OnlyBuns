@@ -17,6 +17,25 @@ public class UserRequest {
 
 	private String address;
 
+	private int numberOfFollowers;
+	private int numberOfFollowing;
+
+	public int getNumberOfFollowers() {
+		return numberOfFollowers;
+	}
+
+	public void setNumberOfFollowers(int numberOfFollowers) {
+		this.numberOfFollowers = numberOfFollowers;
+	}
+
+	public int getNumberOfFollowing() {
+		return numberOfFollowing;
+	}
+
+	public void setNumberOfFollowing(int numberOfFollowing) {
+		this.numberOfFollowing = numberOfFollowing;
+	}
+
 	public String getUsername() {
 		return username;
 	}
