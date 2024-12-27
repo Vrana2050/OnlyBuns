@@ -98,28 +98,67 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-		public User update (User updatedUser)throws AccessDeniedException {
-			if (userRepository.findById(updatedUser.getId()).isPresent()) {
-				return this.userRepository.save(updatedUser);
-			}
-			return null;
+	public User update (User updatedUser)throws AccessDeniedException {
+		if (userRepository.findById(updatedUser.getId()).isPresent()) {
+			return this.userRepository.save(updatedUser);
 		}
+		return null;
+	}
 
-		public boolean activateUser ( long userId){
-			User user = userRepository.findById(userId).orElse(null);
-			if (user != null) {
-				user.setEnabled(true);
-				return update(user) != null;
-			}
-			return false;
+	public boolean activateUser ( long userId){
+		User user = userRepository.findById(userId).orElse(null);
+		if (user != null) {
+			user.setEnabled(true);
+			return update(user) != null;
 		}
+		return false;
+	}
 
-		@Override
-		public User findByEmail (String email){
-			return userRepository.findByEmail(email);
-
-		}
-
+	@Override
+	public User findByEmail (String email){
+		return userRepository.findByEmail(email);
 
 	}
+	public void followUser(long followerId, long followingId) {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
+		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
+		if (!follower.getFollowing().contains(following)) {
+			follower.getFollowing().add(following);
+			following.getFollowers().add(follower);
+
+
+			follower.setNumberOfFollowing(follower.getNumberOfFollowing() + 1);
+			following.setNumberOfFollowers(following.getNumberOfFollowers() + 1);
+
+			userRepository.save(follower);
+			userRepository.save(following);
+		}
+	}
+
+	public void unfollowUser(long followerId, long followingId) {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
+		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
+		if (follower.getFollowing().contains(following)) {
+			follower.getFollowing().remove(following);
+			following.getFollowers().remove(follower);
+
+
+			follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
+			following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
+
+			userRepository.save(follower);
+			userRepository.save(following);
+		}
+	}
+
+	public boolean isFollowing(long followerId, long followingId) {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
+		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
+		return follower.getFollowing().contains(following);
+	}
+
+}
 
