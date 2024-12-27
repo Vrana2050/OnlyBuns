@@ -79,6 +79,12 @@ public class PostController {
     public List<PostReadDto> getPostsOfUser(@AuthenticationPrincipal User user) {
         return postService.getPostsForUser(user);
     }
+/*
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "getMostPopularPostsThisWeek", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getTop5MostPopularPostsLast7Days(){
+        return postService.getTop5MostLikedPostsLast7Days();
+    }*/
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/edit/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,6 +92,18 @@ public class PostController {
         String newDescription = body.get("description");
         System.out.println(newDescription);
         return postService.editDescription(user, postId, newDescription);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "/allTimePostCount", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int getAllTimePostCount() {
+        return postService.countAllTimePosts();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "/thisMonthPostCount", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int getThisMonthPostCount() {
+        return postService.countThisMonthPosts();
     }
 
 }

@@ -81,6 +81,13 @@ public class UserController {
 		return this.userService.findById(userId);
 	}
 
+
+	@GetMapping("/getUsersThatLikedMost")
+	public List<User> getUsersThatLikedMost(){
+		//return userService.getTop10UsersThatLikedMost();
+		return null;
+	}
+
 	@PostMapping("/{userId}/follow")
 	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<?> followUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
@@ -98,9 +105,9 @@ public class UserController {
 	@PostMapping("/{userId}/is-following")
 	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<Boolean> isFollowing(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
-		System.out.println("TRAZIM DA LI" + userId + "PRATI" + currentUser.getId());
 		boolean isFollowing = userService.isFollowing(currentUser.getId(), userId);
 		return ResponseEntity.ok(isFollowing);
 	}
+
 
 }

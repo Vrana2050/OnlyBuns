@@ -13,7 +13,7 @@ INSERT INTO LOCATIONS (longitude, latitude) VALUES (90, 89);
 
 
 
-INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted) VALUES ('A beautiful sunset over the mountains', 'uploads/user/post_0', 0, 4, '2024-11-12 11:00:00', 1, 1, false,false);
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted) VALUES ('A beautiful sunset over the mountains', 'uploads/user/post_0', 0, 4, '2024-12-8 11:00:00', 1, 1, false,false);
 
 INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted) VALUES ('This little bunny is so soft and fluffy.', 'uploads/user/post_1', 0, 3, '2024-11-15 10:00:00', 1, 2, false,false);
 

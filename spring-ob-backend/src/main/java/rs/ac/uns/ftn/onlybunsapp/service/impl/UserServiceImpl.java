@@ -134,11 +134,18 @@ public class UserServiceImpl implements UserService {
 			userRepository.save(follower);
 			userRepository.save(following);
 		}
-	}
+  }
+/*
+	@Override
+	public List<User> getTop10UsersThatLikedMost() {
+		return userRepository.getTop10UsersThatLikedTheMost();
+	}*/
+
 
 	public void unfollowUser(long followerId, long followingId) {
 		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
 		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+
 
 		if (follower.getFollowing().contains(following)) {
 			follower.getFollowing().remove(following);
@@ -152,6 +159,7 @@ public class UserServiceImpl implements UserService {
 			userRepository.save(following);
 		}
 	}
+
 
 	public boolean isFollowing(long followerId, long followingId) {
 		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));

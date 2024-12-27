@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.onlybunsapp.dto.commentDtos.CommentReadDto;
@@ -151,6 +153,42 @@ public class PostServiceImpl implements PostService {
         PostReadDto postReadDto = postMapper.toPostReadDto(post);
         postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
         return postReadDto;
+    }
+
+    @Override
+    public int countAllTimePosts() {
+        return postRepository.countAllPosts();
+    }
+
+    @Override
+    public int countThisMonthPosts() {
+        return postRepository.countThisMonthPosts();
+    }
+
+    @Override
+    public List<PostReadDto> getTop5MostLikedPostsLast7Days() {
+        Pageable top5 = PageRequest.of(0,5);
+        List<Post> posts = postRepository.getTop5MostLikedPostsLast7Days(top5);
+        List<PostReadDto> postReadDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostReadDto postReadDto = postMapper.toPostReadDto(post);
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+            postReadDtos.add(postReadDto);
+        }
+        return postReadDtos;
+    }
+
+    @Override
+    public List<PostReadDto> getTop10MostLikedPostsOfAllTime() {
+        Pageable top5 = PageRequest.of(0,10);
+        List<Post> posts = postRepository.getTop10MostLikedPosts(top5);
+        List<PostReadDto> postReadDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostReadDto postReadDto = postMapper.toPostReadDto(post);
+            postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+            postReadDtos.add(postReadDto);
+        }
+        return postReadDtos;
     }
 
 
