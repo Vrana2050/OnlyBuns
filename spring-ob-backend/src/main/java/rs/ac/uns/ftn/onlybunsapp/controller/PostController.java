@@ -1,9 +1,11 @@
 package rs.ac.uns.ftn.onlybunsapp.controller;
 
+import org.hibernate.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,7 +48,16 @@ public class PostController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/like/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean likePost(@AuthenticationPrincipal User user, @PathVariable long postId) {
-        return this.postService.like(user, postId);
+        try{
+        return this.postService.like(user, postId);}
+        catch (Exception e){
+            if(e.getClass() == ObjectOptimisticLockingFailureException.class)
+            {
+                return likePost(user,postId);
+            }
+            else
+                return false;
+        }
     }
 
     @PreAuthorize("hasRole('USER')")

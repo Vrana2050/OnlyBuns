@@ -1,4 +1,4 @@
-import { CommentReadDto } from "./commentRead.model";
+import { CommentReadDto } from "./comment.model";
 import { UserReadDto } from "./userRead.model";
 
 export interface PostReadDto{

@@ -63,5 +63,13 @@ export class PostService {
       map((response: HttpResponse<PostReadDto>) => response.body as PostReadDto)
     );
   }
+  likePost(postId: number): Observable<PostReadDto> {
+    return this.apiService.post(
+      `http://localhost:8082/api/posts/like/${postId}`,
+      {}
+    ).pipe(
+      map((response: HttpResponse<PostReadDto>) => response.body as PostReadDto)
+    );
+  }
   
 }

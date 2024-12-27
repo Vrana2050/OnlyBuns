@@ -25,4 +25,5 @@ public interface UserService {
     public void followUser(long followerId, long followingId);
     public void unfollowUser(long followerId, long followingId);
 
+    void SendEmailToInactiveUsers();
 }

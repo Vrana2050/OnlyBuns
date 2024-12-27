@@ -58,8 +58,8 @@
           </div>
           <div class="view-more" (click)="openPopup(i)">View more comments</div>
           <div class="comment-input">
-            <input type="text" placeholder="Add a comment..." >
-            <button >Post</button>
+            <input type="text" [(ngModel)]="comment" placeholder="Add a comment..." >
+            <button (click)="AddComment(post.id)">Comment</button>
           </div>
         </div>
       </div>

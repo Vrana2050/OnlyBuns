@@ -10,7 +10,7 @@ import java.util.List;
 public interface PostService {
     public List<PostReadDto> getAll();
     public PostReadDto create(PostCreateDto postDto, User user);
-    public Boolean like(User user,long postId);
+    public Boolean like(User user,long postId)throws Exception;
     public Boolean unlike(User user,long postId);
     public List<PostReadDto> getAllSortedByDate();
 

@@ -6,3 +6,7 @@ export interface CommentReadDto{
     creator: UserReadDto;
     created: string;
 }
+export interface CommentCreate{
+    postId: number,
+    comment: string
+}

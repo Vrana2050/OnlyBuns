@@ -2,23 +2,27 @@ package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import rs.ac.uns.ftn.onlybunsapp.model.PostUserLike;
 import rs.ac.uns.ftn.onlybunsapp.repository.LikeRepository;
 import rs.ac.uns.ftn.onlybunsapp.service.LikeService;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
-public class LikeServiceImpl implements LikeService {
+    public class LikeServiceImpl implements LikeService {
 
-    @Autowired
-    private LikeRepository likeRepository;
+        @Autowired
+        private LikeRepository likeRepository;
 
-    @Override
-    public boolean save(long userId, long postId) {
-        if(HasLiked(userId,postId))
-            return false;
-        likeRepository.save(new PostUserLike(userId,postId));
-        return true;
-    }
+        @Override
+        @Transactional(propagation = Propagation.MANDATORY)
+        public boolean save(long userId, long postId) {
+            if(HasLiked(userId,postId))
+                return false;
+            likeRepository.save(new PostUserLike(userId,postId));
+            return true;
+        }
 
     @Override
     public boolean delete(long userId, long postId) {
@@ -30,7 +34,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     private Boolean HasLiked(long userId, long postId) {
-        return likeRepository.findByPostIdAndUserId(userId,postId)!=null;
+        return likeRepository.findByPostIdAndUserId(postId,userId)!=null;
     }
 
 
