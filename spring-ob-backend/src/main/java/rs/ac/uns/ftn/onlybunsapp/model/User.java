@@ -79,9 +79,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    @ManyToMany(mappedBy = "likedBy")
-    private List<Post> likedPosts;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -151,18 +148,8 @@ public class User implements UserDetails {
     private List<Post> likedPosts;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "following",
-            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
-    )
-    @JsonIgnore // Prevent serialization
-    private List<User> following;
 
-    @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
-    @JsonIgnore // Prevent serialization
-    private List<User> followers;
+
 
 
 
