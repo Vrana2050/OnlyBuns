@@ -62,9 +62,14 @@
     min-width: 400px; 
     overflow: visible; 
   }
+  .picture-and-info {
+    display: flex;
+    align-items: center;
+  }
   
   .post-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
   }
@@ -209,5 +214,11 @@
 
   .commenter-profile{
     cursor: pointer;
+  }
+  .PromoteButton{
+    position: fixed;
+    top: 80px;
+    right: 10px;
+    padding: 5px;
   }
   

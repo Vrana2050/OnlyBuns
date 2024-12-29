@@ -19,5 +19,5 @@ public interface PostService {
 
     public List<PostReadDto> getPostsForUser(User user);
     public PostReadDto editDescription(User user, long postId, String newDescription);
-
+    public Boolean sendPostsToAgencies(List<Long> postIds);
 }

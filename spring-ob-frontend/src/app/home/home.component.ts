@@ -14,9 +14,13 @@ import { CommentCreate } from '../model/comment.model';
 export class HomeComponent implements OnInit {
 
   comment="";
+  postIdsToAds: number[] = [];
   fooResponse = {};
   whoamIResponse = {};
+  hasPostsToPromote = false;
   allUserResponse = {};
+  isAdmin=false;
+  isUser=false;
   isPopupVisible: boolean = false;
   posts: PostReadDto[] = [
     {
@@ -59,17 +63,44 @@ export class HomeComponent implements OnInit {
 
     this.postService.getAllPostsFollowing().subscribe((response) => {
       this.posts = response;
-      console.log("KUREEEEEEEEE");
-      console.log(this.posts[0].comments);
-      console.log("KUREEEEEEEEE" + this.hasSignedIn());
-      console.log(response)
+    });
+    this.getRole();
+  }
+  getRole(){
+    this.userService.getMyInfo().subscribe((response) => {
+      this.isAdmin = response.roles.some((role:any) => role.name === 'ROLE_ADMIN');
+      this.isUser = response.roles.some((role:any) => role.name === 'ROLE_USER');
+      if(this.isAdmin){
+        console.log("Admin");
+        this.postService.getAllPostsDescByDate().subscribe((response) => {
+          this.posts = response;
+          console.log(response);
+        });
+      }
+      if(this.isUser){
+        console.log("User");
+      }
     });
   }
-
+  sendPostsToAds(){
+    this.postService.sendPostsToAds(this.postIdsToAds).subscribe((response) => {
+      console.log(response);
+      this.postIdsToAds = [];
+    });
+  }
   navigateToProfile(): void {
     this.router.navigate(['/profile']);
   }
-
+  sendToAds(id :number,event:any): void {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.postIdsToAds.push(id);
+      this.hasPostsToPromote = true;
+    } else {
+      this.postIdsToAds = this.postIdsToAds.filter((postId) => postId !== id);
+      this.hasPostsToPromote = this.postIdsToAds.length > 0;
+    }
+  }
   toggleLike(index: number) {
     const post = this.posts[index];
     this.postService.likePost(post.id).subscribe((response) => {

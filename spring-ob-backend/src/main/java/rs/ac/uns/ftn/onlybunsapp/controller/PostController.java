@@ -99,4 +99,13 @@ public class PostController {
         return postService.editDescription(user, postId, newDescription);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,value = "/sendAd")
+    public ResponseEntity<Boolean> getAll(@RequestBody List<Long>postIds) {
+        if(postService.sendPostsToAgencies(postIds))
+            return ResponseEntity.ok(true);
+        else
+            return ResponseEntity.ok(false);
+    }
+
 }

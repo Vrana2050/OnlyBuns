@@ -5,6 +5,7 @@
 
 INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_posts,last_login_date) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', 'Trg Kralja 2', true, '2017-10-01 21:58:58.508-07', 0, 0,'2017-10-01 21:58:58.508-07');
 INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_posts,last_login_date) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', 'Titogradska 12', true, '2017-10-01 18:57:58.508-07', 0, 0,'2025-10-01 21:58:58.508-07');
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_posts,last_login_date) VALUES ('b', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'b@example.com', 'Trg Kralja 2', true, '2017-10-01 21:58:58.508-07', 0, 0,'2017-10-01 21:58:58.508-07');
 
 
 
@@ -37,7 +38,7 @@ INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-16 11
 
 
 INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,2);
-
+INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (3,2);
 
 INSERT INTO ROLE (name) VALUES ('ROLE_USER');
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
@@ -47,5 +48,4 @@ INSERT INTO ROLE (name) VALUES ('ROLE_ZEC');
 
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 1); -- user-u dodeljujemo rolu USER
-INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 1); -- admin-u dodeljujemo rolu USER
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 2); -- user-u dodeljujemo rolu ADMIN
