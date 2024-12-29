@@ -69,13 +69,9 @@ public class User implements UserDetails {
     @Column(name = "number_of_following")
     private int numberOfFollowing;
 
-    public int getNumberOfFollowing() {
-        return numberOfFollowing;
-    }
+    @Column(name = "number_of_followers")
+    private int numberOfFollowers;
 
-    public void setNumberOfFollowing(int numberOfFollowing) {
-        this.numberOfFollowing = numberOfFollowing;
-    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -83,6 +79,35 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "following",
+            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
+    )
+    @JsonIgnore // Prevent serialization
+    private List<User> following;
+
+    @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
+    @JsonIgnore // Prevent serialization
+    private List<User> followers;
+
+    public int getNumberOfFollowers() {
+        return numberOfFollowers;
+    }
+
+    public void setNumberOfFollowers(int numberOfFollowers) {
+        this.numberOfFollowers = numberOfFollowers;
+    }
+
+    public int getNumberOfFollowing() {
+        return numberOfFollowing;
+    }
+
+    public void setNumberOfFollowing(int numberOfFollowing) {
+        this.numberOfFollowing = numberOfFollowing;
+    }
 
     public int getNumberOfPosts() {
         return numberOfPosts;
@@ -117,23 +142,14 @@ public class User implements UserDetails {
     public void setLastLoginDate(Timestamp lastLoginDate) {this.lastLoginDate = lastLoginDate;}
     public Timestamp getLastLoginDate() {return lastLoginDate;}
 
+
     @JsonIgnore
     @ManyToMany(mappedBy = "likedBy")
     private List<Post> likedPosts;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "following",
-            joinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
-    )
-    @JsonIgnore // Prevent serialization
-    private List<User> following;
 
-    @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
-    @JsonIgnore // Prevent serialization
-    private List<User> followers;
+
 
 
 

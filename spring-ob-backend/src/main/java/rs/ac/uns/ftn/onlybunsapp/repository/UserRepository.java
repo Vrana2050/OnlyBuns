@@ -10,7 +10,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
-
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +32,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     User findByEmail(String email);
+
     List<User> getAllByLastLoginDateBefore(Date date);
+
+
+    //@Query("SELECT u FROM User u JOIN u.likedPosts p GROUP BY u ORDER BY COUNT(p) DESC")
+    //List<User> getTop10UsersThatLikedTheMost();
+
 }
 

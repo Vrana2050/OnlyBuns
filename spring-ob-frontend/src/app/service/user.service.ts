@@ -39,11 +39,21 @@ export class UserService {
       map((response: HttpResponse<Page<User>>) => response.body as Page<User>)
     );
   }
-
+  
   getById(id: number | undefined) {
     return this.apiService.get('http://localhost:8082/api/getById/' + id );
   }
   
+  getFollowStatus(userId : number) : Observable<boolean>{
+    return this.apiService.post(`http://localhost:8082/api/${userId}/is-following`,{});
+  }
+
+  follow(userId : number){
+    return this.apiService.post(`http://localhost:8082/api/${userId}/follow`,{});
+  }
+  unfollow(userId : number){
+    return this.apiService.post(`http://localhost:8082/api/${userId}/unfollow`,{});
+  }
   
   getUsers(page: number, pageSize: number, filters: any, sortBy: string, sortDirection: string): Observable<any> {
     const requestBody = {
@@ -67,7 +77,8 @@ export class UserService {
           return throwError(error);  // Handle error appropriately
         })
       );
-}
+  }
+
   
 
 }
