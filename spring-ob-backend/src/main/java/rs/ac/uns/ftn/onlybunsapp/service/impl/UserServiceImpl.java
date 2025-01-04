@@ -11,11 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
@@ -33,6 +35,7 @@ import rs.ac.uns.ftn.onlybunsapp.service.RoleService;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
+import javax.persistence.EntityNotFoundException;
 
 
 @Service
@@ -136,21 +139,21 @@ public class UserServiceImpl implements UserService {
 
 	}
 	public void followUser(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
-		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+		User follower = userRepository.findById(followerId)
+				.orElseThrow(() -> new EntityNotFoundException("Follower not found"));
+		User following = userRepository.findById(followingId)
+				.orElseThrow(() -> new EntityNotFoundException("Following not found"));
 
-		if (!follower.getFollowing().contains(following)) {
-			follower.getFollowing().add(following);
-			following.getFollowers().add(follower);
-
-
-			follower.setNumberOfFollowing(follower.getNumberOfFollowing() + 1);
-			following.setNumberOfFollowers(following.getNumberOfFollowers() + 1);
-
-			userRepository.save(follower);
-			userRepository.save(following);
+		if (userRepository.isFollowing(followerId, followingId)) {
+			throw new IllegalStateException("Already following this user");
 		}
-  }
+
+		follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
+		following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
+
+		userRepository.save(follower);
+		userRepository.save(following);
+	}
 /*
 	@Override
 	public List<User> getTop10UsersThatLikedMost() {
@@ -159,21 +162,26 @@ public class UserServiceImpl implements UserService {
 
 
 	public void unfollowUser(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
-		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+		User follower = userRepository.findById(followerId)
+				.orElseThrow(() -> new EntityNotFoundException("Follower not found"));
+		User following = userRepository.findById(followingId)
+				.orElseThrow(() -> new EntityNotFoundException("Following not found"));
 
-
-		if (follower.getFollowing().contains(following)) {
-			follower.getFollowing().remove(following);
-			following.getFollowers().remove(follower);
-
-
-			follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
-			following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
-
-			userRepository.save(follower);
-			userRepository.save(following);
+		// Check if not following
+		if (!userRepository.isFollowing(followerId, followingId)) {
+			throw new IllegalStateException("Not following this user");
 		}
+		follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
+		following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
+
+		userRepository.save(follower);
+		userRepository.save(following);
+
+		userRepository.deleteFollowRelation(followerId, followingId);
+	}
+
+	public boolean isFollowing(long followerId, long followingId) {
+		return userRepository.isFollowing(followerId, followingId);
 	}
 
 
@@ -216,16 +224,17 @@ public class UserServiceImpl implements UserService {
 	  return postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseAndPostDateAfter(user.getFollowing(),user.getLastLoginDate()).size();
   }
 
-	public boolean isFollowing(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
-		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
-
-		return follower.getFollowing().contains(following);
-	}
   
 	private int GetNumberOfUnseenComments(User user) {
 		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
 		return commentRepository.findAllByPostInAndCreatedAfter(userPosts,user.getLastLoginDate()).size();
+	}
+
+	@Scheduled(cron = "0 0 0 L * ?")
+	@Transactional
+	public void deleteUnactivatedAccounts() {
+		userRepository.deleteByEnabledFalse();
+		System.out.println("Scheduled account cleanup completed: Deleted unactivated accounts");
 	}
 
 }

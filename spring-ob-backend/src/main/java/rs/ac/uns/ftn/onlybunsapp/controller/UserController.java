@@ -89,21 +89,18 @@ public class UserController {
 	}
 
 	@PostMapping("/{userId}/follow")
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<?> followUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
 		userService.followUser(currentUser.getId(), userId);
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("/{userId}/unfollow")
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	@DeleteMapping("/{userId}/unfollow")
 	public ResponseEntity<?> unfollowUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
 		userService.unfollowUser(currentUser.getId(), userId);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/{userId}/is-following")
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<Boolean> isFollowing(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
 		boolean isFollowing = userService.isFollowing(currentUser.getId(), userId);
 		return ResponseEntity.ok(isFollowing);
