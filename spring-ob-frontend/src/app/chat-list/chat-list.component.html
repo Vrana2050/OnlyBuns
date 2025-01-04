@@ -1,0 +1,29 @@
+<div class="chat-list-container">
+    <div class="chat-list-header">
+      <h2>Messages</h2>
+    </div>
+    
+    <div class="chat-list">
+      <div *ngFor="let chat of chats" 
+           (click)="openChat(chat.userId)"
+           class="chat-preview">
+        <div class="chat-avatar">
+          <img [src]="chat.avatarUrl" [alt]="chat.username">
+        </div>
+        
+        <div class="chat-info">
+          <div class="chat-header">
+            <h3>{{chat.username}}</h3>
+            <span class="timestamp">{{chat.timestamp | date:'shortTime'}}</span>
+          </div>
+          
+          <div class="chat-footer">
+            <p class="last-message">{{chat.lastMessage}}</p>
+            <span *ngIf="chat.unreadCount > 0" class="unread-count">
+              {{chat.unreadCount}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

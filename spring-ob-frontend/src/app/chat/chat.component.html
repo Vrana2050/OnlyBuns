@@ -1,0 +1,27 @@
+<div class="chat-container">
+  <div #messageContainer class="messages">
+    <div *ngFor="let message of messages" 
+         [ngClass]="{ 
+           'message': true,
+           'sent': isMyMessage(message),
+           'received': !isMyMessage(message)
+         }">
+      <div class="message-username">{{ message.senderId }}</div>
+      <div class="message-content">{{ message.content }}</div>
+      <div class="message-timestamp">{{ message.createdAt | date:'short' }}</div>
+    </div>
+  </div>
+  
+  <div class="input-area">
+    <input [(ngModel)]="newMessageContent" 
+           (keyup.enter)="sendMessage()" 
+           placeholder="Type a message..."
+           class="message-input"
+           #messageInput>
+    <button (click)="sendMessage()" 
+            class="send-button"
+            [disabled]="!newMessageContent.trim()">
+      Send
+    </button>
+  </div>
+</div>

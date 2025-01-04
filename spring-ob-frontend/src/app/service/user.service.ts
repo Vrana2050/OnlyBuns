@@ -52,7 +52,7 @@ export class UserService {
     return this.apiService.post(`http://localhost:8082/api/${userId}/follow`,{});
   }
   unfollow(userId : number){
-    return this.apiService.post(`http://localhost:8082/api/${userId}/unfollow`,{});
+    return this.apiService.delete(`http://localhost:8082/api/${userId}/unfollow`,{});
   }
   
   getUsers(page: number, pageSize: number, filters: any, sortBy: string, sortDirection: string): Observable<any> {
@@ -78,6 +78,7 @@ export class UserService {
         })
       );
   }
+
 
   
 

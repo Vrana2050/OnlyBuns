@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../service';
 
 @Component({
@@ -12,27 +12,22 @@ export class OtherUserProfileComponent implements OnInit {
   user: any;
   isFollowing: boolean = false;
 
-  constructor(private route: ActivatedRoute, private userService : UserService) {}
+  constructor(private route: ActivatedRoute, private userService : UserService,private router: Router,) {}
 
   ngOnInit(): void {
     // Subscribe to queryParams to retrieve the userId
     this.route.queryParams.subscribe(params => {
       this.userId = +params['userId'];
-      console.log(this.userId);
     });
 
     this.userService.getById(this.userId).subscribe((response) => {
       this.user = response;
-      console.log("OVO JE USER");
-      console.log(response);
       this.checkFollowStatus();
     });
     
   }
 
   checkFollowStatus() {
-    console.log("UBICU SE")
-    console.log(this.user.id)
     this.userService.getFollowStatus(this.user.id).subscribe((response) => {
       console.log("DA LI PRATIM " + response);
       this.isFollowing = response;
@@ -53,4 +48,11 @@ export class OtherUserProfileComponent implements OnInit {
 
     }
   }
+
+  startChat() {
+    if (this.user && this.user.id) {
+      this.router.navigate(['/chat', this.user.id]); // Pass userId in the route
+    }
+  }
+  
 }

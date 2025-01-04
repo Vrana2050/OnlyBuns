@@ -4,13 +4,16 @@
   </div>
   <div class="user-info">
     
-    <p>@{{ user.username }}</p>
+    <p>&commat;{{ user.username }}</p>
     <p>Location: {{ user.address || "Unknown" }}</p>
     <p>Posts: {{ user.numberOfPosts }}</p>
     <p>Following: {{ user.numberOfFollowing }}</p>
     <p>Followers: {{ user.numberOfFollowers }}</p>
     <button (click)="toggleFollow()">
       {{ isFollowing ? "Unfollow" : "Follow" }}
+    </button>
+    <button (click)="startChat()" class="message-btn">
+      Message
     </button>
   </div>
 </div>
