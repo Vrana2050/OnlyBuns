@@ -22,4 +22,9 @@ public class LocationServiceImpl implements LocationService {
     public List<Location> getAll() {
         return locationRepository.findAll();
     }
+
+    @Override
+    public Location getById(long id) {
+        return locationRepository.findById(id);
+    }
 }

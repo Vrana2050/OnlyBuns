@@ -30,6 +30,7 @@ import { SuccessfullyActivatedComponent } from './successfully-activated/success
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { TrendingComponent } from './trending/trending.component';
+import { NearbyPostsComponent } from './nearby-posts/nearby-posts.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { TrendingComponent } from './trending/trending.component';
     UserProfileComponent,
     OtherUserProfileComponent,
     TrendingComponent,
+    NearbyPostsComponent,
   ],
   imports: [
     BrowserModule,

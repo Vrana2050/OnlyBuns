@@ -3,7 +3,7 @@ import {ApiService} from './api.service';
 import {ConfigService} from './config.service';
 import {map} from 'rxjs/operators';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { PostReadDto } from '../model/postRead.model';
+import { PostReadDto, UserLikesDto } from '../model/postRead.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -29,6 +29,10 @@ export class PostService {
     return this.apiService.get('http://localhost:8082/api/posts/getAllSortedByTime');
   }
 
+  getAllRabbitObjects() {
+    return this.apiService.get('http://localhost:8082/api/rabbitCareObjects');
+  }
+
   countAllPosts() {
     return this.apiService.get('http://localhost:8082/api/posts/allTimePostCount');
   }
@@ -46,6 +50,18 @@ export class PostService {
     return this.apiService.post('http://localhost:8082/api/posts/getPostsOfUser',{}).pipe(
       map((response: HttpResponse<PostReadDto[]>) => response.body as PostReadDto[])
     );
+  }
+
+  getTop10AllTimePosts() : Observable<PostReadDto[]>{
+    return this.apiService.get('http://localhost:8082/api/posts/getTop10AllTimePosts');
+  }
+
+  getTop5PostLastWeek() : Observable<PostReadDto[]>{
+    return this.apiService.get('http://localhost:8082/api/posts/getTop5PostLastWeek');
+  }
+
+  getTop10LikersThisWeek() : Observable<UserLikesDto[]>{
+    return this.apiService.get('http://localhost:8082/api/posts/findTop10UsersByLikesGivenThisWeek');
   }
 
   deletePost(postId: number): Observable<boolean> {

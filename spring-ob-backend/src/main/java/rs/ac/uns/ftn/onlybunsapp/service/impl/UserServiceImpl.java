@@ -1,11 +1,14 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import ch.qos.logback.core.CoreConstants;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.PasswordChangeDto;
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.PostUserLike;
 import rs.ac.uns.ftn.onlybunsapp.model.Role;
@@ -33,6 +37,13 @@ import rs.ac.uns.ftn.onlybunsapp.service.RoleService;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
+import javax.annotation.PostConstruct;
+
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
+import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
 
 
 @Service
@@ -56,9 +67,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CommentRepository commentRepository;
 
+
+	private final BloomFilter<String> usernameBloomFilter = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), 1000);
+
+	@PostConstruct
+	public void initializeBloomFilters() {
+		// Napuni Bloom filtere postojećim podacima iz baze
+		userRepository.findAllUsernames().forEach(usernameBloomFilter::put);
+	}
+
 	@Override
 	public User findByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username);
+	}
+
+	@Override
+	public boolean isUsernamePotentiallyTaken(String username) {
+		return usernameBloomFilter.mightContain(username);
 	}
 
 	public User findById(Long id) throws AccessDeniedException {
@@ -88,7 +113,12 @@ public class UserServiceImpl implements UserService {
 		List<Role> roles = roleService.findByName("ROLE_USER");
 		u.setRoles(roles);
 
-		return this.userRepository.save(u);
+
+		User savedUser = userRepository.save(u);
+		if(savedUser != null) {
+			usernameBloomFilter.put(savedUser.getUsername());
+		}
+		return savedUser;
 	}
 
 
@@ -202,7 +232,24 @@ public class UserServiceImpl implements UserService {
 			this.emailSenderService.sendEmail(user.getEmail(), subject, body);
 		}
 	}
-  
+
+	@Override
+	public boolean changePassword(PasswordChangeDto passwords, User user) {
+
+		if(!passwordEncoder.matches(passwords.getOldPassword(), user.getPassword())) {
+			return false;
+		}
+
+		user.setPassword(passwordEncoder.encode(passwords.getNewPassword()));
+
+        return update(user) != null;
+    }
+
+	@Override
+	public List<String> findAllUsernames() {
+		return userRepository.findAllUsernames();
+	}
+
 	private int GetNumberOfUnseenLikes(User user) {
 		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
 		List<Long> userPostIds = new ArrayList<>();
@@ -227,6 +274,8 @@ public class UserServiceImpl implements UserService {
 		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
 		return commentRepository.findAllByPostInAndCreatedAfter(userPosts,user.getLastLoginDate()).size();
 	}
+
+
 
 }
 

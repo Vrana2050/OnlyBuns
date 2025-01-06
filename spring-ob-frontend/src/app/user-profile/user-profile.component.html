@@ -5,13 +5,65 @@
       <img class="profile-picture" src="https://via.placeholder.com/100" alt="Profile Picture" />
       <div class="profile-details">
         <h2>{{ user?.username }}</h2>
-        <p>"This user has no bio."</p>
+        <p>{{ user?.email }}</p>
+        <p>{{ user?.address }}</p>
         <div class="stats">
           <span><strong>{{ posts.length }}</strong> Posts</span>
           <span><strong>{{ user?.numberOfFollowers || 0 }}</strong> Followers</span>
           <span><strong>{{ user?.numberOfFollowing || 0 }}</strong> Following</span>
         </div>
       </div>
+    </div>
+    <button class="change-password-btn" (click)="openChangePasswordModal()">Change Password</button>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal" *ngIf="isChangePasswordModalOpen">
+    <div class="modal-content">
+      <h2>Change Password</h2>
+      <form (ngSubmit)="changePassword()">
+        <div class="form-group">
+          <label for="oldPassword">Old Password</label>
+          <input
+            type="password"
+            id="oldPassword"
+            [(ngModel)]="passwordChange.oldPassword"
+            name="oldPassword"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input
+            type="password"
+            id="newPassword"
+            [(ngModel)]="passwordChange.newPassword"
+            name="newPassword"
+            required
+            (input)="validatePasswords()"
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            [(ngModel)]="passwordChange.confirmPassword"
+            name="confirmPassword"
+            required
+            (input)="validatePasswords()"
+          />
+          <div *ngIf="passwordsMismatch" class="error-message">Passwords do not match</div>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!isPasswordValid"
+        >
+          Change Password
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeChangePasswordModal()">Cancel</button>
+      </form>
     </div>
   </div>
 
@@ -45,16 +97,14 @@
         </div>
         <p class="description">{{ selectedPost.description }}</p>
         <div class="interactions">
-          ❤️ {{ selectedPost.likes }}  • 💬 {{ selectedPost.numOfComments }} 
+          ❤️ {{ selectedPost.likes }} • 💬 {{ selectedPost.numOfComments }}
         </div>
         <div class="comments-section">
-          
           <div class="comments-list">
             <div *ngFor="let comment of selectedPost.comments" class="comment">
               <strong>{{ comment.creator }}</strong>: {{ comment.text }}
             </div>
           </div>
-          
         </div>
         <div *ngIf="editingPostId !== selectedPost.id" class="action-buttons">
           <button (click)="editPost(selectedPost)" class="edit-btn">Edit</button>

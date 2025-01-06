@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostCreateDto;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostReadDto;
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserLikesDto;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.PostService;
 
@@ -116,5 +117,24 @@ public class PostController {
     public int getThisMonthPostCount() {
         return postService.countThisMonthPosts();
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "/getTop5PostLastWeek", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getTop5MostLikedPostsLastWeek() {
+        return postService.getTop5MostLikedPostsLast7Days();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "/getTop10AllTimePosts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostReadDto> getTop10AllTimePosts() {
+        return postService.getTop10MostLikedPostsOfAllTime();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping(value = "/findTop10UsersByLikesGivenThisWeek", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UserLikesDto> findTop10UsersByLikesGivenThisWeek() {
+        return postService.findTop10UsersByLikesGivenThisWeek();
+    }
+
 
 }

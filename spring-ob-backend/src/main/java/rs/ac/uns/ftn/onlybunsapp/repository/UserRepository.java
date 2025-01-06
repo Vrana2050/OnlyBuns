@@ -35,6 +35,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> getAllByLastLoginDateBefore(Date date);
 
+    @Query("SELECT u.username FROM User u")
+    List<String> findAllUsernames();
+
+
 
     //@Query("SELECT u FROM User u JOIN u.likedPosts p GROUP BY u ORDER BY COUNT(p) DESC")
     //List<User> getTop10UsersThatLikedTheMost();

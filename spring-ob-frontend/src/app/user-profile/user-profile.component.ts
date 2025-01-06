@@ -1,31 +1,83 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PostService } from '../service/post.service';
 import { PostReadDto } from '../model/postRead.model';
-import { User } from '../model/user.model';
+import { User, PasswordChange } from '../model/user.model';
 import { UserService } from '../service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit{
+export class UserProfileComponent implements OnInit {
   posts: PostReadDto[] = [];
   editingPostId: number | null = null;
   newDescription: string = '';
   user: User | null = null;
-  
-  constructor(private postService : PostService,private userService : UserService){}
 
+  passwordChange: PasswordChange = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
+  isChangePasswordModalOpen: boolean = false;
+  passwordsMismatch: boolean = false;
+  isPasswordValid: boolean = false;
+
+  constructor(private postService: PostService, private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadPosts();
     this.userService.getMyInfo().subscribe((response) => {
       this.user = response;
       console.log(response);
-    })
+    });
+  }
 
-    
+  validatePasswords(): void {
+    this.passwordsMismatch = this.passwordChange.newPassword !== this.passwordChange.confirmPassword;
+    this.isPasswordValid =
+      this.passwordChange.newPassword.length >= 3 &&
+      this.passwordChange.confirmPassword.length >= 3 &&
+      !this.passwordsMismatch;
+  }
+
+  changePassword(): void {
+    if (!this.isPasswordValid) {
+      console.error('Password validation failed');
+      return;
+    }
+
+    this.userService
+  .changePassword({
+    oldPassword: this.passwordChange.oldPassword,
+    newPassword: this.passwordChange.newPassword
+  })
+  .subscribe(
+    (response: any) => {
+      console.log(response.message); // Handle the success message
+        this.router.navigate(['/login']);
+        alert('Password changed successfully. Please login again.');
+    },
+    (error) => {
+      if (error.error && error.error.message) {
+        console.error(error.error.message); // Display error message from backend
+        alert(error.error.message);
+      } else {
+        console.error('An unexpected error occurred', error);
+      }
+    }
+  );
+  }
+
+  openChangePasswordModal(): void {
+    this.isChangePasswordModalOpen = true;
+    console.log('Modal opened');
+  }
+
+  closeChangePasswordModal(): void {
+    this.isChangePasswordModalOpen = false;
   }
 
   loadPosts() :void {

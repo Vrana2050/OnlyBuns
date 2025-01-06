@@ -10,6 +10,7 @@ import { SuccessfullyActivatedComponent } from './successfully-activated/success
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { TrendingComponent } from './trending/trending.component';
+import { NearbyPostsComponent } from './nearby-posts/nearby-posts.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,10 @@ const routes: Routes = [
   {
     path: "trending",
     component: TrendingComponent,
+  },
+  {
+    path: "nearby-posts",
+    component: NearbyPostsComponent,
   },
 ];
 

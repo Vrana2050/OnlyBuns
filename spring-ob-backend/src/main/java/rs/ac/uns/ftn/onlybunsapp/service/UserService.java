@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.PasswordChangeDto;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 
 public interface UserService {
@@ -19,6 +20,7 @@ public interface UserService {
     User update(User updatedUser);
     boolean activateUser(long userId);
     User findByEmail(String email);
+    boolean isUsernamePotentiallyTaken(String username);
     //List<User> getTop10UsersThatLikedMost();
 
     public boolean isFollowing(long followerId, long followingId);
@@ -26,4 +28,8 @@ public interface UserService {
     public void unfollowUser(long followerId, long followingId);
 
     void SendEmailToInactiveUsers();
+
+    public boolean changePassword(PasswordChangeDto passwords, User user);
+
+    List<String> findAllUsernames();
 }

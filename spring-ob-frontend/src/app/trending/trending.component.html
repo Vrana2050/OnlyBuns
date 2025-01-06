@@ -1,4 +1,69 @@
-<div>
+<h1 style="color: purple; margin-left: 180px; margin-top: 40px;">Trending OnlyBuns</h1>
+<div class="container mt-4">
     <h3>All Time Post Count: {{ allPostsCount }}</h3>
     <h3>This Month Post Count: {{ allPostsThisMonthCount }}</h3>
-</div>
+  
+    <h4 class="mt-4">Top 10 All-Time Posts</h4>
+    <div class="row">
+      <div class="col-md-4 mb-3" *ngFor="let post of top10AllTimePosts">
+        <div class="card">
+          <img
+            [src]="'data:image/png;base64,' + post.imageBase64"
+            class="card-img-top"
+            alt="Post Image"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ post.creator.username }}</h5>
+            <p class="card-text">{{ post.description }}</p>
+            <div class="d-flex justify-content-between">
+              <span><i class="bi bi-hand-thumbs-up"></i> {{ post.likes }} Likes</span>
+              <span><i class="bi bi-chat"></i> {{ post.numOfComments }} Comments</span>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            Posted on: {{ post.postDate | date:'mediumDate' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <h4 class="mt-4">Top 5 Posts Last Week</h4>
+    <div class="row">
+      <div class="col-md-4 mb-3" *ngFor="let post of top5PostsLastWeek">
+        <div class="card">
+          <img
+            [src]="'data:image/png;base64,' + post.imageBase64"
+            class="card-img-top"
+            alt="Post Image"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ post.creator.username }}</h5>
+            <p class="card-text">{{ post.description }}</p>
+            <div class="d-flex justify-content-between">
+              <span><i class="bi bi-hand-thumbs-up"></i> {{ post.likes }} Likes</span>
+              <span><i class="bi bi-chat"></i> {{ post.numOfComments }} Comments</span>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            Posted on: {{ post.postDate | date:'mediumDate' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="mt-4">Top 10 Likers This Week</h4>
+    <div class="row">
+      <div class="col-md-4 mb-3" *ngFor="let user of top10Likers">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ user.user.username }}</h5>
+            <div class="d-flex justify-content-between">
+              <span><i class="bi bi-hand-thumbs-up"></i> {{ user.likeCount }} Likes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+  
