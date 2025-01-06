@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.onlybunsapp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -30,16 +32,13 @@ public class Chat {
         this.createdAt = createdAt;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "chat_participants",
-            joinColumns = @JoinColumn(name = "chat_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> participants = new HashSet<>();
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<ChatParticipant> participants = new HashSet<>();
+
 
     @Column(name = "is_private", nullable = false)
-    private boolean isPrivate = false; // True za privatni čat
+    private boolean isPrivate = false;
 
     public boolean isPrivate() {
         return isPrivate;
@@ -73,11 +72,18 @@ public class Chat {
         this.admin = admin;
     }
 
-    public Set<User> getParticipants() {
+    public Set<ChatParticipant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(Set<User> participants) {
+    public void setParticipants(Set<ChatParticipant> participants) {
         this.participants = participants;
+    }
+
+    public void addParticipant(User user) {
+        ChatParticipant participant = new ChatParticipant();
+        participant.setChat(this);
+        participant.setUser(user);
+        participants.add(participant);
     }
 }

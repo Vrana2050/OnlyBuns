@@ -7,8 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.onlybunsapp.dto.ChatDto;
+import rs.ac.uns.ftn.onlybunsapp.dto.ChatInboxDto;
 import rs.ac.uns.ftn.onlybunsapp.dto.MessageDto;
 import rs.ac.uns.ftn.onlybunsapp.model.Chat;
 import rs.ac.uns.ftn.onlybunsapp.model.Message;
@@ -41,24 +44,29 @@ public class ChatController {
     // WebSocket endpoint for sending messages
     @MessageMapping("/send")
     public void sendMessage(@Payload MessageDto message) {
-        System.out.println("Received message: " + message);
+
+        if (chatService == null) {
+            System.out.println("ChatService is null");
+        }
+
         Message savedMessage = chatService.sendMessage(message);
 
-        simpMessagingTemplate.convertAndSend("/topic/chat/" + message.getChatId(), savedMessage);
+        simpMessagingTemplate.convertAndSend("/topic/chat/" + message.getChat().getId(), savedMessage);
     }
 
 
     // REST endpoint to fetch messages for a specific chat
     @GetMapping("/{chatId}/messages")
-    public ResponseEntity<List<Message>> getMessagesByChatId(@PathVariable Long chatId) {
+    public ResponseEntity<List<MessageDto>> getMessagesByChatId(@PathVariable Long chatId, @AuthenticationPrincipal User user) {
         System.out.println("Fetching messages for chat: " + chatId);
-        List<Message> messages = chatService.getChatHistory(chatId);
+        List<MessageDto> messages = chatService.getChatHistory(chatId, user.getId());
+        System.out.println("Messages: " + messages);
         return ResponseEntity.ok(messages);
     }
 
     // REST endpoint to fetch or create a chat between two users
     @PostMapping("/create-or-get")
-    public ResponseEntity<Chat> getOrCreateChat(@RequestBody List<Long> participantIds) {
+    public ResponseEntity<ChatDto> getOrCreateChat(@RequestBody List<Long> participantIds) {
         if (participantIds.size() != 2) {
             return ResponseEntity.badRequest().build();
         }
@@ -69,15 +77,56 @@ public class ChatController {
         Long userId2 = participantIds.get(1);
 
         // Create the chat if both users are found
-        Chat chat = chatService.createOrGetPrivateChat(userId1, userId2);
+        ChatDto chat = chatService.createOrGetPrivateChat(userId1, userId2);
 
         return ResponseEntity.ok(chat);
     }
 
     // REST endpoint to get all chats for a specific user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Chat>> getChatsForUser(@PathVariable Long userId) {
-        List<Chat> chats = chatService.getUserChats(userId);
+    @GetMapping("/forUser")
+    public ResponseEntity<List<ChatInboxDto>> getChatsForUser(@AuthenticationPrincipal User user) {
+        List<ChatInboxDto> chats = chatService.getUserChats(user.getId());
         return ResponseEntity.ok(chats);
     }
+
+    @GetMapping("/{chatId}")
+    public ResponseEntity<ChatDto> getChatById(@PathVariable Long chatId) {
+        ChatDto chat = chatService.findChatById(chatId);
+        return ResponseEntity.ok(chat);
+    }
+
+    @PostMapping("/{chatId}/members/{userId}")
+    public ResponseEntity<ChatDto> addMember(@PathVariable Long chatId, @PathVariable Long userId, @AuthenticationPrincipal User user) {
+        ChatDto updatedChat = chatService.addMember(chatId, userId,user.getId());
+        return ResponseEntity.ok(updatedChat);
+    }
+
+    @DeleteMapping("/{chatId}/members/{userId}")
+    public ResponseEntity<ChatDto> removeMember(@PathVariable Long chatId, @PathVariable Long userId, @AuthenticationPrincipal User user) {
+        try {
+            ChatDto updatedChat = chatService.removeMember(chatId, userId, user.getId());
+            return ResponseEntity.ok(updatedChat);
+        } catch (IllegalAccessException e) {
+            System.out.println("Access error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Argument error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/newChat")
+    public ResponseEntity<ChatDto> createChat(@RequestBody List<Long> participantIds,@AuthenticationPrincipal User user) {
+        ChatDto chat = chatService.createChatIfNotExists(participantIds,user.getId());
+        participantIds.forEach(participantId -> {
+            simpMessagingTemplate.convertAndSend("/topic/new-chat/" + participantId, chat);
+        });
+        return ResponseEntity.ok(chat);
+    }
+
+
 }

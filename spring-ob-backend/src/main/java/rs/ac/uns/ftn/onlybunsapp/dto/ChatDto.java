@@ -1,11 +1,22 @@
 package rs.ac.uns.ftn.onlybunsapp.dto;
 
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserReadDto;
+
 import java.util.Set;
 
 public class ChatDto {
+    private Long id;
     private String name;
-    private Long adminId;
-    private Set<Long> participantIds;
+    private UserReadDto admin;
+    private Set<UserReadDto> participants;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -15,19 +26,19 @@ public class ChatDto {
         this.name = name;
     }
 
-    public Long getAdminId() {
-        return adminId;
+    public UserReadDto getAdmin() {
+        return admin;
     }
 
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+    public void setAdmin(UserReadDto admin) {
+        this.admin = admin;
     }
 
-    public Set<Long> getParticipantIds() {
-        return participantIds;
+    public Set<UserReadDto> getParticipants() {
+        return participants;
     }
 
-    public void setParticipantIds(Set<Long> participantIds) {
-        this.participantIds = participantIds;
+    public void setParticipants(Set<UserReadDto> participants) {
+        this.participants = participants;
     }
 }

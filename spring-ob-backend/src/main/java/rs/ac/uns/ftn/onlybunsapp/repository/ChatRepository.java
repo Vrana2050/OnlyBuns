@@ -21,6 +21,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
             "AND EXISTS (SELECT p FROM c.participants p WHERE p.id = :user2Id)")
     Chat findPrivateChatBetweenUsers(@Param("user1Id") Long user1Id, @Param("user2Id") Long user2Id);
 
-    Chat findChatById(Long chatId);
+    @Query("SELECT DISTINCT c FROM Chat c JOIN c.participants p WHERE p.id IN :participantIds")
+    List<Chat> findChatsByParticipantIds(@Param("participantIds") List<Long> participantIds);
 
 }

@@ -1,9 +1,34 @@
 package rs.ac.uns.ftn.onlybunsapp.dto;
 
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserReadDto;
+
+import java.sql.Timestamp;
+
 public class MessageDto {
     private String content;
-    private Long chatId;
-    private Long senderId;
+    private ChatDto chat;
+    private UserReadDto sender;
+    private Timestamp createdAt;
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public MessageDto() {
+    }
+
+
+    public UserReadDto getSender() {
+        return sender;
+    }
+
+    public void setSender(UserReadDto sender) {
+        this.sender = sender;
+    }
 
     public String getContent() {
         return content;
@@ -13,19 +38,12 @@ public class MessageDto {
         this.content = content;
     }
 
-    public Long getChatId() {
-        return chatId;
+    public ChatDto getChat() {
+        return chat;
     }
 
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
+    public void setChat(ChatDto chat) {
+        this.chat = chat;
     }
 
-    public Long getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
 }
