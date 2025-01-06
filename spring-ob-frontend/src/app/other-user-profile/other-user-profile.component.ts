@@ -49,10 +49,4 @@ export class OtherUserProfileComponent implements OnInit {
     }
   }
 
-  startChat() {
-    if (this.user && this.user.id) {
-      this.router.navigate(['/chat', this.user.id]); // Pass userId in the route
-    }
-  }
-  
 }

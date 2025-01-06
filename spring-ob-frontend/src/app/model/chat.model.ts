@@ -1,9 +1,9 @@
 import { User } from "./user.model";
+import { UserReadDto } from "./userRead.model";
 
 export interface Chat {
-    id: number;
+    id?: number;
     name: string;
-    isGroupChat: boolean;
-    admin?: User;
-    participants: User[];
+    admin: UserReadDto;
+    participants: UserReadDto[];
   }

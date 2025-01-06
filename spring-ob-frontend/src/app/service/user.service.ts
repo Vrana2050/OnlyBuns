@@ -6,6 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { User } from '../model/user.model';
 import { HttpParams, HttpResponse } from '@angular/common/http';
 import { Page } from '../model/page.model';
+import { UserReadDto } from '../model/userRead.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,12 @@ export class UserService {
   
   getFollowStatus(userId : number) : Observable<boolean>{
     return this.apiService.post(`http://localhost:8082/api/${userId}/is-following`,{});
+  }
+
+  getFollowers() : Observable<UserReadDto[]>{
+    return this.apiService.post(`http://localhost:8082/api/getFollowers`,{}).pipe(
+      map((response: HttpResponse<UserReadDto[]>) => response.body as UserReadDto[])
+    );
   }
 
   follow(userId : number){
