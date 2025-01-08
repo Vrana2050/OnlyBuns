@@ -106,76 +106,76 @@ export class AppAnalyticsComponent implements OnInit {
   }
   radialChart: any;
   createRadialChart(data: { PostUsers: number, CommentUsers: number, InactiveUsers: number }) {
-    // Create separate charts for each user activity
+    // Calculate total users to get percentages
+    const totalUsers = data.PostUsers + data.CommentUsers + data.InactiveUsers;
+    
+    // Common options for all charts
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0,
+          max: 100, // Set maximum to 100 for percentage
+          ticks: {
+            stepSize: 20
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context: any) {
+              return `${context.raw.toFixed(1)}%`;
+            }
+          }
+        }
+      }
+    };
   
     // Create chart for PostUsers
     const ctxPostUsers = document.getElementById('postUsersChart') as HTMLCanvasElement;
-    if (this.radialChart) {
-      this.radialChart.destroy();
-    }
-  
-    this.radialChart = new Chart(ctxPostUsers, {
+    new Chart(ctxPostUsers, {
       type: 'polarArea',
       data: {
         labels: ['Posts'],
         datasets: [{
-          data: [data.PostUsers],
+          data: [(data.PostUsers / totalUsers) * 100],
           backgroundColor: ['#42a5f5'],
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
+      options: chartOptions
     });
   
     // Create chart for CommentUsers
     const ctxCommentUsers = document.getElementById('commentUsersChart') as HTMLCanvasElement;
-    this.radialChart = new Chart(ctxCommentUsers, {
+    new Chart(ctxCommentUsers, {
       type: 'polarArea',
       data: {
         labels: ['Comments Only'],
         datasets: [{
-          data: [data.CommentUsers],
+          data: [(data.CommentUsers / totalUsers) * 100],
           backgroundColor: ['#66bb6a'],
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
+      options: chartOptions
     });
   
     // Create chart for InactiveUsers
     const ctxInactiveUsers = document.getElementById('inactiveUsersChart') as HTMLCanvasElement;
-    this.radialChart = new Chart(ctxInactiveUsers, {
+    new Chart(ctxInactiveUsers, {
       type: 'polarArea',
       data: {
         labels: ['Inactive'],
         datasets: [{
-          data: [data.InactiveUsers],
+          data: [(data.InactiveUsers / totalUsers) * 100],
           backgroundColor: ['#ff7043'],
         }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
+      options: chartOptions
     });
   }
   
