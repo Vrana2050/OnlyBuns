@@ -3,6 +3,8 @@ package rs.ac.uns.ftn.onlybunsapp.service.impl;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ch.qos.logback.core.CoreConstants;
@@ -21,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
+import rs.ac.uns.ftn.onlybunsapp.exception.RateLimitExceededException;
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.PostUserLike;
 import rs.ac.uns.ftn.onlybunsapp.model.Role;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
+import rs.ac.uns.ftn.onlybunsapp.ratelimiter.RateLimiterFollow;
 import rs.ac.uns.ftn.onlybunsapp.repository.CommentRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.LikeRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.PostRepository;
@@ -58,6 +62,13 @@ public class UserServiceImpl implements UserService {
 	private LikeRepository likeRepository;
     @Autowired
     private CommentRepository commentRepository;
+
+
+	private RateLimiterFollow rateLimiter;
+
+	private final Map<Long, AtomicInteger> followCountsPerMinute = new ConcurrentHashMap<>();
+	private final Map<Long, Long> lastResetTime = new ConcurrentHashMap<>();
+	private static final int MAX_FOLLOWS_PER_MINUTE = 50;
 
 	@Override
 	public User findByUsername(String username) throws UsernameNotFoundException {
@@ -138,21 +149,72 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmail(email);
 
 	}
+
+	@Transactional
 	public void followUser(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId)
+		// Provera rate limita
+		if (!checkRateLimit(followerId)) {
+			throw new RateLimitExceededException("Exceeded maximum follow rate of 50 per minute");
+		}
+
+		// Zaključavanje i čitanje oba korisnika atomično
+		List<User> users = userRepository.lockUsersForUpdate(followerId, followingId);
+
+		if (users.size() != 2) {
+			throw new EntityNotFoundException("One or both users not found");
+		}
+
+		User follower = users.stream()
+				.filter(u -> u.getId() == followerId)
+				.findFirst()
 				.orElseThrow(() -> new EntityNotFoundException("Follower not found"));
-		User following = userRepository.findById(followingId)
+
+		User following = users.stream()
+				.filter(u -> u.getId() == followingId)
+				.findFirst()
 				.orElseThrow(() -> new EntityNotFoundException("Following not found"));
 
-		if (userRepository.isFollowing(followerId, followingId)) {
+		// Provera da li već prati
+		if (follower.getFollowing().contains(following)) {
 			throw new IllegalStateException("Already following this user");
 		}
 
-		follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
-		following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
+		// Inicijalizacija lista ako su null
+		if (follower.getFollowing() == null) {
+			follower.setFollowing(new ArrayList<>());
+		}
+		if (following.getFollowers() == null) {
+			following.setFollowers(new ArrayList<>());
+		}
 
-		userRepository.save(follower);
-		userRepository.save(following);
+		// Dodavanje veze praćenja
+		follower.getFollowing().add(following);
+		following.getFollowers().add(follower);
+
+		// Ažuriranje brojača
+		follower.setNumberOfFollowing(follower.getNumberOfFollowing() + 1);
+		following.setNumberOfFollowers(following.getNumberOfFollowers() + 1);
+
+		// Čuvanje promena
+		userRepository.saveAll(Arrays.asList(follower, following));
+	}
+
+	private synchronized boolean checkRateLimit(long userId) {
+		long currentTime = System.currentTimeMillis();
+		long userLastResetTime = lastResetTime.getOrDefault(userId, 0L);
+
+		if (currentTime - userLastResetTime >= 60000) {
+			followCountsPerMinute.put(userId, new AtomicInteger(0));
+			lastResetTime.put(userId, currentTime);
+		}
+
+		AtomicInteger count = followCountsPerMinute.computeIfAbsent(userId, k -> new AtomicInteger(0));
+		if (count.get() >= MAX_FOLLOWS_PER_MINUTE) {
+			return false;
+		}
+
+		count.incrementAndGet();
+		return true;
 	}
 /*
 	@Override

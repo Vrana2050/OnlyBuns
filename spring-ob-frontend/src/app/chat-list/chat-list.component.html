@@ -42,7 +42,7 @@
               <p>{{ follower.username }}</p>
             </div>
           </div>
-          <button (click)="makeAChatWithParticipants()">Make a chat</button>
+          <button *ngIf="followers.length !== 0" (click)="makeAChatWithParticipants()">Make a chat</button>
           <div *ngIf="followers.length === 0" >
             <p>No users to add.</p>
           </div>

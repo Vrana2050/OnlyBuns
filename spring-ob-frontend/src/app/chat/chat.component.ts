@@ -47,7 +47,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.chatService.getChat(chatId).subscribe(chat => {
           this.currentChat = chat;
 
-          this.chatParticipants = chat.participants.filter(member => member.id !== this.user?.id);
+          this.loadParticipants();
           // Load existing messages
 
 

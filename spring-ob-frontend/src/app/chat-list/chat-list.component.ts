@@ -41,20 +41,21 @@ export class ChatListComponent implements OnInit,OnDestroy {
     });
 }
 
-  loadChats() {
-    this.chatService.getChatsForUser().subscribe((allChats) => {
-      this.chats = allChats
-        .filter(chat => 
-          chat.participants.some(participant => participant.id === this.user?.id) // Ensure user is part of the chat
-        )
-        .map(chat => {
-          return {
-            ...chat,
-            participants: chat.participants.filter(participant => participant.id !== this.user?.id)
-          };
-        });
-    });
-  }
+loadChats() {
+  this.chatService.getChatsForUser().subscribe((allChats) => {
+    console.log('Received chats from API:', allChats);
+    this.chats = allChats
+      .filter(chat => chat.participants.some(participant => participant.id === this.user?.id))
+      .map(chat => {
+        return {
+          ...chat,
+          participants: chat.participants.filter(participant => participant.id !== this.user?.id)
+        };
+      });
+    console.log('Filtered chats:', this.chats);
+  });
+}
+
   
 
   openChat(chatId: number | undefined) {
@@ -92,6 +93,7 @@ export class ChatListComponent implements OnInit,OnDestroy {
     this.chatService.createChat(this.participantsIdsForNewChat).subscribe(() => {
       this.loadChats();
       this.openSelectParticipants = false;
+      this.participantsIdsForNewChat = [];
     });
   }
 
@@ -105,12 +107,17 @@ export class ChatListComponent implements OnInit,OnDestroy {
         this.chatService.subscribeToNewChats(this.user?.id!).subscribe((newChat) => {
           console.log('New chat received:', newChat);
   
-          const existingChat = this.chats.find(chat => chat.chatId === newChat.chatId);
-          if (!existingChat) {
+          // Check if a chat with the exact same participants already exists
+          const isDuplicate = this.chats.some(chat => 
+            chat.participants.length === newChat.participants.length &&
+            chat.participants.every((p: any) => newChat.participants.some((np: any) => np.id === p.id))
+          );
+  
+          if (!isDuplicate) {
             console.log('Adding new chat:', newChat);
             this.chats.unshift(newChat);
           } else {
-            console.log('Chat already exists:', newChat);
+            console.log('Chat with same participants already exists, ignoring:', newChat);
           }
         });
       }).catch((error) => {
@@ -118,6 +125,8 @@ export class ChatListComponent implements OnInit,OnDestroy {
       });
     }
   }
+  
+  
   
   
   

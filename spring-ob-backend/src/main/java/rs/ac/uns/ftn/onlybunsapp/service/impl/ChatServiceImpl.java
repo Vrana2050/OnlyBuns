@@ -56,6 +56,8 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private ChatParticipantRepository chatParticipantRepository;
 
+    private boolean isItNew;
+
 
     public Message sendMessage(MessageDto messageDto) {
         // Verify chat exists and is accessible to sender
@@ -242,38 +244,40 @@ public class ChatServiceImpl implements ChatService {
     }
 
 
-    @Transactional
     public ChatDto createChatIfNotExists(List<Long> participantIds, Long userId) {
+        isItNew = false;
         List<Long> sortedIds = new ArrayList<>(participantIds);
         Collections.sort(sortedIds);
 
-        List<Chat> potentialChats = chatRepository.findChatsByParticipantIds(participantIds);
+        // Find if a chat with exactly these participants exists
+        List<Long> existingChatIds = chatRepository.findChatIdsByExactParticipants(participantIds, participantIds.size());
 
-        // Check if any of these chats have EXACTLY these participants (no more, no less)
-        for (Chat chat : potentialChats) {
-            List<Long> chatParticipantIds = chat.getParticipants().stream()
-                    .map(participant -> participant.getUser().getId())
-                    .sorted()
-                    .collect(Collectors.toList());
-
-            if (chatParticipantIds.equals(sortedIds)) {
-                return mapToDto(chat); // Found existing chat with exact participants
-            }
+        if (!existingChatIds.isEmpty()) {
+            return mapToDto(chatRepository.findById(existingChatIds.get(0)).orElseThrow());
         }
 
+        // Create new chat if not found
+        isItNew = true;
         Chat newChat = new Chat();
-        newChat.setName("Group Chat"); // Or generate based on participants
+        newChat.setName("Group Chat");
         newChat.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-        // Set participants
         List<User> participants = userRepository.findAllById(participantIds);
+        newChat.setParticipants(new HashSet<>(participants.stream()
+                .map(participant -> new ChatParticipant(newChat, participant))
+                .collect(Collectors.toSet())));
 
-
-        newChat.setParticipants(new HashSet<>(participants.stream().map(participant -> new ChatParticipant(newChat, participant)).collect(Collectors.toSet())));
-        User admin = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        User admin = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
         newChat.setAdmin(admin);
 
         return mapToDto(chatRepository.save(newChat));
+    }
+
+
+
+    public boolean isChatNew(){
+        return isItNew;
     }
 
 

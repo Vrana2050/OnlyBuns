@@ -18,5 +18,6 @@ public interface ChatService {
     public ChatDto removeMember(Long chatId, Long removeUserId,Long requestingUserId) throws IllegalAccessException ;
     public ChatDto addMember(Long chatId, Long newUserId, Long userId);
     public ChatDto createChatIfNotExists(List<Long> participantIds, Long userId) ;
+    public boolean isChatNew();
 
 }

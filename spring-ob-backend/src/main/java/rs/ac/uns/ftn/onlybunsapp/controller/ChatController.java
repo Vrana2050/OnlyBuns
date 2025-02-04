@@ -122,9 +122,10 @@ public class ChatController {
     @PostMapping("/newChat")
     public ResponseEntity<ChatDto> createChat(@RequestBody List<Long> participantIds,@AuthenticationPrincipal User user) {
         ChatDto chat = chatService.createChatIfNotExists(participantIds,user.getId());
-        participantIds.forEach(participantId -> {
-            simpMessagingTemplate.convertAndSend("/topic/new-chat/" + participantId, chat);
-        });
+        if(chatService.isChatNew())
+            participantIds.forEach(participantId -> {
+                simpMessagingTemplate.convertAndSend("/topic/new-chat/" + participantId, chat);
+            });
         return ResponseEntity.ok(chat);
     }
 

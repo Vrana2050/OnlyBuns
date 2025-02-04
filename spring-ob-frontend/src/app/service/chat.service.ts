@@ -85,14 +85,21 @@ export class ChatService {
     }
   
     const subject = new Subject<ChatInbox>();
+  
     this.stompClient.subscribe(`/topic/new-chat/${userId}`, (message) => {
       const newChat = JSON.parse(message.body) as ChatInbox;
       console.log('Received new chat:', newChat);
+  
+      // Remove current user from participants
+      newChat.participants = newChat.participants.filter(p => p.id !== userId);
+      
+      console.log('Filtered new chat:', newChat);
       subject.next(newChat);
     });
   
     return subject.asObservable();
   }
+  
   
   
 

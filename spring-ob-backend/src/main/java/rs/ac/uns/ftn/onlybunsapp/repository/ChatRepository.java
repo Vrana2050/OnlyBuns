@@ -24,4 +24,26 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("SELECT DISTINCT c FROM Chat c JOIN c.participants p WHERE p.id IN :participantIds")
     List<Chat> findChatsByParticipantIds(@Param("participantIds") List<Long> participantIds);
 
+    @Query("SELECT c FROM Chat c WHERE " +
+            "(SELECT COUNT(cp) FROM ChatParticipant cp WHERE cp.chat = c) = :size " +
+            "AND c.id IN (SELECT cp.chat.id FROM ChatParticipant cp WHERE cp.user.id IN :participantIds)")
+    List<Chat> findChatsByExactParticipantIds(@Param("participantIds") List<Long> participantIds, @Param("size") int size);
+
+    @Query(value = "SELECT c.id " +
+            "FROM chats c " +
+            "JOIN chat_participants cp ON c.id = cp.chat_id " +
+            "WHERE cp.user_id IN (:participantIds) " +
+            "GROUP BY c.id " +
+            "HAVING COUNT(DISTINCT cp.user_id) = :size " +
+            "AND COUNT(DISTINCT cp.user_id) = " +
+            "(SELECT COUNT(*) FROM chat_participants WHERE chat_id = c.id)",
+            nativeQuery = true)
+    List<Long> findChatIdsByExactParticipants(
+            @Param("participantIds") List<Long> participantIds,
+            @Param("size") int size
+    );
+
+
+
+
 }
