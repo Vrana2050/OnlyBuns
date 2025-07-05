@@ -17,11 +17,10 @@
 
         <li [routerLink]="['nearby-posts']"><a><i class="fas fa-user"></i>Nearby Posts</a></li>
 
-        <li [routerLink]="['trending']" *ngIf="isAdmin()"><a><i class="fas fa-user"></i>Trending</a></li>
-        <li><a href="#"><i class="fas fa-user"></i>Nearby Posts</a></li>
+        <li [routerLink]="['trending']" ><a><i class="fas fa-user"></i>Trending</a></li>
 
         <li [routerLink]="['post']"><a><i class="fas fa-user"></i>Post</a></li>
-        <li [routerLink]="['app-analytics']" *ngIf="isAdmin()"><a><i class="fas fa-user"></i>App-Analytics</a></li>
+        <li [routerLink]="['app-analytics']" *ngIf="isAdmin"><a><i class="fas fa-user"></i>App-Analytics</a></li>
       </ul>
     </div>
 
@@ -79,7 +78,7 @@
 
 
     
-    <div class="feed" *ngIf="!hasSignedIn() || isAdmin()">
+    <div class="feed" *ngIf="!hasSignedIn()">
       <div *ngFor="let post of postsNotSignedIn; let i = index" class="post">
         <div class="post-header">
           <div class="user-info">

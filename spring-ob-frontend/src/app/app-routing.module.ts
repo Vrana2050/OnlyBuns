@@ -66,7 +66,7 @@ const routes: Routes = [
     path: "nearby-posts",
     component: NearbyPostsComponent,
   },
-
+  {
     path: "app-analytics",
     component: AppAnalyticsComponent,
   },
