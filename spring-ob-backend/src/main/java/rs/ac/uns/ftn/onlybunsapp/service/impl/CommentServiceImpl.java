@@ -38,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreator(creator);
         comment.setText(commentDto.comment);
         comment.setCreated(Timestamp.from(Instant.now()));
+        post.setNumOfComments(post.getNumOfComments() + 1);
+        postRepository.save(post);
         return commentRepository.save(comment);
     }
     public Comment standardFallback(User creator, CommentCreateDto commentDto, RequestNotPermitted rnp) {
