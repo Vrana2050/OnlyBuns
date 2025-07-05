@@ -7,16 +7,20 @@
   <body>
     <div class="side-menu" *ngIf="hasSignedIn()">
       <ul>
+
         <li><a href="#" *ngIf="isUser"><i class="fas fa-home"></i>Home</a></li>
         <li *ngIf="isAdmin" [routerLink]="['']"><a href="#"><i class="fas fa-home"></i> Home</a></li>
+        <li><a [routerLink]="['/inbox']"><i class="fas fa-inbox"></i>Inbox</a></li>
+
         <li><a (click)="navigateToProfile()"><i class="fas fa-user"></i> Profile</a></li>
         <li><a href="#"><i class="fas fa-user"></i>Feed</a></li>
-        <li [routerLink]="['trending']" ><a><i class="fas fa-user"></i>Trending</a></li>
+        <li [routerLink]="['trending']" *ngIf="isAdmin()"><a><i class="fas fa-user"></i>Trending</a></li>
         <li><a href="#"><i class="fas fa-user"></i>Nearby Posts</a></li>
-        <li><a href="#"><i class="fas fa-user"></i>Inbox</a></li>
         <li [routerLink]="['post']"><a><i class="fas fa-user"></i>Post</a></li>
+        <li [routerLink]="['app-analytics']" *ngIf="isAdmin()"><a><i class="fas fa-user"></i>App-Analytics</a></li>
       </ul>
     </div>
+
 
     <div class="feed" *ngIf="hasSignedIn()">
       <button mat-raised-button color="accent" *ngIf="isAdmin && hasPostsToPromote" (click)="sendPostsToAds()" class="PromoteButton"><span> PROMOTE SELECTED POSTS</span></button>
@@ -71,7 +75,7 @@
 
 
     
-    <div class="feed" *ngIf="!hasSignedIn()">
+    <div class="feed" *ngIf="!hasSignedIn() || isAdmin()">
       <div *ngFor="let post of postsNotSignedIn; let i = index" class="post">
         <div class="post-header">
           <div class="user-info">

@@ -94,6 +94,8 @@ public class WebSecurityConfig {
 				.antMatchers("/api/getById/**").permitAll()
 				.antMatchers("/actuator/**").permitAll()//ZA PROMETHEUS
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
+				.antMatchers("/ws/**").permitAll()
+				// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
 			// koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
 			// samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:
 			// .antMatchers("/admin").hasRole("ADMIN") ili .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
@@ -126,7 +128,7 @@ public class WebSecurityConfig {
 
     			// Ovim smo dozvolili pristup statickim resursima aplikacije
     			.antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico",
-    			"/**/*.html", "/**/*.css", "/**/*.js");
+    			"/**/*.html", "/**/*.css", "/**/*.js", "/ws/**");
 
     }
 

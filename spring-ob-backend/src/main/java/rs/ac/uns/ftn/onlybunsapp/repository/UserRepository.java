@@ -5,13 +5,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
+
+import javax.persistence.LockModeType;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
@@ -35,9 +41,35 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> getAllByLastLoginDateBefore(Date date);
 
+    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM User u JOIN u.following f " +
+            "WHERE u.id = :followerId AND f.id = :followingId")
+    boolean isFollowing(@Param("followerId") long followerId, @Param("followingId") long followingId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM following WHERE follower_id = :followerId AND following_id = :followingId", nativeQuery = true)
+    void deleteFollowRelation(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
 
     //@Query("SELECT u FROM User u JOIN u.likedPosts p GROUP BY u ORDER BY COUNT(p) DESC")
     //List<User> getTop10UsersThatLikedTheMost();
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.enabled = true")
+    long countAllByEnabledIsTrue();
+
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.enabled = false")
+    void deleteByEnabledFalse();
+
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT u FROM User u WHERE u.id IN (:followerId, :followingId)")
+    List<User> lockUsersForUpdate(@Param("followerId") long followerId, @Param("followingId") long followingId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT u FROM User u WHERE u.id = :id")
+    Optional<User> findByIdWithLock(@Param("id") Long id);
+
 
 }
 

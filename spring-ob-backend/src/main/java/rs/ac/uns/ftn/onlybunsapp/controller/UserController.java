@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserReadDto;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 
@@ -38,6 +39,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+
 
 	// Za pristup ovoj metodi neophodno je da ulogovani korisnik ima ADMIN ulogu
 	// Ukoliko nema, server ce vratiti gresku 403 Forbidden
@@ -81,6 +84,11 @@ public class UserController {
 		return this.userService.findById(userId);
 	}
 
+	@PostMapping("/getFollowers")
+	public List<User> getFollowers(@AuthenticationPrincipal User user) {
+
+		return this.userService.findByUsername(user.getUsername()).getFollowers();
+	}
 
 	@GetMapping("/getUsersThatLikedMost")
 	public List<User> getUsersThatLikedMost(){
@@ -89,21 +97,18 @@ public class UserController {
 	}
 
 	@PostMapping("/{userId}/follow")
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<?> followUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
 		userService.followUser(currentUser.getId(), userId);
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("/{userId}/unfollow")
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	@DeleteMapping("/{userId}/unfollow")
 	public ResponseEntity<?> unfollowUser(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
 		userService.unfollowUser(currentUser.getId(), userId);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/{userId}/is-following")
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public ResponseEntity<Boolean> isFollowing(@PathVariable long userId, @AuthenticationPrincipal User currentUser) {
 		boolean isFollowing = userService.isFollowing(currentUser.getId(), userId);
 		return ResponseEntity.ok(isFollowing);
