@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
 import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,6 +18,7 @@ import rs.ac.uns.ftn.onlybunsapp.mapper.UserMapper;
 import rs.ac.uns.ftn.onlybunsapp.model.Comment;
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
+import rs.ac.uns.ftn.onlybunsapp.producer.Producer;
 import rs.ac.uns.ftn.onlybunsapp.repository.LikeRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.PostRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.UserRepository;
@@ -29,6 +31,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.RollbackException;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -47,7 +54,8 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserMapper userMapper;
     public int gas=0;
-
+    @Autowired
+    private Producer producer;
     @Autowired
     private PostMapper postMapper;
     @Autowired
@@ -169,6 +177,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Boolean sendPostsToAgencies(List<Long> postIds) {
+        List<Post>selectedPosts = postRepository.findAllById(postIds);
+        StringBuilder text = new StringBuilder();
+        for (Post post : selectedPosts) {
+            text.append(createMessage(post.getDescription(),post.getCreator().getUsername(),post.getPostDate().getTime()));
+        }
+        producer.sendFanoutMessage("agenciesFanoutExchange",text.toString());
+        return true;
+    }
+    public static String createMessage(String description, String username, long publishedAtTimestamp) {
+        LocalDateTime publishedAt = Instant.ofEpochMilli(publishedAtTimestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        return String.format(
+                "Nova objava! 📢\n\n" +
+                        "📝 Opis: %s\n\n" +
+                        "👤 Korisnik: %s\n\n" +
+                        "⏰ Vreme objavljivanja: %s\n",
+                description,
+                username,
+                publishedAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm"))
+        );
+    }
     public int countAllTimePosts() {
         return postRepository.countAllPosts();
     }

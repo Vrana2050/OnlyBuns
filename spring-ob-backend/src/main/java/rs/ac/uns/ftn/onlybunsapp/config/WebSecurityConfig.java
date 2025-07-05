@@ -92,6 +92,8 @@ public class WebSecurityConfig {
 			.antMatchers("/account/**").permitAll()// /api/foo
 				.antMatchers("/api/posts/getAllSortedByTime").permitAll()
 				.antMatchers("/api/getById/**").permitAll()
+				.antMatchers("/actuator/**").permitAll()//ZA PROMETHEUS
+			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
 				.antMatchers("/ws/**").permitAll()
 				// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
 			// koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi

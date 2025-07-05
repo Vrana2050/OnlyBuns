@@ -48,7 +48,11 @@ export class PostService {
       map((response: HttpResponse<PostReadDto[]>) => response.body as PostReadDto[])
     );
   }
-
+  sendPostsToAds(postIds: number[]): Observable<any> {
+    return this.apiService.post('http://localhost:8082/api/posts/sendAd', postIds).pipe(
+      map((response: HttpResponse<any>) => response.body as any)
+    );
+  }
   deletePost(postId: number): Observable<boolean> {
 
     return this.apiService.post(`http://localhost:8082/api/posts/delete/${postId}`,{}).pipe(
