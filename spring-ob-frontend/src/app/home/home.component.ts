@@ -21,8 +21,8 @@ export class HomeComponent implements OnInit {
   whoamIResponse = {};
   hasPostsToPromote = false;
   allUserResponse = {};
-  isAdmin=false;
-  isUser=false;
+  isUser = false;
+  isAdmin = false;
   isPopupVisible: boolean = false;
   posts: PostReadDto[] = [
     {
@@ -48,11 +48,13 @@ export class HomeComponent implements OnInit {
 
 
   hasSignedIn() {
+    console.log("hasSignedIn: " + this.userService.isUserLoggedIn);
     return !!this.userService.isUserLoggedIn;
   }
-  isAdmin(): boolean {
+  /*isAdmin(): boolean {
+  console.log("isAdmin: " + (this.user?.roles?.some(role => role.name === 'ROLE_ADMIN') || false));
     return this.user?.roles?.some(role => role.name === 'ROLE_ADMIN') || false;
-  }
+  }*/
 
   constructor(private postService: PostService,private commentService:CommentService, private userService : UserService,private router: Router) { }
 
@@ -67,7 +69,7 @@ export class HomeComponent implements OnInit {
       console.log(response);
     });
 
-    this.postService.getAllPostsFollowing().subscribe((response) => {
+   this.postService.getAllPostsFollowing().subscribe((response) => {
       this.posts = response;
     });
 
@@ -75,7 +77,7 @@ export class HomeComponent implements OnInit {
   }
   getRole(){
     this.userService.getMyInfo().subscribe((response) => {
-      this.isAdmin = response.roles.some((role:any) => role.name === 'ROLE_ADMIN');
+      this.isAdmin = response.roles.some((role:any) => role.name === 'ROLE_ADMIN'); this.isAdmin = response.roles.some((role:any) => role.name === 'ROLE_ADMIN');
       this.isUser = response.roles.some((role:any) => role.name === 'ROLE_USER');
       if(this.isAdmin){
         console.log("Admin");
