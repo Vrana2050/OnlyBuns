@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from './api.service';
 import {ConfigService} from './config.service';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { PostReadDto } from '../model/postRead.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { AnalyticsDto } from '../model/analytics.model';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,43 @@ export class PostService {
       map((response: HttpResponse<PostReadDto>) => response.body as PostReadDto)
     );
   }
+  
+  getActivityCounts(startDate: Date, endDate: Date): Observable<{ posts: number, comments: number }> {
+    const body = {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    };
+  
+    return this.apiService.post(
+      'http://localhost:8082/api/analytics/activity',
+      body
+    ).pipe(
+      map((response: HttpResponse<{ posts: number, comments: number }>) => 
+        response.body as { posts: number, comments: number }
+      )
+    );
+  }
+
+  getUserActivityStats(): Observable<{ PostUsers: number, CommentUsers: number, InactiveUsers: number }> {
+    return this.apiService.get('http://localhost:8082/api/analytics/user-activity-stats').pipe(
+      map((response) => {
+        // Log the response for debugging
+        console.log('Response from API:', response);
+  
+        // Ensure that the response is defined and return it or fallback if undefined
+        return response || { PostUsers: 0, CommentUsers: 0, InactiveUsers: 0 };  // Fallback data
+      }),
+      catchError((error) => {
+        console.error('Error fetching stats:', error);
+        return of({ PostUsers: 0, CommentUsers: 0, InactiveUsers: 0 });  // Fallback data
+      })
+    );
+  }
+  
+  
+  
+  
+  
+  
   
 }

@@ -9,6 +9,8 @@ import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 
+import javax.transaction.Transactional;
+
 public interface UserService {
     User findById(Long id);
     User findByUsername(String username);

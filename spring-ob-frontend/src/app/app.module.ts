@@ -30,6 +30,9 @@ import { SuccessfullyActivatedComponent } from './successfully-activated/success
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { TrendingComponent } from './trending/trending.component';
+import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
+import { ChatComponent } from './chat/chat.component';
+import { ChatListComponent } from './chat-list/chat-list.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,9 @@ import { TrendingComponent } from './trending/trending.component';
     UserProfileComponent,
     OtherUserProfileComponent,
     TrendingComponent,
+    AppAnalyticsComponent,
+    ChatComponent,
+    ChatListComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,8 @@ import { UserService } from '../service';
 import { Router } from '@angular/router';
 import { CommentService } from '../service/comment.service';
 import { CommentCreate } from '../model/comment.model';
+import { User } from '../model/user.model';
+import { RoleName } from '../model/role.model';
 
 @Component({
   selector: 'app-home',
@@ -38,11 +40,15 @@ export class HomeComponent implements OnInit {
   postsNotSignedIn : PostReadDto[] = [];
   selectedPostIndex: number | null = null;
   showLoginModal: boolean = false;
+  user : User | null = null;
+
 
   hasSignedIn() {
     return !!this.userService.isUserLoggedIn;
   }
-
+  isAdmin(): boolean {
+    return this.user?.roles?.some(role => role.name === 'ROLE_ADMIN') || false;
+  }
 
   constructor(private postService: PostService,private commentService:CommentService, private userService : UserService,private router: Router) { }
 
@@ -60,6 +66,10 @@ export class HomeComponent implements OnInit {
     this.postService.getAllPostsFollowing().subscribe((response) => {
       this.posts = response;
     });
+    this.userService.getMyInfo().subscribe((response) => {
+      this.user = response;
+      console.log(response);
+    })
   }
 
   navigateToProfile(): void {

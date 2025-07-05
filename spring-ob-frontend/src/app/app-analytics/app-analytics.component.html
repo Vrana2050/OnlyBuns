@@ -1,0 +1,54 @@
+<!-- app-analytics.component.html -->
+
+<div class="analytics-container">
+    <h1>Administrator Dashboard</h1>
+    
+    <!-- Time Series Chart -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Activity through time</h2>
+        <div class="time-period-selector">
+          <button [class.active]="activeTimePeriod === 'weekly'" 
+                  (click)="onTimePeriodChange('weekly')">
+            Weekly
+          </button>
+          <button [class.active]="activeTimePeriod === 'monthly'" 
+                  (click)="onTimePeriodChange('monthly')">
+            Monthly
+          </button>
+          <button [class.active]="activeTimePeriod === 'yearly'" 
+                  (click)="onTimePeriodChange('yearly')">
+            Yearly
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="timeSeriesChart"></canvas>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card">
+        <div class="card-header">
+          <h2>Distribucija korisničke aktivnosti</h2>
+        </div>
+        <div class="card-body">
+            
+          <div class="chart-container">
+            Posts
+            <canvas id="postUsersChart"></canvas>
+          </div>
+          <div class="chart-container">
+            Only Comments
+            <canvas id="commentUsersChart"></canvas>
+          </div>
+          <div class="chart-container">
+            Inactive Users
+            <canvas id="inactiveUsersChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      
+  </div>
