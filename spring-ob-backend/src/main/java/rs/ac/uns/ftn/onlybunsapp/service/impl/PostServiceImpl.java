@@ -10,12 +10,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.onlybunsapp.dto.commentDtos.CommentReadDto;
+import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.LocationDto;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostCreateDto;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostReadDto;
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserLikesDto;
 import rs.ac.uns.ftn.onlybunsapp.mapper.CommentMapper;
+import rs.ac.uns.ftn.onlybunsapp.mapper.LocationMapperImpl;
 import rs.ac.uns.ftn.onlybunsapp.mapper.PostMapper;
 import rs.ac.uns.ftn.onlybunsapp.mapper.UserMapper;
 import rs.ac.uns.ftn.onlybunsapp.model.Comment;
+import rs.ac.uns.ftn.onlybunsapp.model.Location;
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.producer.Producer;
@@ -40,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -62,6 +67,8 @@ public class PostServiceImpl implements PostService {
     private ImageService imageService;
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private LocationMapperImpl locationMapperImpl;
 
     @Override
     public List<PostReadDto> getAll() {
@@ -71,6 +78,8 @@ public class PostServiceImpl implements PostService {
             post.getComments().sort((c1, c2) -> c2.getCreated().compareTo(c1.getCreated()));
             PostReadDto postReadDto = postMapper.toPostReadDto(post);
             postReadDto.setImageBase64(imageService.toImageBase64(post.getFolderPath()));
+            Location location = locationService.getById(post.getLocation().getId());
+            postReadDto.setLocation(locationMapperImpl.toLocationDto(location));
             postReadDtos.add(postReadDto);
         }
         return postReadDtos;
@@ -234,6 +243,20 @@ public class PostServiceImpl implements PostService {
             postReadDtos.add(postReadDto);
         }
         return postReadDtos;
+    }
+
+    @Override
+    public List<UserLikesDto> findTop10UsersByLikesGivenThisWeek() {
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Object[]> results = postRepository.findTop10UsersByLikesGivenThisWeek(pageable);
+        System.out.println("LUKA VRANA ALFA");
+        System.out.println(results.size());
+        System.out.println("LUKA VRANA ALFA");
+
+        // Map results to DTO
+        return results.stream()
+                .map(row -> new UserLikesDto((User) row[0], (Long) row[1]))
+                .collect(Collectors.toList());
     }
 
 

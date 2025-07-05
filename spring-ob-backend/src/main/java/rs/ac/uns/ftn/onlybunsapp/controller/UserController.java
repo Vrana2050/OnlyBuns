@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
+
+import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.PasswordChangeDto;
+
 import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserReadDto;
+
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 
@@ -113,6 +117,27 @@ public class UserController {
 		boolean isFollowing = userService.isFollowing(currentUser.getId(), userId);
 		return ResponseEntity.ok(isFollowing);
 	}
+
+	@PostMapping(value = "changePassword", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDto passwords, @AuthenticationPrincipal User currentUser) {
+
+		if (passwords.getNewPassword().length() < 3) {
+			return ResponseEntity
+					.badRequest()
+					.body(Map.of("message", "Password must be at least 3 characters long"));
+		}
+
+		if (userService.changePassword(passwords, currentUser)) {
+			return ResponseEntity
+					.ok(Map.of("message", "Password changed successfully!"));
+		}
+
+		return ResponseEntity
+				.badRequest()
+				.body(Map.of("message", "Wrong password!"));
+	}
+
 
 
 }

@@ -48,6 +48,7 @@ public class AuthenticationController {
 	@Autowired
 	private EmailSenderService emailSenderService;
 
+
 	// Prvi endpoint koji pogadja korisnik kada se loguje.
 	// Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
 	@PostMapping("/login")
@@ -84,7 +85,7 @@ public class AuthenticationController {
 	public ResponseEntity<?> addUser(@RequestBody UserRequest userRequest, UriComponentsBuilder ucBuilder) {
 
 		// Check if username already exists
-		if (this.userService.findByUsername(userRequest.getUsername()) != null) {
+		if (this.userService.isUsernamePotentiallyTaken(userRequest.getUsername())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
 					Map.of("field", "username", "error", "Username already exists")
 			);

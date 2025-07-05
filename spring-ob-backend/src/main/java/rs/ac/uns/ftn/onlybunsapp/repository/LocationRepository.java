@@ -7,4 +7,5 @@ import rs.ac.uns.ftn.onlybunsapp.model.PostUserLike;
 import java.util.List;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
+    Location findById(long id);
 }

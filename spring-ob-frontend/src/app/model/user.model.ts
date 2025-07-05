@@ -10,5 +10,12 @@ export interface User {
     numberOfFollowing: number;
     numberOfFollowers: number;
     roles: Role[];
+    address: string;
   }
+
+export interface PasswordChange {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
   

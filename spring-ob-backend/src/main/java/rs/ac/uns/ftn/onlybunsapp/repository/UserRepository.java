@@ -41,6 +41,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> getAllByLastLoginDateBefore(Date date);
 
+
+    @Query("SELECT u.username FROM User u")
+    List<String> findAllUsernames();
+
+
+
     @Query("SELECT CASE WHEN COUNT(f) > 0 THEN TRUE ELSE FALSE END " +
             "FROM User u JOIN u.following f " +
             "WHERE u.id = :followerId AND f.id = :followingId")
@@ -50,6 +56,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query(value = "DELETE FROM following WHERE follower_id = :followerId AND following_id = :followingId", nativeQuery = true)
     void deleteFollowRelation(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
+
 
     //@Query("SELECT u FROM User u JOIN u.likedPosts p GROUP BY u ORDER BY COUNT(p) DESC")
     //List<User> getTop10UsersThatLikedTheMost();

@@ -16,7 +16,16 @@ public class PostReadDto {
     public String imageBase64;
     public boolean isDeleted;
     public boolean isRestricted;
+    public LocationDto location;
     public List<CommentReadDto> comments;
+
+    public LocationDto getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDto location) {
+        this.location = location;
+    }
 
     public boolean isDeleted() {
         return isDeleted;

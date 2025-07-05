@@ -1,0 +1,27 @@
+@import "~leaflet/dist/leaflet.css";
+
+#map {
+width: 100%;
+height: 100%;
+border: 3px blue;
+position: absolute; /* Ili relative, zavisno od konteksta */
+}
+
+.map-container {
+    margin-top: 3%;
+    margin-left: 5%;
+width: 90%; /* Ili precizna veličina, npr. 800px */
+height: 80%; /* Postavi visinu prema potrebama */
+position: absolute;
+}
+
+html, body {
+height: 100%;
+margin: 0;
+padding: 0;
+}
+
+.leaflet-container {
+    height: 500px;
+    width: 800px;
+}

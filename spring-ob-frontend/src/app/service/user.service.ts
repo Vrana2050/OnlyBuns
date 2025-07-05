@@ -61,6 +61,10 @@ export class UserService {
   unfollow(userId : number){
     return this.apiService.delete(`http://localhost:8082/api/${userId}/unfollow`,{});
   }
+
+  changePassword(passwordChange: any) {
+    return this.apiService.post(`http://localhost:8082/api/changePassword`, passwordChange);
+  }
   
   getUsers(page: number, pageSize: number, filters: any, sortBy: string, sortDirection: string): Observable<any> {
     const requestBody = {

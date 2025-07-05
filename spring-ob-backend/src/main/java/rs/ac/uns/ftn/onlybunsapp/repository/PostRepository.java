@@ -42,8 +42,15 @@ public interface PostRepository extends JpaRepository<Post, Long>  {
     @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND p.isRestricted = false ORDER BY p.likes DESC")
     List<Post> getTop10MostLikedPosts(Pageable pageable);
 
+
+    @Query("SELECT u AS user, COUNT(pul.id) AS likeCount FROM User u JOIN PostUserLike pul ON u.id = pul.userId WHERE pul.likeDate >= CURRENT_DATE - 7 GROUP BY u.id ORDER BY likeCount DESC")
+    List<Object[]> findTop10UsersByLikesGivenThisWeek(Pageable pageable);
+
+
+
     @Query("SELECT COUNT(DISTINCT p.creator) FROM Post p WHERE p.isDeleted = false AND p.isRestricted = false")
     long countDistinctUsers();
+
 
     @Query("SELECT COUNT(DISTINCT p.creator) FROM Post p WHERE p.isDeleted = false AND p.isRestricted = false AND EXISTS (SELECT c FROM Comment c WHERE c.creator = p.creator)")
     long countUsersWithPostsAndComments();

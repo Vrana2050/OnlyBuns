@@ -10,9 +10,13 @@ import { SuccessfullyActivatedComponent } from './successfully-activated/success
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 import { TrendingComponent } from './trending/trending.component';
+
+import { NearbyPostsComponent } from './nearby-posts/nearby-posts.component';
+
 import { AppAnalyticsComponent } from './app-analytics/app-analytics.component';
 import { ChatListComponent } from './chat-list/chat-list.component';
 import { ChatComponent } from './chat/chat.component';
+
 
 const routes: Routes = [
   {
@@ -58,6 +62,11 @@ const routes: Routes = [
     component: TrendingComponent,
   },
   {
+
+    path: "nearby-posts",
+    component: NearbyPostsComponent,
+  },
+
     path: "app-analytics",
     component: AppAnalyticsComponent,
   },
@@ -73,6 +82,7 @@ const routes: Routes = [
     path: "chat/new", 
     component: ChatComponent
   }
+
 ];
 
 @NgModule({
