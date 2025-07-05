@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import rs.ac.uns.ftn.onlybunsapp.dto.MessageDto;
+import rs.ac.uns.ftn.onlybunsapp.dto.LocationMessageDto;
 import rs.ac.uns.ftn.onlybunsapp.model.RabbitCareObject;
 import rs.ac.uns.ftn.onlybunsapp.repository.RabbitCareObjectRepository;
 import rs.ac.uns.ftn.onlybunsapp.service.MessageService;
@@ -32,15 +32,15 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    @Scheduled(fixedRate = 5000)
+    //@Scheduled(fixedRate = 5000)
     public void fetchMessagesPeriodically() {
         String url = brokerUrl + "/api/messages";
         //System.out.println("Luka Vrana " + url);
         try {
-            ResponseEntity<MessageDto> response = restTemplate.getForEntity(url, MessageDto.class);
+            ResponseEntity<LocationMessageDto> response = restTemplate.getForEntity(url, LocationMessageDto.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                MessageDto message = response.getBody();
+                LocationMessageDto message = response.getBody();
                 RabbitCareObject rabbitCareObject = new RabbitCareObject();
                 rabbitCareObject.setName(message.getName());
                 rabbitCareObject.setLongitude(message.getLocation().getLongitude());
