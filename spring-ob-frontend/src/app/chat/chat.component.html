@@ -1,0 +1,93 @@
+<div class="chat-container">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-participants">
+      Chat with
+      <span *ngFor="let participant of chatParticipants; let i = index">
+        {{ participant.username }}<span *ngIf="i < chatParticipants.length - 1">, </span>
+      </span>
+    </div>
+    <div *ngIf="checkAdminStatus()" class="admin-actions">
+      <button class="add-member-btn" (click)="openAddMemberDialog()">
+        Add
+      </button>
+      <button class="remove-member-btn" (click)="openRemoveMemberDialog()">
+        Remove
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages Area -->
+  <div #messageContainer class="messages-area">
+    <div *ngFor="let message of messages" 
+         class="message-container"
+         [ngClass]="{ 
+           'message-right': message.sender.id === user?.id,
+           'message-left': message.sender.id !== user?.id
+         }">
+      <div class="message-bubble">
+        <div class="message-header">{{ message.sender.username }}</div>
+        <div class="message-content">{{ message.content }}</div>
+        <div class="message-timestamp">{{ message.createdAt | date:'short' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <input [(ngModel)]="newMessageContent" 
+           (keyup.enter)="sendMessage()" 
+           placeholder="Type a message..."
+           class="message-input"
+           #messageInput>
+    <button (click)="sendMessage()" 
+            class="send-button"
+            [disabled]="!newMessageContent.trim()">
+      Send
+    </button>
+  </div>
+
+
+  <div *ngIf="peopleToAdd" class="followers-modal">
+    <div class="followers-modal-content">
+      <div class="followers-modal-header">
+        <button (click)="closeAddMemberDialog()" class="close-modal-btn">×</button>
+      </div>
+      <div class="followers-list">
+        <div *ngFor="let follower of followers" class="follower-card">
+          <div class="follower-info">
+            <p>{{ follower.username }}</p>
+          </div>
+          <button  (click)="add(follower.id)">
+            Add
+          </button>
+        </div>
+        <div *ngIf="followers.length === 0" >
+          <p>No users to add.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="peopleToRemove" class="followers-modal">
+    <div class="followers-modal-content">
+      <div class="followers-modal-header">
+        <button (click)="closeRemoveMemberDialog()" class="close-modal-btn">×</button>
+      </div>
+      <div class="followers-list">
+        <div *ngFor="let follower of chatParticipants" class="follower-card">
+          <div class="follower-info">
+            <p>{{ follower.username }}</p>
+          </div>
+          <button  (click)="remove(follower.id)">
+            Remove
+          </button>
+        </div>
+        <div *ngIf="chatParticipants.length === 0" >
+          <p>No users to remove.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

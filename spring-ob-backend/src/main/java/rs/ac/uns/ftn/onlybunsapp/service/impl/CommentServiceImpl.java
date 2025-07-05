@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.onlybunsapp.dto.commentDtos.CommentCreateDto;
 import rs.ac.uns.ftn.onlybunsapp.model.Comment;
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
+import rs.ac.uns.ftn.onlybunsapp.ratelimiter.CustomRateLimiter;
 import rs.ac.uns.ftn.onlybunsapp.repository.CommentRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.PostRepository;
 import rs.ac.uns.ftn.onlybunsapp.service.CommentService;
@@ -25,7 +26,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private PostRepository postRepository;
-    @RateLimiter(name = "comment", fallbackMethod = "standardFallback")
+    //@RateLimiter(name = "comment", fallbackMethod = "standardFallback")
+    @CustomRateLimiter(maxRequests = 5,durationInSeconds = 60)
     public Comment CreateComment(User creator, CommentCreateDto commentDto)throws AccessDeniedException {
         Post post= postRepository.findById(commentDto.postId);
         long postCreatorId = post.getCreator().getId();

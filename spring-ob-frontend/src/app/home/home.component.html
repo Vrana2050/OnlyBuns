@@ -7,26 +7,38 @@
   <body>
     <div class="side-menu" *ngIf="hasSignedIn()">
       <ul>
-        
-        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+
+        <li><a href="#" *ngIf="isUser"><i class="fas fa-home"></i>Home</a></li>
+        <li *ngIf="isAdmin" [routerLink]="['']"><a href="#"><i class="fas fa-home"></i> Home</a></li>
+        <li><a [routerLink]="['/inbox']"><i class="fas fa-inbox"></i>Inbox</a></li>
+
         <li><a (click)="navigateToProfile()"><i class="fas fa-user"></i> Profile</a></li>
         <li><a href="#"><i class="fas fa-user"></i>Feed</a></li>
-        <li [routerLink]="['trending']" ><a><i class="fas fa-user"></i>Trending</a></li>
+
         <li [routerLink]="['nearby-posts']"><a><i class="fas fa-user"></i>Nearby Posts</a></li>
-        <li><a href="#"><i class="fas fa-user"></i>Inbox</a></li>
+
+        <li [routerLink]="['trending']" *ngIf="isAdmin()"><a><i class="fas fa-user"></i>Trending</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Nearby Posts</a></li>
+
         <li [routerLink]="['post']"><a><i class="fas fa-user"></i>Post</a></li>
+        <li [routerLink]="['app-analytics']" *ngIf="isAdmin()"><a><i class="fas fa-user"></i>App-Analytics</a></li>
       </ul>
     </div>
 
+
     <div class="feed" *ngIf="hasSignedIn()">
+      <button mat-raised-button color="accent" *ngIf="isAdmin && hasPostsToPromote" (click)="sendPostsToAds()" class="PromoteButton"><span> PROMOTE SELECTED POSTS</span></button>
       <div class="post" *ngFor="let post of posts; let i = index" class="post">
         <div class="post-header">
+          <div class="picture-and-info">
           <img [src]=" 'https://via.placeholder.com/40'" alt="User">
           <div class="user-info" (click)="lookAtProfile(post.creator.id)">
             <strong>{{ post.creator.username }}</strong>
             <span>Posted {{ post.postDate  }} in lokacija ovde</span>
           </div>
-        </div>
+          </div>
+          <input type="checkbox" *ngIf="isAdmin" (change)="sendToAds(post.id,$event)">
+                </div>
         
         <div class="post-image">
           <img [src]="'data:image/png;base64,' + post.imageBase64" alt="Post Image">
@@ -67,7 +79,7 @@
 
 
     
-    <div class="feed" *ngIf="!hasSignedIn()">
+    <div class="feed" *ngIf="!hasSignedIn() || isAdmin()">
       <div *ngFor="let post of postsNotSignedIn; let i = index" class="post">
         <div class="post-header">
           <div class="user-info">

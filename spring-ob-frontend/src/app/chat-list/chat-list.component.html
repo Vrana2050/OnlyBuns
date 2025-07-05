@@ -1,0 +1,52 @@
+<div class="chat-list-container">
+  <div class="chat-list-header">
+    <h2>Messages</h2>
+    <button  (click)="createANewChat()">
+      New
+    </button>
+  </div>
+    
+    <div class="chat-list">
+      <div *ngFor="let chat of chats" 
+          (click)="chat?.chatId ? openChat(chat.chatId) : null"
+           class="chat-preview">
+        
+        <div class="chat-info">
+          <div class="chat-header">
+            <h3>
+              <span *ngFor="let u of chat.participants; let i = index">
+                {{u.username}}<span *ngIf="i < chat.participants.length - 1">, </span>
+              </span>
+            </h3>
+            <span class="timestamp">{{chat.lastMessage?.createdAt | date:'shortTime'}}</span>
+          </div>
+          
+          <div class="chat-footer">
+            <p class="last-message">{{chat.lastMessage?.content}}</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="openSelectParticipants" class="followers-modal">
+      <div class="followers-modal-content">
+        <div class="followers-modal-header">
+          <button (click)="closeSelectParticipantsDialog()" class="close-modal-btn">×</button>
+        </div>
+        <div class="followers-list">
+          <div *ngFor="let follower of followers" class="follower-card">
+            <input type="checkbox" (change)="toggleParticipantSelection(follower.id)">
+            <div class="follower-info">
+              <p>{{ follower.username }}</p>
+            </div>
+          </div>
+          <button *ngIf="followers.length !== 0" (click)="makeAChatWithParticipants()">Make a chat</button>
+          <div *ngIf="followers.length === 0" >
+            <p>No users to add.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

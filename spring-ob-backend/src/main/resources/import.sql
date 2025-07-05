@@ -3,9 +3,10 @@
 
 
 
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', 'Despota Djurdja 21 Smederevo', true, '2024-11-12 11:00:00', 0, 1, 1, '2024-11-12 11:00:00');
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', 'Titogradska 12', true, '2024-11-12 11:00:00', 1, 0, 1, '2024-11-12 11:00:00');
-
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', 'Despota Djurdja 21 Smederevo', true, '2024-11-12 11:00:00', 3, 1, 0, '2024-11-12 11:00:00');
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', 'Titogradska 12', true, '2024-11-12 11:00:00', 0, 1, 0, '2024-11-12 11:00:00');
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('m', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'm', 'm', 'm@example.com', 'Titogradska 12', true, '2024-11-12 11:00:00', 2, 2, 0, '2024-11-12 11:00:00');
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('t', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 't', 't', 't@example.com', 'Titogradska 12', true, '2024-11-12 11:00:00', 1, 2, 0, '2024-11-12 11:00:00');
 
 
 INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.664276, 20.925287);
@@ -39,6 +40,11 @@ INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-16 11
 
 
 INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,2);
+INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,3);
+INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,4);
+INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (3,1);
+INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (3,4);
+INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (4,3);
 
 
 INSERT INTO ROLE (name) VALUES ('ROLE_USER');
@@ -49,10 +55,13 @@ INSERT INTO ROLE (name) VALUES ('ROLE_ZEC');
 
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 1); -- user-u dodeljujemo rolu USER
-INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 1); -- admin-u dodeljujemo rolu USER
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 2); -- user-u dodeljujemo rolu ADMIN
+
 
 INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-01-03 11:55:00', 2, 1);
 INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-01-03 11:55:00', 1, 1);
 INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-01-04 11:55:00', 1, 2);
+
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (3, 1);
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (4, 1);
 

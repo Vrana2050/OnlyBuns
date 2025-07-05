@@ -4,6 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ch.qos.logback.core.CoreConstants;
@@ -14,19 +16,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.onlybunsapp.dto.AdminUserList;
 import rs.ac.uns.ftn.onlybunsapp.dto.PaginationRequest;
 import rs.ac.uns.ftn.onlybunsapp.dto.UserRequest;
+
 import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.PasswordChangeDto;
+
+import rs.ac.uns.ftn.onlybunsapp.exception.RateLimitExceededException;
+
 import rs.ac.uns.ftn.onlybunsapp.model.Post;
 import rs.ac.uns.ftn.onlybunsapp.model.PostUserLike;
 import rs.ac.uns.ftn.onlybunsapp.model.Role;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
+import rs.ac.uns.ftn.onlybunsapp.ratelimiter.RateLimiterFollow;
 import rs.ac.uns.ftn.onlybunsapp.repository.CommentRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.LikeRepository;
 import rs.ac.uns.ftn.onlybunsapp.repository.PostRepository;
@@ -37,6 +46,7 @@ import rs.ac.uns.ftn.onlybunsapp.service.RoleService;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 import rs.ac.uns.ftn.onlybunsapp.util.TokenUtils;
 
+
 import javax.annotation.PostConstruct;
 
 import com.google.common.hash.BloomFilter;
@@ -44,6 +54,9 @@ import com.google.common.hash.Funnels;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+
+import javax.persistence.EntityNotFoundException;
+
 
 
 @Service
@@ -68,6 +81,7 @@ public class UserServiceImpl implements UserService {
     private CommentRepository commentRepository;
 
 
+
 	private final BloomFilter<String> usernameBloomFilter = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), 1000);
 
 	@PostConstruct
@@ -75,6 +89,13 @@ public class UserServiceImpl implements UserService {
 		// Napuni Bloom filtere postojećim podacima iz baze
 		userRepository.findAllUsernames().forEach(usernameBloomFilter::put);
 	}
+
+	private RateLimiterFollow rateLimiter;
+
+	private final Map<Long, AtomicInteger> followCountsPerMinute = new ConcurrentHashMap<>();
+	private final Map<Long, Long> lastResetTime = new ConcurrentHashMap<>();
+	private static final int MAX_FOLLOWS_PER_MINUTE = 50;
+
 
 	@Override
 	public User findByUsername(String username) throws UsernameNotFoundException {
@@ -165,22 +186,73 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmail(email);
 
 	}
+
+	@Transactional
 	public void followUser(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
-		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
-
-		if (!follower.getFollowing().contains(following)) {
-			follower.getFollowing().add(following);
-			following.getFollowers().add(follower);
-
-
-			follower.setNumberOfFollowing(follower.getNumberOfFollowing() + 1);
-			following.setNumberOfFollowers(following.getNumberOfFollowers() + 1);
-
-			userRepository.save(follower);
-			userRepository.save(following);
+		// Provera rate limita
+		if (!checkRateLimit(followerId)) {
+			throw new RateLimitExceededException("Exceeded maximum follow rate of 50 per minute");
 		}
-  }
+
+		// Zaključavanje i čitanje oba korisnika atomično
+		List<User> users = userRepository.lockUsersForUpdate(followerId, followingId);
+
+		if (users.size() != 2) {
+			throw new EntityNotFoundException("One or both users not found");
+		}
+
+		User follower = users.stream()
+				.filter(u -> u.getId() == followerId)
+				.findFirst()
+				.orElseThrow(() -> new EntityNotFoundException("Follower not found"));
+
+		User following = users.stream()
+				.filter(u -> u.getId() == followingId)
+				.findFirst()
+				.orElseThrow(() -> new EntityNotFoundException("Following not found"));
+
+		// Provera da li već prati
+		if (follower.getFollowing().contains(following)) {
+			throw new IllegalStateException("Already following this user");
+		}
+
+		// Inicijalizacija lista ako su null
+		if (follower.getFollowing() == null) {
+			follower.setFollowing(new ArrayList<>());
+		}
+		if (following.getFollowers() == null) {
+			following.setFollowers(new ArrayList<>());
+		}
+
+		// Dodavanje veze praćenja
+		follower.getFollowing().add(following);
+		following.getFollowers().add(follower);
+
+		// Ažuriranje brojača
+		follower.setNumberOfFollowing(follower.getNumberOfFollowing() + 1);
+		following.setNumberOfFollowers(following.getNumberOfFollowers() + 1);
+
+		// Čuvanje promena
+		userRepository.saveAll(Arrays.asList(follower, following));
+	}
+
+	private synchronized boolean checkRateLimit(long userId) {
+		long currentTime = System.currentTimeMillis();
+		long userLastResetTime = lastResetTime.getOrDefault(userId, 0L);
+
+		if (currentTime - userLastResetTime >= 60000) {
+			followCountsPerMinute.put(userId, new AtomicInteger(0));
+			lastResetTime.put(userId, currentTime);
+		}
+
+		AtomicInteger count = followCountsPerMinute.computeIfAbsent(userId, k -> new AtomicInteger(0));
+		if (count.get() >= MAX_FOLLOWS_PER_MINUTE) {
+			return false;
+		}
+
+		count.incrementAndGet();
+		return true;
+	}
 /*
 	@Override
 	public List<User> getTop10UsersThatLikedMost() {
@@ -189,21 +261,26 @@ public class UserServiceImpl implements UserService {
 
 
 	public void unfollowUser(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
-		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
+		User follower = userRepository.findById(followerId)
+				.orElseThrow(() -> new EntityNotFoundException("Follower not found"));
+		User following = userRepository.findById(followingId)
+				.orElseThrow(() -> new EntityNotFoundException("Following not found"));
 
-
-		if (follower.getFollowing().contains(following)) {
-			follower.getFollowing().remove(following);
-			following.getFollowers().remove(follower);
-
-
-			follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
-			following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
-
-			userRepository.save(follower);
-			userRepository.save(following);
+		// Check if not following
+		if (!userRepository.isFollowing(followerId, followingId)) {
+			throw new IllegalStateException("Not following this user");
 		}
+		follower.setNumberOfFollowing(follower.getNumberOfFollowing() - 1);
+		following.setNumberOfFollowers(following.getNumberOfFollowers() - 1);
+
+		userRepository.save(follower);
+		userRepository.save(following);
+
+		userRepository.deleteFollowRelation(followerId, followingId);
+	}
+
+	public boolean isFollowing(long followerId, long followingId) {
+		return userRepository.isFollowing(followerId, followingId);
 	}
 
 
@@ -263,18 +340,19 @@ public class UserServiceImpl implements UserService {
 	  return postRepository.findAllByCreatorInAndIsDeletedFalseAndIsRestrictedFalseAndPostDateAfter(user.getFollowing(),user.getLastLoginDate()).size();
   }
 
-	public boolean isFollowing(long followerId, long followingId) {
-		User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
-		User following = userRepository.findById(followingId).orElseThrow(() -> new RuntimeException("User not found"));
-
-		return follower.getFollowing().contains(following);
-	}
   
 	private int GetNumberOfUnseenComments(User user) {
 		List<Post> userPosts= postRepository.findAllByUserIdAndNotDeletedAndNotRestricted(user.getId());
 		return commentRepository.findAllByPostInAndCreatedAfter(userPosts,user.getLastLoginDate()).size();
 	}
 
+
+	@Scheduled(cron = "0 0 0 L * ?")
+	@Transactional
+	public void deleteUnactivatedAccounts() {
+		userRepository.deleteByEnabledFalse();
+		System.out.println("Scheduled account cleanup completed: Deleted unactivated accounts");
+	}
 
 
 }
