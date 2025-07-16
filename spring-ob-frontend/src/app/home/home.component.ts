@@ -13,8 +13,6 @@ import { PostService } from '../service/post.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  imageCache: { [postId: number]: string } = {};
-
   comments: { [key: number]: string } = {};
   isFollowing: boolean = false;
   postIdsToAds: number[] = [];
@@ -72,13 +70,6 @@ export class HomeComponent implements OnInit {
 
     this.postService.getAllPostsFollowing().subscribe((response) => {
       this.posts = response;
-
-      this.posts.forEach((post) => {
-        if (!this.imageCache[post.id]) {
-          this.imageCache[post.id] =
-            'data:image/png;base64,' + post.imageBase64;
-        }
-      });
     });
 
     this.getRole();

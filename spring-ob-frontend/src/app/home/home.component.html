@@ -70,7 +70,10 @@
         </div>
 
         <div class="post-image">
-          <img [src]="imageCache[post.id]" />
+          <img
+            [src]="'data:image/png;base64,' + post.imageBase64"
+            alt="Post Image"
+          />
         </div>
         <div class="post-description">{{ post.description }}</div>
         <div class="post-interactions">
@@ -124,7 +127,10 @@
         </div>
 
         <div class="post-image">
-          <img [src]="imageCache[post.id]" />
+          <img
+            [src]="'data:image/png;base64,' + post.imageBase64"
+            alt="Post Image"
+          />
         </div>
 
         <div class="post-description">{{ post.description }}</div>
