@@ -5,7 +5,8 @@
             http://www.ehcache.org/schema/ehcache-core-3.7.xsd">
 
     <!-- Persistent cache directory -->
-    <persistence directory="cache-example/cache-8082" />
+    <persistence directory="cache-example/cache-8083" />
+
 
     <!-- Default cache template -->
     <cache-template name="default">
