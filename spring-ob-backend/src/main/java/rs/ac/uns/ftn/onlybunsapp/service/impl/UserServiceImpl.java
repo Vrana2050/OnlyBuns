@@ -90,11 +90,8 @@ public class UserServiceImpl implements UserService {
 		userRepository.findAllUsernames().forEach(usernameBloomFilter::put);
 	}
 
-	private RateLimiterFollow rateLimiter;
-
-	private final Map<Long, AtomicInteger> followCountsPerMinute = new ConcurrentHashMap<>();
-	private final Map<Long, Long> lastResetTime = new ConcurrentHashMap<>();
-	private static final int MAX_FOLLOWS_PER_MINUTE = 50;
+	@Autowired
+	private RateLimiterFollow rateLimiterFollow;
 
 
 	@Override
@@ -190,9 +187,11 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void followUser(long followerId, long followingId) {
 		// Provera rate limita
-		if (!checkRateLimit(followerId)) {
+		if (!rateLimiterFollow.canFollow(followerId)) {
 			throw new RateLimitExceededException("Exceeded maximum follow rate of 50 per minute");
 		}
+		rateLimiterFollow.incrementFollowCount(followerId);
+
 
 		// Zaključavanje i čitanje oba korisnika atomično
 		List<User> users = userRepository.lockUsersForUpdate(followerId, followingId);
@@ -236,23 +235,6 @@ public class UserServiceImpl implements UserService {
 		userRepository.saveAll(Arrays.asList(follower, following));
 	}
 
-	private synchronized boolean checkRateLimit(long userId) {
-		long currentTime = System.currentTimeMillis();
-		long userLastResetTime = lastResetTime.getOrDefault(userId, 0L);
-
-		if (currentTime - userLastResetTime >= 60000) {
-			followCountsPerMinute.put(userId, new AtomicInteger(0));
-			lastResetTime.put(userId, currentTime);
-		}
-
-		AtomicInteger count = followCountsPerMinute.computeIfAbsent(userId, k -> new AtomicInteger(0));
-		if (count.get() >= MAX_FOLLOWS_PER_MINUTE) {
-			return false;
-		}
-
-		count.incrementAndGet();
-		return true;
-	}
 /*
 	@Override
 	public List<User> getTop10UsersThatLikedMost() {

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.onlybunsapp.service.ImageService;
@@ -69,6 +70,8 @@ public class ImageServiceImpl implements ImageService {
                 .collect(Collectors.toList());
     }
 
+
+    @Cacheable("images")
     @Override
     public String toImageBase64(String folderPath) {
         try {
