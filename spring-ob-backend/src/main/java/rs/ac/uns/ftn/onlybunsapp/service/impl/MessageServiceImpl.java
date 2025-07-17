@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import rs.ac.uns.ftn.onlybunsapp.dto.LocationMessageDto;
 import rs.ac.uns.ftn.onlybunsapp.model.RabbitCareObject;
@@ -32,9 +33,9 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    //@Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 15000)
     public void fetchMessagesPeriodically() {
-        String url = brokerUrl + "/api/messages";
+        String url = brokerUrl + "/broker/consume/mq";
         //System.out.println("Luka Vrana " + url);
         try {
             ResponseEntity<LocationMessageDto> response = restTemplate.getForEntity(url, LocationMessageDto.class);
@@ -50,10 +51,21 @@ public class MessageServiceImpl implements MessageService {
 
                 System.out.println("Objekat za brigu o zecevima sacuvan.");
 
+                String ackUrl = brokerUrl + "/broker/ack?queue=mq&messageId=" + message.getId();
+                ResponseEntity<Void> ackResponse = restTemplate.postForEntity(ackUrl, null, Void.class);
+
+                if (ackResponse.getStatusCode().is2xxSuccessful()) {
+                    System.out.println("Poruka uspešno potvrđena (ACK).");
+                } else {
+                    System.err.println("Neuspešan ACK: " + ackResponse.getStatusCode());
+                }
             } else if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
                 System.out.println("Nema novih poruka.");
             }
-        } catch (Exception e) {
+        } catch (ResourceAccessException e) {
+            // Ovo obuhvata ConnectException, SocketTimeoutException itd.
+            System.err.println("Broker nije dostupan: " + e.getMessage());
+        }catch (Exception e) {
             System.err.println("Greška prilikom preuzimanja poruka: " + e.getMessage());
         }
     }

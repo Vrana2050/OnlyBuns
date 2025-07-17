@@ -50,4 +50,22 @@
         </resources>
     </cache>
 
+    <cache alias="postTop5Last7Days" uses-template="default">
+        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
+        <value-type>java.util.List</value-type>
+        <resources>
+            <heap>1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="postTop10AllTime" uses-template="default">
+        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
+        <value-type>java.util.List</value-type>
+        <resources>
+            <heap>1</heap>
+        </resources>
+    </cache>
+
+
+
 </config>

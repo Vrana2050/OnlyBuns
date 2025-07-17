@@ -15,27 +15,27 @@ INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.666276, 20.921787);
 
 
 
-INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted,version) VALUES ('A beautiful sunset over the mountains', 'uploads/user/post_0', 2, 4, '2025-01-3 11:00:00', 1, 1, false,false,0);
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted,version) VALUES ('A beautiful sunset over the mountains', 'uploads/user/post_0', 2, 4, '2025-07-15 11:00:00', 1, 1, false,false,0);
 
 
-INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted,version) VALUES ('This little bunny is so soft and fluffy.', 'uploads/user/post_1', 1, 3, '2024-11-15 10:00:00', 2, 2, false,false,0);
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted,version) VALUES ('This little bunny is so soft and fluffy.', 'uploads/user/post_1', 1, 3, '2025-07-14 10:00:00', 2, 2, false,false,0);
 
 
 
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:00:00', 'This sunset is stunning!', 2, 1);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:00:00', 'This sunset is stunning!', 2, 1);
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2010-11-12 11:05:00', 'Amazing view! Where is this?', 2, 1);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'Amazing view! Where is this?', 2, 1);
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:05:00', 'Such a cute little potato!', 1, 2);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'Such a cute little potato!', 1, 2);
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-12 11:05:00', 'Rabbit just pissed on me', 1, 1);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'Rabbit just pissed on me', 1, 1);
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-13 12:05:00', 'That thing is so cute.', 1, 1);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 12:05:00', 'That thing is so cute.', 1, 1);
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-14 10:05:00', 'I like a good rabbit soup!', 1, 1);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 10:05:00', 'I like a good rabbit soup!', 1, 1);
 
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-11-16 11:05:00', 'You are disgusting sir!', 1, 1);
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'You are disgusting sir!', 1, 1);
 
 
 
@@ -58,9 +58,9 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 1); -- user-u dodeljujemo ro
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 2); -- user-u dodeljujemo rolu ADMIN
 
 
-INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-01-03 11:55:00', 2, 1);
-INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-01-03 11:55:00', 1, 1);
-INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-01-04 11:55:00', 1, 2);
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-15 11:55:00', 2, 1);
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-15 11:55:00', 1, 1);
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-15 11:55:00', 1, 2);
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (3, 1);
 INSERT INTO USER_ROLE (user_id, role_id) VALUES (4, 1);

@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.onlybunsapp.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostCreateDto;
 import rs.ac.uns.ftn.onlybunsapp.dto.postDtos.PostReadDto;
@@ -24,7 +26,11 @@ public interface PostService {
     public Boolean sendPostsToAgencies(List<Long> postIds);
     public int countAllTimePosts();
     public int countThisMonthPosts();
+    @Cacheable("postTop5Last7Days")
     public List<PostReadDto> getTop5MostLikedPostsLast7Days();
+
+    @Cacheable("postTop10AllTime")
     public List<PostReadDto> getTop10MostLikedPostsOfAllTime();
     public List<UserLikesDto> findTop10UsersByLikesGivenThisWeek();
+
 }
