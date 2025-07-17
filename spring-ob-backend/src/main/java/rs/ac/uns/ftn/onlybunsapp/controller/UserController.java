@@ -27,6 +27,7 @@ import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.PasswordChangeDto;
 
 import rs.ac.uns.ftn.onlybunsapp.dto.userDtos.UserReadDto;
 
+import rs.ac.uns.ftn.onlybunsapp.exception.RateLimitExceededException;
 import rs.ac.uns.ftn.onlybunsapp.model.User;
 import rs.ac.uns.ftn.onlybunsapp.service.UserService;
 
@@ -138,6 +139,10 @@ public class UserController {
 				.body(Map.of("message", "Wrong password!"));
 	}
 
+	@ExceptionHandler(RateLimitExceededException.class)
+	public ResponseEntity<String> handleRateLimitExceeded(RateLimitExceededException ex) {
+		return ResponseEntity.status(429).body(ex.getMessage());
+	}
 
 
 }

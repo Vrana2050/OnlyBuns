@@ -1,15 +1,16 @@
-<div class="profile-card">
+<div class="profile-card" *ngIf="user">
   <div class="avatar">
     <img src="https://via.placeholder.com/100" alt="User Avatar" />
   </div>
+
   <div class="user-info">
-    
     <p>&commat;{{ user.username }}</p>
     <p>Location: {{ user.address || "Unknown" }}</p>
     <p>Posts: {{ user.numberOfPosts }}</p>
     <p>Following: {{ user.numberOfFollowing }}</p>
     <p>Followers: {{ user.numberOfFollowers }}</p>
-    <button (click)="toggleFollow()">
+
+    <button *ngIf="currentUserId !== user.id" (click)="toggleFollow()">
       {{ isFollowing ? "Unfollow" : "Follow" }}
     </button>
   </div>
