@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Message Queue Producer</title>
+  </head>
+  <body>
+    <h1>Message Queue Producer</h1>
+
+    <!-- Kreiraj queue -->
+    <section>
+      <h2>Kreiraj Queue</h2>
+      <form id="create-queue-form">
+        <label for="queue-name">Ime queue:</label>
+        <input type="text" id="queue-name" required />
+        <button type="submit">Kreiraj queue</button>
+      </form>
+    </section>
+
+    <hr />
+
+    <!-- Kreiraj exchange -->
+    <section>
+      <h2>Kreiraj Exchange</h2>
+      <form id="create-exchange-form">
+        <label for="exchange-name">Ime exchange:</label>
+        <input type="text" id="exchange-name" required />
+        <label for="exchange-type">Tip exchange:</label>
+        <select id="exchange-type" required>
+          <option value="DIRECT">DIRECT</option>
+          <option value="FANOUT">FANOUT</option>
+        </select>
+        <button type="submit">Kreiraj exchange</button>
+      </form>
+    </section>
+
+    <hr />
+
+    <!-- Bind queue na exchange -->
+    <section>
+      <h2>Bind Queue na Exchange</h2>
+      <form id="bind-form">
+        <label for="bind-queue">Queue ime:</label>
+        <input type="text" id="bind-queue" required />
+        <label for="bind-exchange">Exchange ime:</label>
+        <input type="text" id="bind-exchange" required />
+        <label for="bind-routingKey">Routing key:</label>
+        <input type="text" id="bind-routingKey" required />
+        <button type="submit">Binduj queue</button>
+      </form>
+    </section>
+
+    <hr />
+
+    <!-- Publish poruka kao JSON -->
+    <section>
+      <h2>Publish JSON poruka</h2>
+      <form id="publish-json-form">
+        <label for="publish-exchange">Exchange ime:</label>
+        <input type="text" id="publish-exchange" required />
+        <label for="publish-routingKey">Routing key:</label>
+        <input type="text" id="publish-routingKey" required />
+        <label for="publish-name">Naziv:</label>
+        <input type="text" id="publish-name" required />
+        <label for="publish-latitude">Latitude:</label>
+        <input type="number" step="any" id="publish-latitude" required />
+        <label for="publish-longitude">Longitude:</label>
+        <input type="number" step="any" id="publish-longitude" required />
+        <button type="submit">Pošalji JSON poruku</button>
+      </form>
+    </section>
+
+    <script>
+      const baseUrl = "http://localhost:8084/broker";
+
+      // Kreiraj queue
+      document
+        .getElementById("create-queue-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const queueName = document.getElementById("queue-name").value.trim();
+
+          fetch(`${baseUrl}/queue/${encodeURIComponent(queueName)}`, {
+            method: "POST",
+          })
+            .then((res) => res.text())
+            .then((text) => alert(text))
+            .catch((err) => alert("Greška: " + err));
+        });
+
+      // Kreiraj exchange
+      document
+        .getElementById("create-exchange-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const exchangeName = document
+            .getElementById("exchange-name")
+            .value.trim();
+          const exchangeType = document.getElementById("exchange-type").value;
+
+          fetch(
+            `${baseUrl}/exchange/${encodeURIComponent(
+              exchangeName
+            )}?type=${encodeURIComponent(exchangeType)}`,
+            { method: "POST" }
+          )
+            .then((res) => res.text())
+            .then((text) => alert(text))
+            .catch((err) => alert("Greška: " + err));
+        });
+
+      // Bind queue na exchange
+      document.getElementById("bind-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const queue = document.getElementById("bind-queue").value.trim();
+        const exchange = document.getElementById("bind-exchange").value.trim();
+        const routingKey = document
+          .getElementById("bind-routingKey")
+          .value.trim();
+
+        fetch(
+          `${baseUrl}/bind?queue=${encodeURIComponent(
+            queue
+          )}&exchange=${encodeURIComponent(
+            exchange
+          )}&routingKey=${encodeURIComponent(routingKey)}`,
+          { method: "POST" }
+        )
+          .then((res) => res.text())
+          .then((text) => alert(text))
+          .catch((err) => alert("Greška: " + err));
+      });
+
+      // Publish JSON poruku
+      document
+        .getElementById("publish-json-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const exchange = document
+            .getElementById("publish-exchange")
+            .value.trim();
+          const routingKey = document
+            .getElementById("publish-routingKey")
+            .value.trim();
+          const name = document.getElementById("publish-name").value.trim();
+          const latitude = parseFloat(
+            document.getElementById("publish-latitude").value
+          );
+          const longitude = parseFloat(
+            document.getElementById("publish-longitude").value
+          );
+
+          const payload = {
+            name: name,
+            location: {
+              latitude: latitude,
+              longitude: longitude,
+            },
+          };
+
+          fetch(
+            `${baseUrl}/publish?exchange=${encodeURIComponent(
+              exchange
+            )}&routingKey=${encodeURIComponent(routingKey)}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            }
+          )
+            .then((res) => res.text())
+            .then((text) => alert(text))
+            .catch((err) => alert("Greška: " + err));
+        });
+    </script>
+  </body>
+</html>

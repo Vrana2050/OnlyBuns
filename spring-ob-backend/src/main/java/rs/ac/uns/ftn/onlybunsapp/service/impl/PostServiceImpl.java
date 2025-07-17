@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.onlybunsapp.service.impl;
 
 import org.hibernate.StaleStateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
+
     @Autowired
     private PostRepository postRepository;
     @Autowired
@@ -249,11 +252,7 @@ public class PostServiceImpl implements PostService {
     public List<UserLikesDto> findTop10UsersByLikesGivenThisWeek() {
         Pageable pageable = PageRequest.of(0, 10);
         List<Object[]> results = postRepository.findTop10UsersByLikesGivenThisWeek(pageable);
-        System.out.println("LUKA VRANA ALFA");
-        System.out.println(results.size());
-        System.out.println("LUKA VRANA ALFA");
 
-        // Map results to DTO
         return results.stream()
                 .map(row -> new UserLikesDto((User) row[0], (Long) row[1]))
                 .collect(Collectors.toList());

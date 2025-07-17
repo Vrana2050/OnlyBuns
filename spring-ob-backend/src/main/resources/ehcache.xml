@@ -50,6 +50,22 @@
         </resources>
     </cache>
 
+    <cache alias="postTop5Last7Days" uses-template="default">
+        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
+        <value-type>java.util.List</value-type>
+        <resources>
+            <heap>1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="postTop10AllTime" uses-template="default">
+        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
+        <value-type>java.util.List</value-type>
+        <resources>
+            <heap>1</heap>
+        </resources>
+    </cache>
+
     <cache alias="images">
         <key-type>java.lang.String</key-type>
         <value-type>java.lang.String</value-type>
@@ -76,10 +92,5 @@
             <disk persistent="true" unit="MB">20</disk>
         </resources>
     </cache>
-
-
-
-
-
 
 </config>

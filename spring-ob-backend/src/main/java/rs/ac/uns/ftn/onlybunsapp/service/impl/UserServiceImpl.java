@@ -12,6 +12,7 @@ import ch.qos.logback.core.CoreConstants;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -113,30 +114,35 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public User save(UserRequest userRequest) {
-		User u = new User();
-		u.setUsername(userRequest.getUsername());
+		try {
+			User u = new User();
+			u.setUsername(userRequest.getUsername());
 
-		// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
-		// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
-		u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+			// pre nego sto postavimo lozinku u atribut hesiramo je kako bi se u bazi nalazila hesirana lozinka
+			// treba voditi racuna da se koristi isi password encoder bean koji je postavljen u AUthenticationManager-u kako bi koristili isti algoritam
+			u.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
-		u.setFirstName(userRequest.getFirstname());
-		u.setLastName(userRequest.getLastname());
-		u.setEnabled(false);
-		u.setEmail(userRequest.getEmail());
-		u.setAddress(userRequest.getAddress());
+			u.setFirstName(userRequest.getFirstname());
+			u.setLastName(userRequest.getLastname());
+			u.setEnabled(false);
+			u.setEmail(userRequest.getEmail());
+			u.setAddress(userRequest.getAddress());
 
-		// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
-		List<Role> roles = roleService.findByName("ROLE_USER");
-		u.setRoles(roles);
+			// u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
+			List<Role> roles = roleService.findByName("ROLE_USER");
+			u.setRoles(roles);
 
 
-		User savedUser = userRepository.save(u);
-		if(savedUser != null) {
-			usernameBloomFilter.put(savedUser.getUsername());
+			User savedUser = userRepository.save(u);
+			if(savedUser != null) {
+				usernameBloomFilter.put(savedUser.getUsername());
+			}
+			return savedUser;
+		} catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("Username or email already taken", e);
 		}
-		return savedUser;
 	}
 
 
