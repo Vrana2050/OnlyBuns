@@ -8,14 +8,18 @@ public class Message {
 
     private String id;
     private String body;
-    private LocalDateTime timestamp;
+    private LocalDateTime receivedTimestamp;
+    private LocalDateTime deliveryTimestamp;
     private boolean acknowledged;
+    private int deliveryAttempts;
 
     public Message(String body) {
         this.id = UUID.randomUUID().toString();
         this.body = body;
-        this.timestamp = LocalDateTime.now();
+        this.receivedTimestamp = LocalDateTime.now();
+        this.deliveryTimestamp = null;
         this.acknowledged = false;
+        this.deliveryAttempts = 0;
     }
 
     public String getId() {
@@ -30,8 +34,16 @@ public class Message {
         this.body = body;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getReceivedTimestamp() {
+        return receivedTimestamp;
+    }
+
+    public LocalDateTime getDeliveryTimestamp() {
+        return deliveryTimestamp;
+    }
+
+    public void setDeliveryTimestamp(LocalDateTime deliveryTimestamp) {
+        this.deliveryTimestamp = deliveryTimestamp;
     }
 
     public boolean isAcknowledged() {
@@ -40,6 +52,20 @@ public class Message {
 
     public void acknowledge() {
         this.acknowledged = true;
+    }
+
+    public int getDeliveryAttempts() {
+        return deliveryAttempts;
+    }
+
+    public void incrementDeliveryAttempts() {
+        this.deliveryAttempts++;
+    }
+
+    public boolean isAckDeadlineExceeded(){
+        return !this.isAcknowledged() &&
+                this.deliveryAttempts > 0 &&
+                LocalDateTime.now().isAfter(this.deliveryTimestamp.plusSeconds(10));
     }
 }
 
