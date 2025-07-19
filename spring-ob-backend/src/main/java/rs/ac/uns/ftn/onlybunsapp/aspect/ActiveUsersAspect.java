@@ -29,7 +29,6 @@ public class ActiveUsersAspect {
 
                 String jwt = userTokenState.getAccessToken();  // Dohvati JWT token
                 activeUserMetric.userLoggedIn(jwt);  // Prilagoditi logiku prema potrebama
-                System.out.println(jwt);
             }
         }
     }

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: rs.ac.uns.ftn.informatika.rabbitmq.RabbitmqConsumerExampleApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.557 s - in rs.ac.uns.ftn.informatika.rabbitmq.RabbitmqConsumerExampleApplicationTests

@@ -54,6 +54,7 @@ public class PostController {
         catch (Exception e){
             if(e.getClass() == ObjectOptimisticLockingFailureException.class)
             {
+                System.out.println("Optimistic lock failure");
                 return likePost(user,postId);
             }
             else
