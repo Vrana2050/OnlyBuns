@@ -119,7 +119,9 @@ export class HomeComponent implements OnInit {
   toggleLike(index: number) {
     const post = this.posts[index];
     this.postService.likePost(post.id).subscribe((response) => {
-      this.posts[index] = response;
+      if (response) {
+        this.posts[index].likes += 1;
+      }
     });
   }
   openLoginModal(): void {
