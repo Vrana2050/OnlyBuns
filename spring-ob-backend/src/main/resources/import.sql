@@ -1,66 +1,139 @@
--- Lozinke su hesovane pomocu BCrypt algoritma https://www.dailycred.com/article/bcrypt-calculator
--- Lozinka za oba user-a je 123
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('taylorturner', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Beverly', 'Anderson', 'taylorturner@example.com', 'Despota Djurdja 21 Smederevo', true, '2025-07-10 10:00:00', 2, 3, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('christopher29', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Ronnie', 'Gray', 'lukaivanisevic10@gmail.com', 'Karadjordjeva 7 Smederevo', true, '2025-07-10 10:00:00', 2, 3, 6, '2024-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('christopherjones', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Lindsey', 'Davis', 'christopherjones@example.com', 'Karadjordjeva 17 Smederevo', true, '2025-07-10 10:00:00', 3, 2, 5, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('rfoster', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Jennifer', 'Williams', 'rfoster@example.com', 'Karadjordjeva 11 Smederevo', true, '2025-07-10 10:00:00', 4, 3, 5, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('elizabeth14', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Jason', 'Nunez', 'elizabeth14@example.com', 'Karadjordjeva 2 Smederevo', true, '2025-07-10 10:00:00', 2, 2, 5, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('katherinefranklin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Derek', 'Wells', 'katherinefranklin@example.com', 'Karadjordjeva 4 Smederevo', true, '2025-07-10 10:00:00', 2, 1, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('hendersonbrady', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Jennifer', 'Olson', 'hendersonbrady@example.com', 'Karadjordjeva 3 Smederevo', true, '2025-07-10 10:00:00', 3, 1, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('tglass', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Kristin', 'Reynolds', 'tglass@example.com', 'Despota Djurdja 20 Smederevo', true, '2025-07-10 10:00:00', 2, 3, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('edwardfranklin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Tonya', 'Mitchell', 'edwardfranklin@example.com', 'Despota Djurdja 19 Smederevo', true, '2025-07-10 10:00:00', 4, 5, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('jasmine95', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Maria', 'Weaver', 'jasmine95@example.com', 'Despota Djurdja 23 Smederevo', true, '2025-07-10 10:00:00', 2, 1, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('hortiz', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Lindsey', 'Nelson', 'hortiz@example.com', 'Despota Djurdja 24 Smederevo', true, '2025-07-10 10:00:00', 4, 2, 0, '2025-07-18 10:00:00');;
+INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('christopher38', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Lauren', 'Brown', 'christopher38@example.com', 'Despota Djurdja 26 Smederevo', true, '2025-07-10 10:00:00', 2, 5, 0, '2025-07-18 10:00:00');;
+INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.774848, 20.266705);;
+INSERT INTO LOCATIONS (longitude, latitude) VALUES (45.029505, 20.111874);;
+INSERT INTO LOCATIONS (longitude, latitude) VALUES (45.090403, 20.613407);;
+INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.796358, 20.712766);;
+INSERT INTO LOCATIONS (longitude, latitude) VALUES (45.2566, 20.839034);;
+INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.842812, 20.115228);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Every role return strong.', 'uploads/christopher29/post_0', 0, 1, '2025-07-01 11:00:00', 2, 1, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Ability table brother effort under.', 'uploads/christopher29/post_1', 2, 2, '2025-07-02 18:00:00', 2, 7, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Security remember spend type focus number.', 'uploads/christopher29/post_2', 3, 1, '2025-07-03 15:00:00', 2, 7, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Lay option paper instead world economy school.', 'uploads/christopher29/post_3', 2, 0, '2025-07-04 12:00:00', 2, 8, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Beautiful how spend article doctor step.', 'uploads/christopher29/post_4', 5, 1, '2025-07-05 13:00:00', 2, 1, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Line weight mother pattern them.', 'uploads/christopher29/post_5', 0, 2, '2025-07-05 18:00:00', 2, 2, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Personal hair get compare.', 'uploads/rfoster/post_0', 2, 3, '2025-07-06 11:00:00', 3, 6, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Floor side politics our rate strong someone.', 'uploads/rfoster/post_1', 1, 2, '2025-02-07 8:00:00', 3, 1, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Old evening exactly reduce sell region walk.', 'uploads/rfoster/post_2', 0, 3, '2025-03-10 16:00:00', 3, 4, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Yourself employee away lawyer detail prove mind.', 'uploads/rfoster/post_3', 0, 1, '2025-07-08 9:00:00', 3, 7, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Area professional quite support.', 'uploads/rfoster/post_4', 1, 2, '2025-07-09 14:00:00', 3, 5, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Fine song him parent around.', 'uploads/elizabeth14/post_0', 1, 2, '2025-04-11 12:00:00', 4, 6, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('You choice through contain majority break cover.', 'uploads/elizabeth14/post_1', 0, 1, '2025-05-14 13:00:00', 4, 8, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Analysis reality hand rule check.', 'uploads/elizabeth14/post_2', 0, 3, '2025-07-10 13:00:00', 4, 8, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Yourself spend force response partner rock.', 'uploads/elizabeth14/post_3', 2, 2, '2025-07-15 11:00:00', 4, 8, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Begin impact shoulder.', 'uploads/elizabeth14/post_4', 1, 0, '2025-07-13 15:00:00', 4, 6, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('His eat every laugh yes voice girl.', 'uploads/katherinefranklin/post_0', 3, 0, '2025-01-10 11:00:00', 5, 2, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Thank young community.', 'uploads/katherinefranklin/post_1', 0, 0, '2025-07-17 8:00:00', 5, 5, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Very vote couple wind.', 'uploads/katherinefranklin/post_2', 0, 0, '2025-07-16 14:00:00', 5, 3, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Mention ever never official oil road positive ten.', 'uploads/katherinefranklin/post_3', 0, 0, '2025-07-13 8:00:00', 5, 2, false, false, 0);;
+INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id, is_Deleted, is_Restricted, version) VALUES ('Own sister police to network.', 'uploads/katherinefranklin/post_4', 0, 0, '2025-07-17 17:00:00', 5, 1, false, false, 0);;
 
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-06-17 10:00:00', 'a',2, 1);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-05-18 10:00:00','avcdafw', 2, 2);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-04-07 10:00:00', 'vfvgreba',2, 15);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-06-03 10:00:00', 'xdda',2, 11);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-06-14 10:00:00','a', 2, 7);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2021-08-25 10:00:00','aefcefge', 3, 8);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-09-14 10:00:00','vdffedfv', 3, 9);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2024-10-21 10:00:00','a', 4, 14);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-06-29 10:00:00', 'efedrgra',4, 12);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-0-28 10:00:00', 'a',4, 7);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-11 10:00:00','a', 5, 3);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-18 10:00:00','agrgedr', 7, 2);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-07 10:00:00','a', 7, 9);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-06 10:00:00', 'a',7, 12);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-05 10:00:00', 'afedf',7, 13);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-04 10:00:00', 'a',7, 15);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-12 10:00:00', 'avdcfedfrg',8, 14);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-02 10:00:00', 'avedvgv',9, 6);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-03 10:00:00', 'angnjttgn',9, 7);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 10:00:00','avdevrfbvgrt', 9, 5);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-02 10:00:00', 'aedgvrdgr',9, 6);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-14 10:00:00', 'aafdwef',10, 9);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-11 10:00:00', 'avwaefewg',10, 10);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-01 10:00:00', 'wdxwfa',11, 11);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-19 10:00:00','cwsfea', 12, 14);;
+INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-10 10:00:00','avwscfsef', 12, 8);;
 
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 13:35:00', 7, 4);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 17:48:00', 15, 1);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 17:42:00', 5, 7);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 9:51:00', 7, 7);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 15:05:00', 17, 10);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 11:03:00', 2, 12);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 12:48:00', 3, 8);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 15:53:00', 15, 10);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 15:03:00', 17, 2);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 11:49:00', 17, 3);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 14:16:00', 16, 9);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 10:14:00', 4, 10);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 17:15:00', 5, 12);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 17:29:00', 3, 11);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 11:03:00', 12, 9);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 16:37:00', 4, 9);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 10:20:00', 5, 9);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 9:11:00', 2, 10);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 13:24:00', 5, 10);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 17:48:00', 3, 12);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 15:41:00', 5, 11);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 12:53:00', 11, 8);;
+INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-17 14:43:00', 8, 8);;
 
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('user', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Marko', 'Markovic', 'user@example.com', 'Despota Djurdja 21 Smederevo', true, '2024-11-12 11:00:00', 3, 1, 1, '2024-11-12 11:00:00');
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Nikola', 'Nikolic', 'admin@example.com', 'Karadjordjeva 7 Smederevo', true, '2024-11-12 11:00:00', 0, 1, 2, '2024-11-12 11:00:00');
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('m', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'm', 'm', 'm@example.com', 'Titogradska 12', true, '2024-11-12 11:00:00', 2, 2, 0, '2024-11-12 11:00:00');
-INSERT INTO USERS (username, password, first_name, last_name, email, address, enabled, last_password_reset_date, number_of_following, number_of_followers, number_of_posts, last_login_date) VALUES ('t', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 't', 't', 't@example.com', 'Titogradska 12', true, '2024-11-12 11:00:00', 1, 2, 0, '2024-11-12 11:00:00');
-
-
-INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.664276, 20.925287);
-INSERT INTO LOCATIONS (longitude, latitude) VALUES (44.666276, 20.921787);
-
-
-
-
-
-INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted,version) VALUES ('A beautiful sunset over the mountains', 'uploads/user/post_0', 2, 6, '2025-01-3 11:00:00', 1, 1, false,false,0);
-INSERT INTO POSTS (description, folder_path, likes, num_of_comments, post_date, creator_id, location_id,is_Deleted,is_Restricted,version) VALUES ('This little bunny is so soft and fluffy.', 'uploads/user/post_1', 1, 1, '2024-11-15 10:00:00', 2, 2, false,false,0);
-
-
-
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:00:00', 'This sunset is stunning!', 2, 1);
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'Amazing view! Where is this?', 2, 1);
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'Such a cute little potato!', 1, 2);
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'Rabbit just pissed on me', 1, 1);
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 12:05:00', 'That thing is so cute.', 1, 1);
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 10:05:00', 'I like a good rabbit soup!', 1, 1);
-
-INSERT INTO COMMENTS (created, text, creator_id, post_id) VALUES ('2025-07-15 11:05:00', 'You are disgusting sir!', 1, 1);
-
-
-
-INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,2);
-INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,3);
-INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (1,4);
-INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (3,1);
-INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (3,4);
-INSERT INTO FOLLOWING (follower_id,following_id) VALUES  (4,3);
-
-
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (1, 9);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (1, 2);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (2, 11);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (2, 4);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (3, 12);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (3, 4);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (3, 1);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (4, 8);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (4, 9);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (4, 12);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (4, 2);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (5, 9);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (5, 12);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (6, 12);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (6, 9);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (7, 1);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (7, 9);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (7, 4);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (8, 11);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (8, 10);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (9, 1);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (9, 3);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (9, 5);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (9, 12);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (10, 8);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (10, 3);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (11, 2);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (11, 7);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (11, 9);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (11, 8);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (12, 6);;
+INSERT INTO FOLLOWING (follower_id, following_id) VALUES (12, 5);;
 INSERT INTO ROLE (name) VALUES ('ROLE_USER');
 INSERT INTO ROLE (name) VALUES ('ROLE_ADMIN');
 INSERT INTO ROLE (name) VALUES ('ROLE_ZEC');
 
-
-
-
-INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 1); -- user-u dodeljujemo rolu USER
-INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 2); -- user-u dodeljujemo rolu ADMIN
-
-
-INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-15 11:55:00', 2, 1);
-INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-15 11:55:00', 1, 1);
-INSERT INTO POST_USER_LIKES (like_date, post_id, user_id) VALUES ('2025-07-15 11:55:00', 1, 2);
-
-INSERT INTO USER_ROLE (user_id, role_id) VALUES (3, 1);
-INSERT INTO USER_ROLE (user_id, role_id) VALUES (4, 1);
-
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (1, 2);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (2, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (3, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (4, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (5, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (6, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (7, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (8, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (9, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (10, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (11, 1);;
+INSERT INTO USER_ROLE (user_id, role_id) VALUES (12, 1);;
