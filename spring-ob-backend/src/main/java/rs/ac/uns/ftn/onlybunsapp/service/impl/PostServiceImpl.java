@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private UserMapper userMapper;
-    public int gas=0;
+    public int count=0;
     @Autowired
     private Producer producer;
     @Autowired
@@ -101,12 +101,12 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public Boolean like(User user, long postId)throws Exception {
-            gas++;
+            count++;
             Post post = postRepository.getById(postId);
             if (!likeService.save(user.getId(), postId))
                 return false;
             post.addLike();
-            if (gas == 1) {
+            if (count == 1) {
                 Thread.sleep(3000);
             }
             postRepository.save(post);

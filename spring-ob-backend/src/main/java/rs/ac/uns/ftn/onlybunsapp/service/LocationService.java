@@ -11,5 +11,6 @@ public interface LocationService {
 
     @Cacheable(value = "location", key = "#id")
     public List<Location> getAll();
+    @Cacheable(value = "location", key = "#id")
     public Location getById(long id);
 }
