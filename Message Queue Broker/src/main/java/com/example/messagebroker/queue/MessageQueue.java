@@ -2,6 +2,7 @@ package com.example.messagebroker.queue;
 
 import com.example.messagebroker.model.Message;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -25,6 +26,8 @@ public class MessageQueue {
     public synchronized Message pollMessage() {
         Message msg = messages.poll();
         if (msg != null) {
+            msg.incrementDeliveryAttempts();
+            msg.setDeliveryTimestamp(LocalDateTime.now());
             inFlight.put(msg.getId(), msg);
         }
         return msg;
@@ -38,6 +41,14 @@ public class MessageQueue {
         Message msg = inFlight.remove(messageId);
         if (msg != null) {
             messages.add(msg);
+        }
+    }
+
+    public synchronized void requeueMessages(){
+        for (Message message : inFlight.values()) {
+            if (message.isAckDeadlineExceeded()) {
+                this.requeue(message.getId());
+            }
         }
     }
 
