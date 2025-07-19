@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.onlybunsapp.ratelimiter;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Component
 public class RateLimiterFollow {
     private final Map<Long, FollowCounter> followCounters = new ConcurrentHashMap<>();
     private static final int FOLLOW_LIMIT = 50;

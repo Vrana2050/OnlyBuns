@@ -73,9 +73,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id IN (:followerId, :followingId)")
     List<User> lockUsersForUpdate(@Param("followerId") long followerId, @Param("followingId") long followingId);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT u FROM User u WHERE u.id = :id")
-    Optional<User> findByIdWithLock(@Param("id") Long id);
 
 
 }
