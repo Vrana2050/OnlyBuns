@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { PostService } from '../service/post.service';
-import { PostReadDto } from '../model/postRead.model';
-import { User, PasswordChange } from '../model/user.model';
-import { UserService } from '../service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { PostReadDto } from '../model/postRead.model';
+import { PasswordChange, User } from '../model/user.model';
+import { UserService } from '../service';
+import { PostService } from '../service/post.service';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
   posts: PostReadDto[] = [];
@@ -19,13 +19,17 @@ export class UserProfileComponent implements OnInit {
   passwordChange: PasswordChange = {
     oldPassword: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
   isChangePasswordModalOpen: boolean = false;
   passwordsMismatch: boolean = false;
   isPasswordValid: boolean = false;
 
-  constructor(private postService: PostService, private userService: UserService, private router: Router) {}
+  constructor(
+    private postService: PostService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadPosts();
@@ -36,7 +40,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   validatePasswords(): void {
-    this.passwordsMismatch = this.passwordChange.newPassword !== this.passwordChange.confirmPassword;
+    this.passwordsMismatch =
+      this.passwordChange.newPassword !== this.passwordChange.confirmPassword;
     this.isPasswordValid =
       this.passwordChange.newPassword.length >= 3 &&
       this.passwordChange.confirmPassword.length >= 3 &&
@@ -50,25 +55,25 @@ export class UserProfileComponent implements OnInit {
     }
 
     this.userService
-  .changePassword({
-    oldPassword: this.passwordChange.oldPassword,
-    newPassword: this.passwordChange.newPassword
-  })
-  .subscribe(
-    (response: any) => {
-      console.log(response.message); // Handle the success message
-        this.router.navigate(['/login']);
-        alert('Password changed successfully. Please login again.');
-    },
-    (error) => {
-      if (error.error && error.error.message) {
-        console.error(error.error.message); // Display error message from backend
-        alert(error.error.message);
-      } else {
-        console.error('An unexpected error occurred', error);
-      }
-    }
-  );
+      .changePassword({
+        oldPassword: this.passwordChange.oldPassword,
+        newPassword: this.passwordChange.newPassword,
+      })
+      .subscribe(
+        (response: any) => {
+          console.log(response.message); // Handle the success message
+          this.router.navigate(['/login']);
+          alert('Password changed successfully. Please login again.');
+        },
+        (error) => {
+          if (error.error && error.error.message) {
+            console.error(error.error.message); // Display error message from backend
+            alert(error.error.message);
+          } else {
+            console.error('An unexpected error occurred', error);
+          }
+        }
+      );
   }
 
   openChangePasswordModal(): void {
@@ -80,23 +85,22 @@ export class UserProfileComponent implements OnInit {
     this.isChangePasswordModalOpen = false;
   }
 
-  loadPosts() :void {
+  loadPosts(): void {
     this.postService.getAllPostsForUser().subscribe((response) => {
       this.posts = response;
     });
   }
-  
 
   deletePost(post: PostReadDto): void {
     this.postService.deletePost(post.id).subscribe(
       (success) => {
         if (success) {
-          
           console.log('Post deleted successfully');
           /*const index = this.posts.findIndex(p => p.id === post.id);
           this.posts.splice(index, 1);
           this.cdr.detectChanges();*/
           this.loadPosts();
+          this.closeModal();
         } else {
           console.error('Failed to delete post');
         }
@@ -118,20 +122,22 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    this.postService.editPostDescription(post.id, this.newDescription).subscribe(
-      (updatedPost) => {
-        console.log(updatedPost);
-        const index = this.posts.findIndex(p => p.id === updatedPost.id);
-        if (index !== -1) {
-          this.posts[index].description = updatedPost.description;
+    this.postService
+      .editPostDescription(post.id, this.newDescription)
+      .subscribe(
+        (updatedPost) => {
+          console.log(updatedPost);
+          const index = this.posts.findIndex((p) => p.id === updatedPost.id);
+          if (index !== -1) {
+            this.posts[index].description = updatedPost.description;
+          }
+          this.editingPostId = null;
+          console.log('Post description updated successfully');
+        },
+        (error) => {
+          console.error('Error updating post description', error);
         }
-        this.editingPostId = null;
-        console.log('Post description updated successfully');
-      },
-      (error) => {
-        console.error('Error updating post description', error);
-      }
-    );
+      );
   }
 
   cancelEdit(): void {
